@@ -235,3 +235,19 @@ select option {
   animation: fadeUp 0.3s ease;
   backdrop-filter: blur(10px);
 }
+
+/* Navbar responsive */
+@media (max-width: 768px) {
+  .desktop-nav { display: none !important; }
+  .mobile-hamburger { display: block !important; }
+}
+
+@media (min-width: 769px) {
+  .mobile-hamburger { display: none !important; }
+  .mobile-menu { display: none !important; }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

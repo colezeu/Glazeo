@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, ChevronRight, Clock } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ArrowRight, ChevronRight, ChevronDown, Clock, Menu, X } from "lucide-react";
 
 const PRODUCTS = [
   { id: "balustrade",       name: "Balustrade",              tagline: "Scări, balcoane, terase",                   price: "de la 150€/m²", path: "/configurator/balustrade",       desc: "Sticlă dreaptă sau pe rampă, cu butoni, profil U/V/L, mini-montanți sau canal în pardoseală.", active: true },
@@ -20,6 +21,143 @@ const STATS = [
   { value: "instant", label: "Ofertă personalizată" },
 ];
 
+// Navbar cu dropdown pentru configuratoare
+function Navbar() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const location = useLocation();
+
+  // Închide dropdown la click în afara lui
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Închide mobile menu la navigare
+  useEffect(() => {
+    setMobileOpen(false);
+    setDropdownOpen(false);
+  }, [location.pathname]);
+
+  const activeProducts = PRODUCTS.filter(p => p.active);
+
+  return (
+    <nav style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+      padding: "0 32px", background: "rgba(15,17,23,0.7)", backdropFilter: "blur(24px)",
+      borderBottom: "1px solid rgba(255,255,255,0.07)", height: 64,
+      display: "flex", alignItems: "center", justifyContent: "space-between"
+    }}>
+      <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+        <img src="/logo.png" alt="Glass Associates" style={{ height: 28, filter: "invert(1)", opacity: 0.95 }} />
+      </Link>
+
+      {/* Desktop nav */}
+      <div className="desktop-nav" style={{ display: "flex", gap: 2, alignItems: "center" }}>
+        {/* Dropdown Configuratoare */}
+        <div ref={dropdownRef} style={{ position: "relative" }}>
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            style={{
+              display: "flex", alignItems: "center", gap: 4,
+              fontSize: "0.82rem", padding: "6px 12px", borderRadius: 8,
+              border: dropdownOpen ? "1px solid rgba(200,169,110,0.3)" : "1px solid transparent",
+              background: dropdownOpen ? "rgba(200,169,110,0.08)" : "transparent",
+              color: dropdownOpen ? "#c8a96e" : "rgba(240,237,232,0.7)",
+              cursor: "pointer", transition: "all 0.2s ease",
+            }}
+          >
+            Configuratoare <ChevronDown size={13} style={{ transform: dropdownOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+          </button>
+
+          {dropdownOpen && (
+            <div style={{
+              position: "absolute", top: "calc(100% + 8px)", right: 0,
+              minWidth: 260, background: "rgba(20,23,30,0.95)",
+              backdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 14, padding: "8px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+              animation: "fadeDown 0.15s ease",
+            }}>
+              <div style={{ fontSize: "0.68rem", color: "rgba(240,237,232,0.3)", padding: "6px 12px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                Toate configuratoarele
+              </div>
+              {activeProducts.map(p => (
+                <Link
+                  key={p.id}
+                  to={p.path}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "10px 12px", borderRadius: 8, textDecoration: "none",
+                    color: location.pathname === p.path ? "#c8a96e" : "rgba(240,237,232,0.7)",
+                    background: location.pathname === p.path ? "rgba(200,169,110,0.08)" : "transparent",
+                    fontSize: "0.82rem", transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={e => { if (location.pathname !== p.path) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+                  onMouseLeave={e => { if (location.pathname !== p.path) e.currentTarget.style.background = "transparent"; }}
+                >
+                  <span>{p.name}</span>
+                  <span style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.25)" }}>{p.price}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Link-uri directe */}
+        <Link to="/despre" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Despre</Link>
+        <Link to="/portofoliu" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Portofoliu</Link>
+        <Link to="/contact" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Contact</Link>
+      </div>
+
+      {/* Mobile hamburger */}
+      <button
+        className="mobile-hamburger"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        style={{ display: "none", background: "none", border: "none", color: "#f0ede8", cursor: "pointer", padding: 4 }}
+      >
+        {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="mobile-menu" style={{
+          position: "absolute", top: 64, left: 0, right: 0,
+          background: "rgba(15,17,23,0.97)", backdropFilter: "blur(24px)",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          padding: "16px 24px", display: "flex", flexDirection: "column", gap: 4,
+        }}>
+          <div style={{ fontSize: "0.68rem", color: "rgba(240,237,232,0.3)", padding: "8px 0", letterSpacing: "0.08em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }}>
+            Configuratoare
+          </div>
+          {activeProducts.map(p => (
+            <Link key={p.id} to={p.path} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "10px 0", textDecoration: "none",
+              color: location.pathname === p.path ? "#c8a96e" : "rgba(240,237,232,0.7)",
+              fontSize: "0.88rem", borderBottom: "1px solid rgba(255,255,255,0.04)",
+            }}>
+              {p.name}
+              <span style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.3)" }}>{p.price}</span>
+            </Link>
+          ))}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 8, paddingTop: 8 }}>
+            <Link to="/despre" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Despre</Link>
+            <Link to="/portofoliu" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Portofoliu</Link>
+            <Link to="/contact" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Contact</Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+
 export default function HomePage() {
   return (
     <div style={{ minHeight: "100vh", color: "#f0ede8", position: "relative" }}>
@@ -28,18 +166,7 @@ export default function HomePage() {
       <div style={{ position: "fixed", inset: 0, zIndex: 0, background: "radial-gradient(ellipse at 30% 50%, rgba(15,17,23,0.82) 0%, rgba(15,17,23,0.6) 50%, rgba(15,17,23,0.4) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-
-        {/* Nav */}
-        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, padding: "0 32px", background: "rgba(15,17,23,0.7)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <img src="/logo.png" alt="Glass Associates" style={{ height: 28, filter: "invert(1)", opacity: 0.95 }} />
-          </Link>
-          <div style={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            {PRODUCTS.filter(p => p.active).map(p => (
-              <Link key={p.id} to={p.path} className="nav-link" style={{ fontSize: "0.8rem", padding: "4px 10px" }}>{p.name}</Link>
-            ))}
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Hero */}
         <section style={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
