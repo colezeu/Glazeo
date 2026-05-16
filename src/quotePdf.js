@@ -1,0 +1,176 @@
+/**
+ * Generare PDF ofertă - client side, fără dependențe externe
+ * Creează un HTML frumos și deschide print dialog
+ */
+export function generateQuotePDF({ productName, quote, config, clientInfo }) {
+  const today = new Date().toLocaleDateString("ro-RO", {
+    year: "numeric", month: "long", day: "numeric"
+  });
+
+  // Detalii configurație în funcție de tip produs
+  const configDetails = [];
+  if (config) {
+    if (config.length) configDetails.push(`Lungime: ${config.length}m`);
+    if (config.width) configDetails.push(`Lățime: ${config.width}m`);
+    if (config.depth) configDetails.push(`Adâncime: ${config.depth}m`);
+    if (config.height) configDetails.push(`Înălțime: ${config.height}m`);
+    if (config.glassType) configDetails.push(`Tip sticlă: ${config.glassType}`);
+    if (config.glassShape) configDetails.push(`Formă sticlă: ${config.glassShape}`);
+    if (config.hardware) configDetails.push(`Feronerie: ${config.hardware}`);
+    if (config.enclosure) configDetails.push(`Tip cabină: ${config.enclosure}`);
+    if (config.treatment) configDetails.push(`Tratament: ${config.treatment}`);
+    if (config.handrail && config.handrail !== "none") configDetails.push(`Mână curentă: ${config.handrail}`);
+    if (config.includeLed || config.inclLed) configDetails.push(`Iluminare LED: Da`);
+    if (config.inclTowel) configDetails.push(`Port prosop: Da`);
+    if (config.inclSeat) configDetails.push(`Scaun rabatabil: Da`);
+  }
+
+  const lines = [];
+  if (quote) {
+    if (quote.area) lines.push({ label: "Suprafață", value: `${quote.area} m²` });
+    if (quote.hwPrice) lines.push({ label: "Feronerie", value: `${quote.hwPrice}€` });
+    if (quote.glassPrice) lines.push({ label: "Sticlă", value: `${quote.glassPrice}€` });
+    if (quote.encP) lines.push({ label: "Tip cabină", value: `${quote.encP}€` });
+    if (quote.treatP) lines.push({ label: "Tratament", value: `${quote.treatP}€` });
+    if (quote.taxaForma) lines.push({ label: "Taxă formă", value: `${quote.taxaForma}€` });
+    if (quote.handrailP) lines.push({ label: "Mână curentă", value: `${quote.handrailP}€` });
+    if (quote.ledP) lines.push({ label: "LED", value: `${quote.ledP}€` });
+    if (quote.towelP) lines.push({ label: "Port prosop", value: `${quote.towelP}€` });
+    if (quote.seatP) lines.push({ label: "Scaun", value: `${quote.seatP}€` });
+  }
+
+  const html = `
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Ofertă ${productName} — Glass Associates</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #c8a96e; }
+    .logo { font-size: 1.8rem; font-weight: 700; color: #c8a96e; letter-spacing: -0.5px; }
+    .logo-sub { font-size: 0.75rem; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+    .meta { text-align: right; font-size: 0.85rem; color: #666; }
+    .meta strong { color: #1a1a2e; }
+    h2 { font-size: 1.1rem; color: #c8a96e; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    .section { margin-bottom: 28px; }
+    .config-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .config-item { font-size: 0.9rem; padding: 6px 0; border-bottom: 1px solid #eee; }
+    .config-item span { color: #666; }
+    .lines { width: 100%; border-collapse: collapse; }
+    .lines td { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    .lines td:last-child { text-align: right; font-weight: 600; }
+    .lines .total td { font-size: 1.2rem; font-weight: 700; color: #c8a96e; border-top: 2px solid #c8a96e; border-bottom: none; padding-top: 14px; }
+    .lines .subtotal td { font-size: 0.85rem; color: #888; }
+    .client-info { background: #f8f8f8; padding: 16px; border-radius: 8px; margin-bottom: 24px; }
+    .client-info p { font-size: 0.85rem; margin-bottom: 4px; }
+    .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.75rem; color: #999; text-align: center; }
+    .footer a { color: #c8a96e; text-decoration: none; }
+    @media print {
+      body { padding: 20px; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="logo">Glass Associates</div>
+      <div class="logo-sub">Sticlă Structurală & Balustrade</div>
+    </div>
+    <div class="meta">
+      <strong>Ofertă #${Date.now().toString(36).toUpperCase()}</strong><br>
+      Data: ${today}<br>
+      Valabilă 30 zile
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Produs</h2>
+    <p style="font-size: 1.1rem; font-weight: 600;">${productName}</p>
+  </div>
+
+  ${clientInfo ? `
+  <div class="section">
+    <h2>Client</h2>
+    <div class="client-info">
+      <p><strong>${clientInfo.name || "—"}</strong></p>
+      ${clientInfo.email ? `<p>Email: ${clientInfo.email}</p>` : ""}
+      ${clientInfo.phone ? `<p>Telefon: ${clientInfo.phone}</p>` : ""}
+      ${clientInfo.message ? `<p style="margin-top:8px; font-style:italic;">"${clientInfo.message}"</p>` : ""}
+    </div>
+  </div>
+  ` : ""}
+
+  ${configDetails.length > 0 ? `
+  <div class="section">
+    <h2>Configurație</h2>
+    <div class="config-list">
+      ${configDetails.map(d => `<div class="config-item"><span>•</span> ${d}</div>`).join("")}
+    </div>
+  </div>
+  ` : ""}
+
+  ${quote ? `
+  <div class="section">
+    <h2>Detaliu Preț</h2>
+    <table class="lines">
+      ${lines.map(l => `<tr><td>${l.label}</td><td>${l.value}</td></tr>`).join("")}
+      <tr class="subtotal"><td colspan="2" style="text-align:right; padding:8px 0;">
+        Subtotal: ${quote.subtotal}€ &nbsp;•&nbsp; TVA: ${quote.vat}€
+      </td></tr>
+      <tr class="total">
+        <td>TOTAL</td>
+        <td>${quote.total}€</td>
+      </tr>
+    </table>
+  </div>
+  ` : ""}
+
+  <div class="footer">
+    <p><strong>Glass Associates</strong> — Sticlă structurală, balustrade, cabine duș, pergole, copertine</p>
+    <p>Email: office@glassassociates.ro &nbsp;|&nbsp; Web: www.glassassociates.ro</p>
+    <p style="margin-top: 8px;">Această ofertă este valabilă 30 de zile de la data emiterii. Prețurile nu includ transportul și montajul decât dacă este specificat.</p>
+  </div>
+
+  <div class="no-print" style="margin-top: 32px; text-align: center;">
+    <button onclick="window.print()" style="padding: 12px 32px; background: #c8a96e; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 600;">
+      🖨️ Printează / Salvează PDF
+    </button>
+  </div>
+</body>
+</html>`;
+
+  // Deschide într-o fereastră nouă pentru print/save PDF
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(html);
+    printWindow.document.close();
+  }
+}
+
+/**
+ * Trimite cerere ofertă prin email (backend API)
+ */
+export async function sendQuoteEmail({ productName, quote, config, clientInfo }) {
+  const API = "http://localhost:3001";
+
+  const res = await fetch(`${API}/quote/request`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      productName,
+      quote,
+      config,
+      client: clientInfo,
+    }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Eroare la trimiterea cererii");
+  }
+
+  return res.json();
+}

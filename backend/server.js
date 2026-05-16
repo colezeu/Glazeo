@@ -165,7 +165,30 @@ Reguli de interpretare:
   }
 });
 
-// ─── START ─────────────────────────────────────────────────────
+// ─── QUOTE REQUEST (email) ──────────────────────────────────────
+app.post("/quote/request", async (req, res) => {
+  try {
+    const { productName, quote, config, client } = req.body || {};
+
+    // În producție: integrare cu SendGrid / Resend / Nodemailer
+    // Pentru moment, logăm cererea și returnăm succes
+    console.log("=== CERERE OFERTĂ ===");
+    console.log("Client:", client?.name, client?.email, client?.phone);
+    console.log("Produs:", productName);
+    console.log("Total:", quote?.total, "€");
+    console.log("Config:", JSON.stringify(config));
+    console.log("=====================");
+
+    // TODO: Integrare email service
+    // const emailBody = generateEmailTemplate({ productName, quote, config, client });
+    // await sendEmail({ to: "office@glassassociates.ro", subject: `Ofertă ${productName} — ${client?.name}`, html: emailBody });
+
+    res.json({ ok: true, message: "Cerere înregistrată" });
+  } catch (err) {
+    console.error("Quote request error:", err);
+    res.status(500).json({ error: "Eroare la trimiterea cererii" });
+  }
+});
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Glass Associates API running on :${PORT}`);

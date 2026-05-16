@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { X, Send, Check, Loader2 } from "lucide-react";
+import { X, Send, Check, Loader2, FileText, Mail, Download } from "lucide-react";
 import { validateForm } from "./validation";
+import { generateQuotePDF, sendQuoteEmail } from "./quotePdf";
 
 export default function QuoteModal({ isOpen, onClose, quote, productName, config }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [sendMethod, setSendMethod] = useState("email"); // "email" | "whatsapp" | "pdf"
 
   if (!isOpen) return null;
 
-  // Validare
   const validation = validateForm({
     name: form.name,
     email: form.email,
@@ -22,21 +23,73 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
 
   const handleSend = async () => {
     setTouched(true);
-
-    // Validează complet la submit
-    const check = validateForm({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      message: form.message,
-    });
+    const check = validateForm({ name: form.name, email: form.email, phone: form.phone, message: form.message });
     if (!check.valid) return;
 
-    setSending(true);
-    // Simulate API call - in production connect to email service
-    await new Promise(r => setTimeout(r, 1500));
-    setSending(false);
-    setSent(true);
+    if (sendMethod === "pdf") {
+      // Generare PDF
+      generateQuotePDF({
+        productName,
+        quote,
+        config,
+        clientInfo: form,
+      });
+      setSent(true);
+      return;
+    }
+
+    if (sendMethod === "email") {
+      setSending(true);
+      try {
+        await sendQuoteEmail({
+          productName,
+          quote,
+          config,
+          clientInfo: form,
+        });
+        setSent(true);
+      } catch (err) {
+        alert("Eroare la trimitere: " + err.message);
+      } finally {
+        setSending(false);
+      }
+      return;
+    }
+
+    if (sendMethod === "whatsapp") {
+      // Generare mesaj WhatsApp
+      const lines = [];
+      lines.push(`*Cere Ofertă — ${productName}*`);
+      lines.push("");
+      lines.push(`*Client:* ${form.name}`);
+      if (form.phone) lines.push(`*Telefon:* ${form.phone}`);
+      if (form.email) lines.push(`*Email:* ${form.email}`);
+      lines.push("");
+      if (config) {
+        lines.push("*Configurație:*");
+        if (config.length) lines.push(`• Lungime: ${config.length}m`);
+        if (config.width) lines.push(`• Lățime: ${config.width}m`);
+        if (config.depth) lines.push(`• Adâncime: ${config.depth}m`);
+        if (config.height) lines.push(`• Înălțime: ${config.height}m`);
+        if (config.glassType) lines.push(`• Sticlă: ${config.glassType}`);
+        if (config.glassShape) lines.push(`• Formă: ${config.glassShape}`);
+        if (config.hardware) lines.push(`• Feronerie: ${config.hardware}`);
+        if (config.enclosure) lines.push(`• Tip cabină: ${config.enclosure}`);
+        lines.push("");
+      }
+      if (quote) {
+        lines.push(`*Total estimat: ${quote.total}€*`);
+        lines.push(`(Subtotal: ${quote.subtotal}€ + TVA: ${quote.vat}€)`);
+      }
+      if (form.message) {
+        lines.push("");
+        lines.push(`*Mesaj:* ${form.message}`);
+      }
+
+      const msg = encodeURIComponent(lines.join("\n"));
+      window.open(`https://wa.me/40721726789?text=${msg}`, "_blank");
+      setSent(true);
+    }
   };
 
   const handleClose = () => {
@@ -57,16 +110,20 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
           <div className="text-center py-8 anim-fade-in">
             <div style={{
               width: 64, height: 64, borderRadius: "50%",
-              background: "rgba(200,169,110,0.15)",
-              border: "2px solid #c8a96e",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 24px"
+              background: "rgba(200,169,110,0.15)", border: "2px solid #c8a96e",
+              display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px"
             }}>
               <Check size={28} color="#c8a96e" />
             </div>
-            <h3 className="serif" style={{ fontSize: "1.6rem", marginBottom: 8 }}>Cerere trimisă!</h3>
+            <h3 className="serif" style={{ fontSize: "1.6rem", marginBottom: 8 }}>
+              {sendMethod === "pdf" ? "PDF generat!" : "Cerere trimisă!"}
+            </h3>
             <p style={{ color: "rgba(240,237,232,0.55)", marginBottom: 28 }}>
-              Vă vom contacta în maxim 24 de ore cu o ofertă detaliată.
+              {sendMethod === "pdf"
+                ? "Fereastra de print s-a deschis. Alege 'Salvează ca PDF' din opțiunile de print."
+                : sendMethod === "whatsapp"
+                ? "WhatsApp s-a deschis. Trimite mesajul pentru a solicita oferta."
+                : "Vă vom contacta în maxim 24 de ore cu o ofertă detaliată."}
             </p>
             <button className="btn-primary w-full" onClick={handleClose}>Închide</button>
           </div>
@@ -85,90 +142,79 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
             {/* Quote summary */}
             {quote && (
               <div style={{
-                background: "rgba(200,169,110,0.08)",
-                border: "1px solid rgba(200,169,110,0.2)",
-                borderRadius: 12,
-                padding: "16px 20px",
-                marginBottom: 24
+                background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)",
+                borderRadius: 12, padding: "16px 20px", marginBottom: 20
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.85rem" }}>Total estimat</span>
                   <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "#c8a96e" }}>{quote.total}€</span>
                 </div>
-                {quote.area && (
-                  <div style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.78rem", marginTop: 4 }}>
-                    Suprafață: {quote.area} m² · Subtotal: {quote.subtotal}€ + TVA {quote.vat}€
-                  </div>
-                )}
+                <div style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.78rem", marginTop: 4 }}>
+                  Suprafață: {quote.area} m² · Subtotal: {quote.subtotal}€ + TVA {quote.vat}€
+                </div>
               </div>
             )}
 
+            {/* Send method selector */}
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.5)", display: "block", marginBottom: 8 }}>Metodă trimitere</label>
+              <div style={{ display: "grid", gridTemplateColumns:"1fr 1fr 1fr", gap: 8 }}>
+                {[
+                  { key: "email", icon: <Mail size={14} />, label: "Email" },
+                  { key: "whatsapp", icon: <Send size={14} />, label: "WhatsApp" },
+                  { key: "pdf", icon: <FileText size={14} />, label: "PDF" },
+                ].map(m => (
+                  <button key={m.key} onClick={() => setSendMethod(m.key)}
+                    className={sendMethod === m.key ? "btn-primary" : "btn-ghost"}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px", fontSize: "0.8rem" }}>
+                    {m.icon} {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Form */}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div>
                 <label style={{ fontSize: "0.8rem", color: errors.name ? "#ef4444" : "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
                   Nume complet <span style={{ color: "rgba(239,68,68,0.6)" }}>*</span>
                 </label>
-                <input
-                  className="input-field"
-                  placeholder="Ion Popescu"
-                  value={form.name}
+                <input className="input-field" placeholder="Ion Popescu" value={form.name}
                   onChange={e => { setForm({ ...form, name: e.target.value }); setTouched(true); }}
                   onBlur={() => setTouched(true)}
-                  style={{ borderColor: errors.name ? "rgba(239,68,68,0.5)" : undefined }}
-                />
-                {errors.name && (
-                  <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.name}</div>
-                )}
+                  style={{ borderColor: errors.name ? "rgba(239,68,68,0.5)" : undefined }} />
+                {errors.name && <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.name}</div>}
               </div>
               <div>
                 <label style={{ fontSize: "0.8rem", color: errors.email ? "#ef4444" : "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
                   Email <span style={{ color: "rgba(239,68,68,0.6)" }}>*</span>
                 </label>
-                <input
-                  className="input-field"
-                  type="email"
-                  placeholder="ion@exemplu.ro"
-                  value={form.email}
+                <input className="input-field" type="email" placeholder="ion@exemplu.ro" value={form.email}
                   onChange={e => { setForm({ ...form, email: e.target.value }); setTouched(true); }}
                   onBlur={() => setTouched(true)}
-                  style={{ borderColor: errors.email ? "rgba(239,68,68,0.5)" : undefined }}
-                />
-                {errors.email && (
-                  <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.email}</div>
-                )}
+                  style={{ borderColor: errors.email ? "rgba(239,68,68,0.5)" : undefined }} />
+                {errors.email && <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.email}</div>}
               </div>
               <div>
                 <label style={{ fontSize: "0.8rem", color: errors.phone ? "#ef4444" : "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
-                  Telefon
+                  Telefon {sendMethod === "whatsapp" && <span style={{ color: "rgba(37,211,102,0.6)" }}>*</span>}
                 </label>
-                <input
-                  className="input-field"
-                  placeholder="07xx xxx xxx"
-                  value={form.phone}
+                <input className="input-field" placeholder="07xx xxx xxx" value={form.phone}
                   onChange={e => { setForm({ ...form, phone: e.target.value }); setTouched(true); }}
                   onBlur={() => setTouched(true)}
-                  style={{ borderColor: errors.phone ? "rgba(239,68,68,0.5)" : undefined }}
-                />
-                {errors.phone && (
-                  <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.phone}</div>
-                )}
+                  style={{ borderColor: errors.phone ? "rgba(239,68,68,0.5)" : undefined }} />
+                {errors.phone && <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.phone}</div>}
               </div>
               <div>
                 <label style={{ fontSize: "0.8rem", color: errors.message ? "#ef4444" : "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
                   Mesaj / Detalii suplimentare
                 </label>
-                <textarea
-                  className="input-field"
-                  rows={3}
-                  placeholder="Ex: proiect rezidențial, termen de execuție..."
+                <textarea className="input-field" rows={3} placeholder="Ex: proiect rezidențial, termen de execuție..."
                   value={form.message}
                   onChange={e => { setForm({ ...form, message: e.target.value }); setTouched(true); }}
                   onBlur={() => setTouched(true)}
-                  style={{ resize: "vertical", minHeight: 80, borderColor: errors.message ? "rgba(239,68,68,0.5)" : undefined }}
-                />
-                {errors.message && (
-                  <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.message}</div>
-                )}
+                  style={{ resize: "vertical", minHeight: 80, borderColor: errors.message ? "rgba(239,68,68,0.5)" : undefined }} />
+                {errors.message && <div style={{ fontSize: "0.72rem", color: "#ef4444", marginTop: 4 }}>{errors.message}</div>}
               </div>
 
               <button
@@ -179,8 +225,12 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
               >
                 {sending ? (
                   <><Loader2 size={18} className="animate-spin" /> Se trimite...</>
+                ) : sendMethod === "pdf" ? (
+                  <><Download size={16} /> Generează PDF</>
+                ) : sendMethod === "whatsapp" ? (
+                  <><Send size={16} /> Deschide WhatsApp</>
                 ) : (
-                  <><Send size={16} /> Trimite Cererea</>
+                  <><Mail size={16} /> Trimite pe Email</>
                 )}
               </button>
             </div>

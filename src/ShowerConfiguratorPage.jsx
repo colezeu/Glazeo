@@ -79,7 +79,7 @@ export default function ShowerConfiguratorPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Cabină de Duș" />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Cabină de Duș" config={config} />
       <ConfigHeader title="Configurator Cabine Duș" quote={quote} />
 
       <main style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
