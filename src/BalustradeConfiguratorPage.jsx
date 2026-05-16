@@ -105,7 +105,7 @@ export default function BalustradeConfiguratorPage() {
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Balustradă Sticlă" config={config} />
       <ConfigHeader title="Configurator Balustrade" quote={quote} />
 
-      <main style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
+      <main style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }} className="configurator-grid">
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
 
           <SectionCard num="01" label="Dimensiuni">

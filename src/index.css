@@ -251,3 +251,31 @@ select option {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── Responsive configuratoare ─────────────────────────────── */
+@media (max-width: 900px) {
+  /* Grid principal configurator → single column */
+  .configurator-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Quote sidebar sus pe mobil */
+  .configurator-grid > div:last-child {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Dimensiuni grid → 1 coloana */
+  .configurator-grid input[type="number"] {
+    font-size: 16px; /* Previne zoom pe iOS */
+  }
+  /* Section cards padding mai mic */
+  .glass-card {
+    padding: 16px !important;
+  }
+  /* Butoane full width pe mobil */
+  .btn-primary, .btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+}
