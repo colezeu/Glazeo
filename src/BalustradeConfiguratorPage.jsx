@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { validateForm } from "./validation";
 import QuoteModal from "./QuoteModal.jsx";
 import BalustradePreview3D from "./BalustradePreview2D.jsx";
 
@@ -26,6 +27,8 @@ export default function BalustradeConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [formTouched, setFormTouched] = useState(false);
 
   useEffect(() => {
     fetch("/catalog.json").then(r => r.json())
@@ -40,7 +43,16 @@ export default function BalustradeConfiguratorPage() {
 
   const p = product;
   const showProfileShape = hardware === "profil-pardoseala";
-  const isValid = dims.length && parseFloat(dims.length) > 0;
+
+  // Validare completă formular
+  const validation = validateForm({
+    width: dims.length,
+    height: dims.height,
+  });
+  const isValid = validation.valid;
+
+  // Afișează erori doar după prima încercare de calcul
+  const displayErrors = formTouched ? validation.errors : {};
 
   const skirt = hardware === "butoni" ? 0.35
     : (hardware === "profil-pardoseala" && profileShape === "Y") ? 0.10
@@ -48,15 +60,25 @@ export default function BalustradeConfiguratorPage() {
 
   const calculate = async () => {
     if (!p) return;
+    setFormTouched(true);
+
+    // Validează înainte de calcul
+    const check = validateForm({ width: dims.length, height: dims.height });
+    if (!check.valid) {
+      setFormErrors(check.errors);
+      // Scroll la primul câmp cu eroare
+      const firstErrorKey = Object.keys(check.errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    setFormErrors({});
     setCalculating(true);
     await new Promise(r => setTimeout(r, 600));
     const len = parseFloat(dims.length) || 0;
     const h   = parseFloat(dims.height) || 0;
     const panelCount = Math.ceil(len / 1.1);
-
-    // Suprafata se calculeaza pe inaltimea sticlei + fusta (daca e cazul)
-    // La forma, suprafata e aceeasi ca la dreapta (dreptunghiul din care se taie)
-    // diferenta e doar taxa de forma per panou
     const area = len * (h + skirt);
 
     const hwPrice    = len * (p.hardwareTypes[hardware]?.pricePerMeter || 0);
@@ -97,9 +119,43 @@ export default function BalustradeConfiguratorPage() {
 
           <SectionCard num="01" label="Dimensiuni">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
-              <NumberInput label="Lungime (m)" value={dims.length} onChange={v=>setDims(d=>({...d,length:v}))} placeholder="Ex: 5.0" />
-              <NumberInput label="Înălțime (m)" value={dims.height} onChange={v=>setDims(d=>({...d,height:v}))} placeholder="Ex: 0.9" step="0.05" />
+              <div data-field="width">
+                <ValidatedNumberInput
+                  label="Lungime (m)"
+                  value={dims.length}
+                  onChange={v => { setDims(d => ({ ...d, length: v })); setFormTouched(true); }}
+                  placeholder="Ex: 5.0"
+                  fieldName="width"
+                  helperText="Min: 0.1m — Max: 20m"
+                />
+              </div>
+              <div data-field="height">
+                <ValidatedNumberInput
+                  label="Înălțime (m)"
+                  value={dims.height}
+                  onChange={v => { setDims(d => ({ ...d, height: v })); setFormTouched(true); }}
+                  placeholder="Ex: 0.9"
+                  step="0.05"
+                  fieldName="height"
+                  helperText="Min: 0.1m — Max: 6m"
+                />
+              </div>
             </div>
+            {/* Banner eroare generală */}
+            {formTouched && !isValid && (
+              <div style={{
+                marginTop: 12, padding: "10px 14px", borderRadius: 10,
+                background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)",
+                fontSize: "0.8rem", color: "#ef4444", display: "flex", alignItems: "center", gap: 8
+              }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="7" r="6" stroke="#ef4444" strokeWidth="1.5"/>
+                  <rect x="6.2" y="3.5" width="1.6" height="4" rx="0.8" fill="#ef4444"/>
+                  <rect x="6.2" y="8.5" width="1.6" height="1.6" rx="0.8" fill="#ef4444"/>
+                </svg>
+                Vă rugăm completați corect dimensiunile înainte de a calcula.
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard num="02" label="Tip Sticlă">

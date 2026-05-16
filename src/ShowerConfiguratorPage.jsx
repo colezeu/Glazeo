@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { validateForm } from "./validation";
 import QuoteModal from "./QuoteModal.jsx";
 import ShowerPreview2D from "./ShowerPreview2D.jsx";
 
@@ -18,6 +19,7 @@ export default function ShowerConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [formTouched, setFormTouched] = useState(false);
 
   useEffect(() => {
     fetch("/catalog.json").then(r=>r.json())
@@ -26,10 +28,28 @@ export default function ShowerConfiguratorPage() {
   }, []);
 
   const p = product;
-  const isValid = dims.width && dims.depth && parseFloat(dims.width) > 0;
+
+  // Validare completă
+  const validation = validateForm({
+    width: dims.width,
+    depth: dims.depth,
+    height: dims.height,
+  });
+  const isValid = validation.valid;
+  const displayErrors = formTouched ? validation.errors : {};
 
   const calculate = async () => {
     if (!p) return;
+    setFormTouched(true);
+
+    const check = validateForm({ width: dims.width, depth: dims.depth, height: dims.height });
+    if (!check.valid) {
+      const firstErrorKey = Object.keys(check.errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
     setCalculating(true);
     await new Promise(r => setTimeout(r, 600));
     const w=parseFloat(dims.width)||0, d=parseFloat(dims.depth)||0, h=parseFloat(dims.height)||0;
@@ -60,11 +80,45 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num="01" label="Dimensiuni Cabină">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:16 }}>
-              <NumberInput label="Lățime (m)" value={dims.width} onChange={v=>setDims(d=>({...d,width:v}))} placeholder="Ex: 0.9" step="0.05" />
-              <NumberInput label="Adâncime (m)" value={dims.depth} onChange={v=>setDims(d=>({...d,depth:v}))} placeholder="Ex: 0.9" step="0.05" />
-              <SelectInput label="Înălțime" value={dims.height} onChange={v=>setDims(d=>({...d,height:v}))}
+              <div data-field="width">
+                <ValidatedNumberInput
+                  label="Lățime (m)"
+                  value={dims.width}
+                  onChange={v => { setDims(d => ({ ...d, width: v })); setFormTouched(true); }}
+                  placeholder="Ex: 0.9"
+                  step="0.05"
+                  fieldName="width"
+                  helperText="Min: 0.1m — Max: 20m"
+                />
+              </div>
+              <div data-field="depth">
+                <ValidatedNumberInput
+                  label="Adâncime (m)"
+                  value={dims.depth}
+                  onChange={v => { setDims(d => ({ ...d, depth: v })); setFormTouched(true); }}
+                  placeholder="Ex: 0.9"
+                  step="0.05"
+                  fieldName="depth"
+                  helperText="Min: 0.1m — Max: 20m"
+                />
+              </div>
+              <SelectInput label="Înălțime" value={dims.height} onChange={v => { setDims(d => ({ ...d, height: v })); setFormTouched(true); }}
                 options={[{value:"1.9",label:"1.9m"},{value:"2.0",label:"2.0m (standard)"},{value:"2.1",label:"2.1m"},{value:"2.2",label:"2.2m"}]} />
             </div>
+            {formTouched && !isValid && (
+              <div style={{
+                marginTop: 12, padding: "10px 14px", borderRadius: 10,
+                background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)",
+                fontSize: "0.8rem", color: "#ef4444", display: "flex", alignItems: "center", gap: 8
+              }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="7" r="6" stroke="#ef4444" strokeWidth="1.5"/>
+                  <rect x="6.2" y="3.5" width="1.6" height="4" rx="0.8" fill="#ef4444"/>
+                  <rect x="6.2" y="8.5" width="1.6" height="1.6" rx="0.8" fill="#ef4444"/>
+                </svg>
+                Vă rugăm completați corect dimensiunile înainte de a calcula.
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard num="02" label="Tip Cabină / Deschidere">
