@@ -80,6 +80,7 @@ export function NumberInput({ label, value, onChange, placeholder, step, min, ma
 
 export { ValidatedNumberInput } from "./ValidatedNumberInput";
 export { validateField, validateForm, ValidationRules } from "./validation";
+export { OptionCard, GlassPreviewSVG, HandrailPreviewSVG, HardwarePreviewSVG } from "./OptionPreviews";
 
 export function SelectInput({ label, value, onChange, options }) {
   return (
