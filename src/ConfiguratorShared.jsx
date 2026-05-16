@@ -16,7 +16,7 @@ export function ConfigHeader({ title, quote }) {
       {quote && (
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
           <span style={{ fontSize:"0.82rem", color:"rgba(240,237,232,0.4)" }}>Total estimat:</span>
-          <span style={{ fontSize:"1.1rem", fontWeight:700, color:"#c8a96e" }}>{quote.total}€</span>
+          <span style={{ fontSize:"1.1rem", fontWeight:700, color:"#c8a96e" }}>{formatPrice(quote.total)}</span>
         </div>
       )}
     </header>
@@ -121,13 +121,13 @@ export function QuoteSidebar({ quote, isFormValid, calculating, onCalculate, onR
           <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:20 }}>
             {(lines || []).map((l, i) => l && <QuoteLine key={i} {...l} />)}
             <div style={{ borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:10, marginTop:4 }}>
-              <QuoteLine label="Subtotal" value={`${quote.subtotal}€`} />
-              <QuoteLine label="TVA 19%" value={`${quote.vat}€`} muted />
+              <QuoteLine label="Subtotal" value={formatPrice(quote.subtotal)} />
+              <QuoteLine label="TVA" value={formatPrice(quote.vat)} muted />
             </div>
           </div>
           <div style={{ background:"rgba(200,169,110,0.08)", border:"1px solid rgba(200,169,110,0.2)", borderRadius:14, padding:"16px 20px", marginBottom:16, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
             <span style={{ fontSize:"0.85rem", fontWeight:600 }}>Total</span>
-            <span style={{ fontSize:"1.8rem", fontWeight:700, color:"#c8a96e" }}>{quote.total}€</span>
+            <span style={{ fontSize:"1.8rem", fontWeight:700, color:"#c8a96e" }}>{formatPrice(quote.total)}</span>
           </div>
           <button className="btn-primary" style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginBottom:10 }} onClick={onSolicita}>
             <Check size={16} /> Solicită Ofertă
@@ -225,4 +225,25 @@ export function calcQuote(subtotalRaw, vatRate) {
   const vat = Math.round(subtotalRaw * vatRate);
   const total = Math.round(subtotalRaw * (1 + vatRate));
   return { subtotal, vat, total };
+}
+
+/**
+ * Formatează un preț cu monedă și separatori de mii
+ * @param {number} amount - valoarea
+ * @param {string} currency - "EUR" sau "RON" (default: "EUR")
+ * @param {boolean} showSymbol - afișează simbolul monedei
+ */
+export function formatPrice(amount, currency = "EUR", showSymbol = true) {
+  const formatted = new Intl.NumberFormat("ro-RO", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+
+  if (!showSymbol) return formatted;
+
+  const symbols = { EUR: "€", RON: "Lei" };
+  const symbol = symbols[currency] || "€";
+
+  // EUR: simbol după, RON: simbol după
+  return `${formatted} ${symbol}`;
 }

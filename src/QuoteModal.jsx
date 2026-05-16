@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Send, Check, Loader2, FileText, Mail, Download } from "lucide-react";
 import { validateForm } from "./validation";
 import { generateQuotePDF, sendQuoteEmail } from "./quotePdf";
+import { formatPrice } from "./ConfiguratorShared";
 
 export default function QuoteModal({ isOpen, onClose, quote, productName, config }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
@@ -78,8 +79,8 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
         lines.push("");
       }
       if (quote) {
-        lines.push(`*Total estimat: ${quote.total}€*`);
-        lines.push(`(Subtotal: ${quote.subtotal}€ + TVA: ${quote.vat}€)`);
+        lines.push(`*Total estimat: ${formatPrice(quote.total)}*`);
+        lines.push(`(Subtotal: ${formatPrice(quote.subtotal)} + TVA: ${formatPrice(quote.vat)})`);
       }
       if (form.message) {
         lines.push("");
@@ -147,10 +148,10 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.85rem" }}>Total estimat</span>
-                  <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "#c8a96e" }}>{quote.total}€</span>
+                  <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "#c8a96e" }}>{formatPrice(quote.total)}</span>
                 </div>
                 <div style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.78rem", marginTop: 4 }}>
-                  Suprafață: {quote.area} m² · Subtotal: {quote.subtotal}€ + TVA {quote.vat}€
+                  Suprafață: {quote.area} m² · Subtotal: {formatPrice(quote.subtotal)} + TVA {formatPrice(quote.vat)}
                 </div>
               </div>
             )}
