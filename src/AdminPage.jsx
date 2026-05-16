@@ -1,197 +1,270 @@
-import { useState } from "react";
-import { Download, Lock, LogOut, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Save, Download, Upload, Lock, LogOut, Check, AlertTriangle } from "lucide-react";
 
-const PASSWORD = "glass2026";
+const API = "http://localhost:3001";
 
 export default function AdminPage() {
-  const [auth, setAuth] = useState(false);
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState(false);
-  const [openSection, setOpenSection] = useState(null);
-  const [catalog, setCatalog] = useState(null);
-  const [loaded, setLoaded] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [token, setToken] = useState(null);
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
 
-  const login = () => {
-  if (pass !== PASSWORD) {
-    setError(true);
-    setTimeout(() => setError(false), 2000);
-    return;
-  }
-  fetch("https://emergent-app-weld.vercel.app/catalog.json")
-    .then(r => r.json())
-    .then(d => {
-      setCatalog(d);
-      setLoaded(true);
-      setAuth(true);
-    })
-    .catch(err => {
-      alert("Eroare: " + err.message);
-    });
-};
-  
-  const exportJson = () => {
+  const [catalog, setCatalog] = useState(null);
+  const [status, setStatus] = useState({ type: "", msg: "" });
+  const [saving, setSaving] = useState(false);
+
+  // Verifică dacă există token salvat în localStorage
+  useEffect(() => {
+    const savedToken = localStorage.getItem("ga_admin_token");
+    if (savedToken) {
+      verifyToken(savedToken);
+    }
+  }, []);
+
+  const verifyToken = async (tok) => {
+    try {
+      const res = await fetch(`${API}/admin/verify`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${tok}` },
+      });
+      if (res.ok) {
+        setToken(tok);
+        setAuthenticated(true);
+        loadCatalog();
+      } else {
+        localStorage.removeItem("ga_admin_token");
+      }
+    } catch {
+      localStorage.removeItem("ga_admin_token");
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError("");
+    setLoginLoading(true);
+    try {
+      const res = await fetch(`${API}/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Parolă incorectă");
+      }
+      const data = await res.json();
+      localStorage.setItem("ga_admin_token", data.token);
+      setToken(data.token);
+      setAuthenticated(true);
+      loadCatalog();
+    } catch (err) {
+      setLoginError(err.message || "Eroare de conexiune la server");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API}/admin/logout`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch {}
+    localStorage.removeItem("ga_admin_token");
+    setToken(null);
+    setAuthenticated(false);
+    setPassword("");
+  };
+
+  const loadCatalog = async () => {
+    try {
+      const res = await fetch("/catalog.json");
+      const data = await res.json();
+      setCatalog(data);
+    } catch {
+      setStatus({ type: "error", msg: "Nu s-a putut încărca catalogul" });
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setStatus({ type: "", msg: "" });
+    try {
+      // Salvăm în localStorage ca backup (persistă între sesiuni)
+      localStorage.setItem("ga_catalog_backup", JSON.stringify(catalog, null, 2));
+      setStatus({ type: "success", msg: "Catalog salvat local (backup). Pe server, salvează fișierul descărcat peste catalog.json din repo." });
+    } catch {
+      setStatus({ type: "error", msg: "Eroare la salvare" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleExport = () => {
     const blob = new Blob([JSON.stringify(catalog, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "catalog.json"; a.click();
+    a.href = url;
+    a.download = "catalog.json";
+    a.click();
     URL.revokeObjectURL(url);
   };
 
-  const updatePrice = (productKey, path, value) => {
-    setCatalog(prev => {
-      const next = JSON.parse(JSON.stringify(prev));
-      const parts = path.split(".");
-      let obj = next.products[productKey];
-      for (let i = 0; i < parts.length - 1; i++) obj = obj[parts[i]];
-      obj[parts[parts.length - 1]] = parseFloat(value) || 0;
-      return next;
-    });
-  };
-
-  const updateVat = (value) => {
-    setCatalog(prev => ({ ...prev, vatRate: parseFloat(value) / 100 || 0 }));
-  };
-
-  const PRICE_KEYS = ["pricePerSqm", "pricePerMeter", "price", "pricePerUnit", "basePrice"];
-  const LABELS = { pricePerSqm:"Preț/m²", pricePerMeter:"Preț/m", price:"Preț fix", pricePerUnit:"Preț/buc", basePrice:"Preț de bază" };
-  const PRODUCT_NAMES = {
-    "balustrade": "Balustrade",
-    "cabine-dus": "Cabine Duș",
-    "inchidere-terasa": "Închidere Mobilă Terase",
-    "pergola-copertina": "Pergolă & Copertină",
-    "usi-batante": "Uși Batante",
-    "usi-culisante": "Uși Culisante",
-    "partitionari": "Partiționări",
-    "oglinzi": "Oglinzi"
-  };
-
-  const renderFields = (productKey, obj) => {
-    const results = [];
-    const traverse = (current, path) => {
-      if (typeof current !== "object" || current === null) return;
-      Object.entries(current).forEach(([key, val]) => {
-        const fullPath = path ? `${path}.${key}` : key;
-        if (typeof val === "number" && PRICE_KEYS.includes(key)) {
-          const parentPath = fullPath.split(".").slice(0, -1).join(".");
-          const parentObj = parentPath.split(".").reduce((o, k) => o?.[k], catalog.products[productKey]);
-          const parentName = parentObj?.name || parentPath.split(".").pop() || key;
-          results.push(
-            <div key={fullPath} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
-              <div>
-                <div style={{ fontSize:"0.85rem", color:"#f0ede8", fontWeight:500 }}>{parentName}</div>
-                <div style={{ fontSize:"0.75rem", color:"rgba(240,237,232,0.35)" }}>{LABELS[key] || key}</div>
-              </div>
-              <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <input
-                  type="number" step="1" value={val}
-                  onChange={e => updatePrice(productKey, fullPath, e.target.value)}
-                  style={{ width:90, background:"rgba(255,255,255,0.06)", border:"1.5px solid rgba(200,169,110,0.3)", borderRadius:8, padding:"6px 10px", color:"#c8a96e", fontWeight:700, fontSize:"0.95rem", textAlign:"right", outline:"none", fontFamily:"'DM Sans', sans-serif" }}
-                />
-                <span style={{ color:"rgba(240,237,232,0.4)", fontSize:"0.8rem" }}>€</span>
-              </div>
-            </div>
-          );
-        } else if (typeof val === "object" && val !== null) {
-          traverse(val, fullPath);
-        }
-      });
+  const handleImport = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        setCatalog(data);
+        setStatus({ type: "success", msg: "Catalog importat cu succes" });
+      } catch {
+        setStatus({ type: "error", msg: "Fișier JSON invalid" });
+      }
     };
-    traverse(obj, "");
-    return results;
+    reader.readAsText(file);
   };
 
-  if (!auth) {
+  const updatePrice = (category, subcategory, field, value) => {
+    if (!catalog) return;
+    const updated = { ...catalog };
+    if (updated[category]?.[subcategory]) {
+      updated[category][subcategory][field] = parseFloat(value) || 0;
+      setCatalog(updated);
+    }
+  };
+
+  // ─── LOGIN SCREEN ────────────────────────────────────────────
+  if (!authenticated) {
     return (
-      <div style={{ minHeight:"100vh", background:"#0f1117", display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(200,169,110,0.2)", borderRadius:20, padding:"48px 40px", width:360, textAlign:"center" }}>
-          <div style={{ width:48, height:48, borderRadius:"50%", background:"rgba(200,169,110,0.1)", border:"1px solid rgba(200,169,110,0.3)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px" }}>
-            <Lock size={20} color="#c8a96e" />
+      <div style={{ minHeight: "100vh", background: "#0f1117", display: "flex", alignItems: "center", justifyContent: "center", color: "#f0ede8" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "48px 40px", width: "100%", maxWidth: 420, backdropFilter: "blur(20px)" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(200,169,110,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+              <Lock size={24} color="#c8a96e" />
+            </div>
+            <h2 style={{ fontSize: "1.5rem", fontWeight: 600, fontFamily: "'DM Serif Display', serif" }}>Admin Glass Associates</h2>
+            <p style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.85rem", marginTop: 8 }}>Introduceți parola pentru a accesa panoul de administrare</p>
           </div>
-          <h2 style={{ fontFamily:"'DM Serif Display', serif", fontSize:"1.6rem", marginBottom:8, color:"#f0ede8" }}>Admin</h2>
-          <p style={{ color:"rgba(240,237,232,0.35)", fontSize:"0.85rem", marginBottom:28 }}>Glass Associates · Catalog Prețuri</p>
-          <input
-            className="input-field" type="password" placeholder="Parolă"
-            value={pass} onChange={e => setPass(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && login()}
-            style={{ marginBottom:12, textAlign:"center", border: error ? "1.5px solid rgba(255,80,80,0.6)" : undefined }}
-          />
-          {error && <p style={{ color:"rgba(255,80,80,0.8)", fontSize:"0.8rem", marginBottom:8 }}>Parolă incorectă</p>}
-          <button className="btn-primary" style={{ width:"100%" }} onClick={login}>Intră</button>
-        </div>
-      </div>
-    );
-  }
 
-  if (!loaded) {
-    return (
-      <div style={{ minHeight:"100vh", background:"#0f1117", display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ color:"#c8a96e" }}>Se încarcă catalogul...</div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-      <header style={{ background:"rgba(15,17,23,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 32px", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:40 }}>
-        <div>
-          <div style={{ fontWeight:700, fontSize:"0.95rem" }}>Admin · Catalog Prețuri</div>
-          <div style={{ fontSize:"0.73rem", color:"rgba(240,237,232,0.35)" }}>Glass Associates</div>
-        </div>
-        <div style={{ display:"flex", gap:10 }}>
-          <button className="btn-primary" style={{ display:"flex", alignItems:"center", gap:8 }} onClick={exportJson}>
-            <Download size={15} /> Export catalog.json
-          </button>
-          <button className="btn-ghost" style={{ display:"flex", alignItems:"center", gap:8 }} onClick={() => { setAuth(false); setLoaded(false); setCatalog(null); }}>
-            <LogOut size={15} /> Ieși
-          </button>
-        </div>
-      </header>
-
-      <main style={{ maxWidth:800, margin:"0 auto", padding:"32px 24px" }}>
-        <div style={{ background:"rgba(200,169,110,0.08)", border:"1px solid rgba(200,169,110,0.2)", borderRadius:16, padding:"20px 24px", marginBottom:24, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <div>
-            <div style={{ fontWeight:700 }}>Cotă TVA</div>
-            <div style={{ fontSize:"0.78rem", color:"rgba(240,237,232,0.4)" }}>Aplicată la toate produsele</div>
-          </div>
-          <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-            <input
-              type="number" step="1"
-              value={Math.round(catalog.vatRate * 100)}
-              onChange={e => updateVat(e.target.value)}
-              style={{ width:70, background:"rgba(255,255,255,0.06)", border:"1.5px solid rgba(200,169,110,0.3)", borderRadius:8, padding:"6px 10px", color:"#c8a96e", fontWeight:700, fontSize:"0.95rem", textAlign:"right", outline:"none", fontFamily:"'DM Sans', sans-serif" }}
-            />
-            <span style={{ color:"rgba(240,237,232,0.4)", fontSize:"0.8rem" }}>%</span>
-          </div>
-        </div>
-
-        <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-          {Object.entries(catalog.products).map(([key, product]) => (
-            <div key={key} className="glass-card" style={{ borderRadius:16, overflow:"hidden" }}>
-              <button
-                onClick={() => setOpenSection(openSection === key ? null : key)}
-                style={{ width:"100%", background:"none", border:"none", padding:"18px 20px", display:"flex", justifyContent:"space-between", alignItems:"center", cursor:"pointer", color:"#f0ede8" }}
-              >
-                <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                  <div style={{ width:8, height:8, borderRadius:"50%", background:"#c8a96e" }} />
-                  <span style={{ fontWeight:700, fontSize:"1rem" }}>{PRODUCT_NAMES[key] || product.name}</span>
-                </div>
-                {openSection === key ? <ChevronUp size={18} color="#c8a96e" /> : <ChevronDown size={18} color="rgba(240,237,232,0.4)" />}
-              </button>
-              {openSection === key && (
-                <div style={{ borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-                  {renderFields(key, product)}
-                </div>
+          <form onSubmit={handleLogin}>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: "block", fontSize: "0.8rem", color: "rgba(240,237,232,0.5)", marginBottom: 8 }}>Parolă</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                autoFocus
+                style={{
+                  width: "100%", padding: "12px 16px", borderRadius: 12,
+                  border: loginError ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.05)", color: "#f0ede8", fontSize: "0.95rem",
+                  outline: "none", boxSizing: "border-box"
+                }}
+              />
+              {loginError && (
+                <p style={{ color: "#ef4444", fontSize: "0.78rem", marginTop: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                  <AlertTriangle size={12} /> {loginError}
+                </p>
               )}
             </div>
-          ))}
+            <button
+              type="submit"
+              disabled={loginLoading || !password}
+              style={{
+                width: "100%", padding: "14px", borderRadius: 12, border: "none",
+                background: loginLoading || !password ? "rgba(200,169,110,0.3)" : "#c8a96e",
+                color: "#0f1117", fontWeight: 700, fontSize: "0.95rem", cursor: loginLoading || !password ? "not-allowed" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+              }}
+            >
+              {loginLoading ? "Se verifică..." : <>Autentificare <Lock size={14} /></>}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── ADMIN PANEL ─────────────────────────────────────────────
+  if (!catalog) return <div style={{ color: "#f0ede8", padding: 40 }}>Se încarcă catalogul...</div>;
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8", padding: "32px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+          <div>
+            <h1 style={{ fontSize: "1.8rem", fontWeight: 700 }}>Admin Catalog</h1>
+            <p style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.85rem", marginTop: 4 }}>Editați prețurile din catalog</p>
+          </div>
+          <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(240,237,232,0.5)", cursor: "pointer", fontSize: "0.82rem" }}>
+            <LogOut size={14} /> Deconectare
+          </button>
         </div>
 
-        <div style={{ marginTop:32, padding:"20px 24px", background:"rgba(255,255,255,0.02)", borderRadius:16, border:"1px solid rgba(255,255,255,0.07)" }}>
-          <p style={{ fontSize:"0.82rem", color:"rgba(240,237,232,0.35)", lineHeight:1.7, margin:0 }}>
-            <strong style={{ color:"rgba(240,237,232,0.6)" }}>Cum funcționează:</strong> Modifică prețurile → apasă <strong style={{ color:"#c8a96e" }}>Export catalog.json</strong> → înlocuiește fișierul <code style={{ color:"#c8a96e" }}>public/catalog.json</code> pe GitHub → Vercel face deploy automat.
-          </p>
+        {/* Status */}
+        {status.msg && (
+          <div style={{
+            padding: "12px 20px", borderRadius: 12, marginBottom: 24, fontSize: "0.85rem",
+            background: status.type === "success" ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
+            border: `1px solid ${status.type === "success" ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,
+            color: status.type === "success" ? "#22c55e" : "#ef4444",
+            display: "flex", alignItems: "center", gap: 8
+          }}>
+            {status.type === "success" ? <Check size={14} /> : <AlertTriangle size={14} />}
+            {status.msg}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
+          <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Save size={14} /> {saving ? "Se salvează..." : "Salvează"}
+          </button>
+          <button onClick={handleExport} className="btn-ghost" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Download size={14} /> Export JSON
+          </button>
+          <label className="btn-ghost" style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+            <Upload size={14} /> Import JSON
+            <input type="file" accept=".json" onChange={handleImport} style={{ display: "none" }} />
+          </label>
         </div>
-      </main>
+
+        {/* Catalog sections */}
+        {Object.entries(catalog).map(([catKey, catVal]) => (
+          <div key={catKey} style={{ marginBottom: 40, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "24px" }}>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 20, color: "#c8a96e", textTransform: "uppercase", letterSpacing: "0.05em" }}>{catKey}</h2>
+            {Object.entries(catVal).map(([subKey, subVal]) => (
+              <div key={subKey} style={{ marginBottom: 24, paddingBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: 12 }}>{subKey}</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+                  {Object.entries(subVal).map(([field, val]) => (
+                    <div key={field}>
+                      <label style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", display: "block", marginBottom: 4 }}>{field}</label>
+                      <input
+                        type="number"
+                        value={val}
+                        onChange={(e) => updatePrice(catKey, subKey, field, e.target.value)}
+                        style={{
+                          width: "100%", padding: "8px 12px", borderRadius: 8,
+                          border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)",
+                          color: "#f0ede8", fontSize: "0.85rem", outline: "none", boxSizing: "border-box"
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
