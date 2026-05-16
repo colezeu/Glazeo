@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote } from "./ConfiguratorShared.jsx";
 import { validateForm } from "./validation";
 import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal.jsx";
@@ -28,21 +28,34 @@ export default function BalustradeConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const { length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed } = config;
 
-  useEffect(() => {
-    fetch("/catalog.json").then(r => r.json())
+  const loadCatalog = () => {
+    setLoadError(false);
+    fetch("/catalog.json")
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(d => {
         setProduct(d.products.balustrade);
         setVatRate(d.vatRate);
         const firstGlass = Object.keys(d.products.balustrade.glassTypes)[0];
         setConfig(c => ({ ...c, glassType: firstGlass }));
       })
-      .catch(() => setProduct(FALLBACK));
-  }, []);
+      .catch(() => {
+        setProduct(FALLBACK);
+        setLoadError(true);
+      });
+  };
+
+  useEffect(() => { loadCatalog(); }, []);
+
+  // Error state
+  if (loadError && !product) {
+    return <ErrorBanner message="Nu s-a putut încărca catalogul de produse." onRetry={loadCatalog} onBack />;
+  }
 
   const p = product;
   const showProfileShape = hardware === "profil-pardoseala";

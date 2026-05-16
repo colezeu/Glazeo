@@ -143,8 +143,59 @@ export function QuoteSidebar({ quote, isFormValid, calculating, onCalculate, onR
 
 export function PageLoader() {
   return (
-    <div style={{ minHeight:"100vh", background:"#0f1117", display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <Loader2 size={32} color="#c8a96e" className="animate-spin" />
+    <div style={{
+      minHeight: "100vh", background: "#0f1117",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      gap: 16
+    }}>
+      <div style={{
+        width: 48, height: 48, borderRadius: "50%",
+        border: "2px solid rgba(200,169,110,0.2)",
+        borderTopColor: "#c8a96e",
+        animation: "spin 0.8s linear infinite",
+      }} />
+      <span style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.85rem" }}>Se încarcă configuratorul...</span>
+    </div>
+  );
+}
+
+export function ErrorBanner({ message, onRetry, onBack }) {
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#0f1117",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "32px 24px", color: "#f0ede8"
+    }}>
+      <div style={{ textAlign: "center", maxWidth: 420 }}>
+        <div style={{
+          width: 56, height: 56, borderRadius: "50%",
+          background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 20px"
+        }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <h3 style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: 8 }}>Eroare de încărcare</h3>
+        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: "0.88rem", marginBottom: 24, lineHeight: 1.6 }}>
+          {message || "Nu s-a putut încărca catalogul de produse. Verificați conexiunea la internet."}
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          {onRetry && (
+            <button onClick={onRetry} className="btn-primary" style={{ padding: "10px 24px", fontSize: "0.85rem" }}>
+              🔄 Încearcă din nou
+            </button>
+          )}
+          {onBack && (
+            <a href="/"><button className="btn-ghost" style={{ padding: "10px 24px", fontSize: "0.85rem" }}>
+              ← Înapoi la Homepage
+            </button></a>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
