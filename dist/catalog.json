@@ -1,0 +1,198 @@
+{
+  "vatRate": 0.21,
+  "products": {
+    "balustrade": {
+      "name": "Balustrade",
+      "basePrice": 100,
+      "glassShapes": {
+        "dreapta": { "name": "Sticlă Dreaptă (dreptunghiulară)", "desc": "Panou drept, standard", "taxaForma": 0 },
+        "forma":   { "name": "Sticlă Formă (pe rampă)", "desc": "Tăiată pe unghi", "taxaForma": 45 }
+      },
+      "hardwareTypes": {
+        "butoni":            { "name": "Cu Butoni Inox",    "pricePerMeter": 85, "desc": "Puncte de fixare, design minimalist" },
+        "mini-montanti":     { "name": "Cu Mini-Montanți",  "pricePerMeter": 78, "desc": "Montanți intermediari inox" },
+        "profil-pardoseala": { "name": "Profil Pardoseală", "pricePerMeter": 50, "desc": "Canal montat pe pardoseală" }
+      },
+      "profileShapes": {
+        "U": { "name": "Formă U", "pricePerMeter": 0   },
+        "Y": { "name": "Formă Y", "pricePerMeter": 108 },
+        "L": { "name": "Formă L", "pricePerMeter": 99  }
+      },
+      "glassTypes": {
+        "662mm": { "name": "Sticlă Securizată/Laminată 662 (13mm)", "pricePerSqm": 84, "desc": "Laminat 66.2, ideal interior rezidențial" },
+        "882mm": { "name": "Sticlă Securizată/Laminată 882 (17mm)", "pricePerSqm": 98, "desc": "Standard exterior, rezistență ridicată" }
+      },
+      "options": {
+        "handrail-structurala": { "name": "Mână Curentă Structurală Aluminiu", "pricePerMeter": 85, "desc": "Profil aluminiu structural, rezistență maximă" },
+        "handrail-rotunda":     { "name": "Mână Curentă Rotundă Inox",         "pricePerMeter": 45, "desc": "Rotundă Ø42.4mm, șlefuită satinat" },
+        "handrail-patrata":     { "name": "Mână Curentă Pătrată Inox",         "pricePerMeter": 55, "desc": "Profil pătrat 40x40mm, aspect modern" },
+        "handrail-slim":        { "name": "Mână Curentă Slim Aluminiu",        "pricePerMeter": 65, "desc": "Profil slim 18x12mm, design minimalist" },
+        "led":                  { "name": "Iluminare LED Integrată",           "price": 250,        "desc": "Bandă LED 3000K în mâna curentă" }
+      }
+    },
+    "cabine-dus": {
+      "name": "Cabine Duș",
+      "basePrice": 80,
+      "enclosureTypes": {
+        "paravan-fix-profil":   { "name": "Paravan Fix cu Profil",              "price": 0,   "desc": "Fix, cu profil perete/jos" },
+        "paravan-fix-punctual": { "name": "Paravan Fix cu Prinderi Fixe",       "price": 50,  "desc": "Fix, prinderi punctuale" },
+        "paravan-mobil":        { "name": "Paravan Mobil (evantai)",            "price": 180, "desc": "Se pliază în evantai" },
+        "usa-batanta":          { "name": "Ușă Batantă",                        "price": 200, "desc": "Deschidere 180°, balamale prinse pe perete" },
+        "usa-culisanta-vedere": { "name": "Ușă Culisantă cu Glisori la Vedere", "price": 300, "desc": "Sistem clasic vizibil" },
+        "usa-culisanta-sina":   { "name": "Ușă Culisantă cu Glisori în Șină",  "price": 380, "desc": "Cărucioare ascunse, soft-close" }
+      },
+      "glassTypes": {
+        "8mm":  { "name": "Sticlă Securizată 8mm",  "pricePerSqm": 130, "desc": "Rezistentă la șocuri termice" },
+        "10mm": { "name": "Sticlă Securizată 10mm", "pricePerSqm": 170, "desc": "Robustețe sporită" }
+      },
+      "treatments": {
+        "clear":  { "name": "Transparentă",           "pricePerSqm": 0,  "desc": "Sticlă clară standard" },
+        "frosted":{ "name": "Satinată (Opacă)",        "pricePerSqm": 25, "desc": "Intimitate totală, aspect mat" },
+        "nano":   { "name": "Tratament Nano Anti-Calcar","pricePerSqm": 35, "desc": "Respinge mizeria și calcarul" }
+      },
+      "options": {
+        "towelBar": { "name": "Port Prosop Integrat", "price": 45,  "desc": "Inox satinat, capacitate 5kg" },
+        "seat":     { "name": "Scaun Rabatabil",       "price": 85,  "desc": "Teak tratat, 120kg capacitate" },
+        "led":      { "name": "Iluminare LED",         "price": 120, "desc": "Profil luminos impermeabil IP67" }
+      }
+    },
+    "inchidere-terasa": {
+      "name": "Închidere Mobilă Terase / Balcoane",
+      "basePrice": 150,
+      "systemTypes": {
+        "multitrack": { "name": "Multitrack", "pricePerSqm": 380, "desc": "Panouri culisante pe șine multiple, stivuire suprapusă" },
+        "frameless":  { "name": "Frameless",  "pricePerSqm": 450, "desc": "Sticlă full-glass fără profile, stivuire pe perete" },
+        "ghilotina":  { "name": "Ghilotină",  "pricePerSqm": 420, "desc": "Panouri culisante vertical" }
+      },
+      "glassTypes": {
+        "8mm":  { "name": "Securit 8mm Clar",  "pricePerSqm": 140, "desc": "Standard rezidențial" },
+        "10mm": { "name": "Securit 10mm",       "pricePerSqm": 185, "desc": "Rezistență sporită, vânt puternic" },
+        "dgu":  { "name": "Termoizolant DGU",   "pricePerSqm": 320, "desc": "Izolare termică și fonică" }
+      },
+      "options": {
+        "blocator":    { "name": "Blocator Interior", "price": 65,  "desc": "Blocare panou în poziție deschis" },
+        "incuietoare": { "name": "Încuietoare Cheie", "price": 95,  "desc": "Cilindru de siguranță" },
+        "profile-lat": { "name": "Profile Laterale",  "price": 120, "desc": "Profile de etanșare laterale" }
+      }
+    },
+    "pergola-copertina": {
+      "name": "Pergolă & Copertină",
+      "basePrice": 300,
+      "typeCategories": {
+        "pergola-bioclimatica": { "name": "Pergolă Bioclimatică",       "pricePerSqm": 650, "desc": "Lamele orientabile, ventilație controlată" },
+        "pergola-sticla":       { "name": "Pergolă Acoperiș Sticlă",    "pricePerSqm": 580, "desc": "Panouri de sticlă culisante sau fixe" },
+        "pergola-sandwich":     { "name": "Pergolă Panou Sandwich",     "pricePerSqm": 420, "desc": "Panou termoizolant opac" },
+        "copertina-tiranti":    { "name": "Copertină cu Tiranți",       "pricePerSqm": 380, "desc": "Structură susținută cu tiranți din inox" },
+        "copertina-fara":       { "name": "Copertină fără Tiranți",     "pricePerSqm": 350, "desc": "Consolă, fără suport vizibil" },
+        "copertina-spider":     { "name": "Copertină pe Suport Spider", "pricePerSqm": 490, "desc": "Prinderi punctuale spider, aspect minimal" }
+      },
+      "glassTypes": {
+        "clear":  { "name": "Sticlă Clară",      "pricePerSqm": 0,  "desc": "Lumină maximă" },
+        "solar":  { "name": "Control Solar",      "pricePerSqm": 85, "desc": "Reduce căldura, coeficient g=0.35" },
+        "frosted":{ "name": "Sablată / Satinată", "pricePerSqm": 45, "desc": "Intimitate, difuzie lumină" }
+      },
+      "options": {
+        "led":         { "name": "Iluminare LED",        "pricePerMeter": 55,  "desc": "Bandă LED integrată în profil" },
+        "dezghetare":  { "name": "Dezghețare Electrică", "pricePerSqm": 95,    "desc": "Rezistențe în sticlă, anti-îngheț" },
+        "mobilier":    { "name": "Mobilier Pergolă",     "price": 1200,        "desc": "Set mobilier rezistent UV" },
+        "panouri-lat": { "name": "Panouri Laterale",     "pricePerSqm": 280,   "desc": "Închideri laterale suplimentare" }
+      }
+    },
+    "usi-batante": {
+      "name": "Uși Batante",
+      "basePrice": 120,
+      "doorConfigs": {
+        "simpla": { "name": "Simplă",                    "pricePerUnit": 0,   "desc": "Un canat, standard" },
+        "pe-toc": { "name": "Cu Închidere pe Toc",       "pricePerUnit": 150, "desc": "Închidere precisă, etanșare sporită" },
+        "fono":   { "name": "Cu Izolație Fonică Ridicată","pricePerUnit": 350, "desc": "Garnituri multiple, Rw≥42dB" }
+      },
+      "closerTypes": {
+        "balama":    { "name": "Balamale Standard",   "pricePerUnit": 0,  "desc": "Balamale inox reglabile" },
+        "hidraulic": { "name": "Amortizor Hidraulic", "pricePerUnit": 95, "desc": "Soft-close, reglabil" }
+      },
+      "glassTypes": {
+        "10mm":   { "name": "Securit 10mm Clar", "pricePerSqm": 220, "desc": "Standard, rezistență bună" },
+        "12mm":   { "name": "Securit 12mm",       "pricePerSqm": 280, "desc": "Greutate și rezistență sporită" },
+        "frosted":{ "name": "Securit Sablat",     "pricePerSqm": 310, "desc": "Confidențialitate, design sofisticat" }
+      },
+      "options": {
+        "manere":      { "name": "Mânere Inox Premium",  "price": 120, "desc": "Push-pull, diverse finisaje" },
+        "incuietoare": { "name": "Încuietoare Magnetică", "price": 180, "desc": "Blocare automată la închidere" },
+        "blocator":    { "name": "Blocator Interior",     "price": 65,  "desc": "Blocare din interior" },
+        "caroiaj":     { "name": "Profile Caroiaj",       "pricePerSqm": 35, "desc": "Grilaj decorativ pe sticlă" }
+      }
+    },
+    "usi-culisante": {
+      "name": "Uși Culisante",
+      "basePrice": 150,
+      "mountTypes": {
+        "perete":  { "name": "Prindere pe Perete",      "pricePerUnit": 0,   "desc": "Șină montată pe perete" },
+        "tavan":   { "name": "Prindere pe Tavan",       "pricePerUnit": 80,  "desc": "Șină ascunsă în tavan" },
+        "sincron": { "name": "Sincron (fără șină jos)", "pricePerUnit": 220, "desc": "Fără ghidaj la pardoseală" }
+      },
+      "panelTypes": {
+        "panou-fix": { "name": "Cu Panou Fix",   "pricePerUnit": 0,   "desc": "Panou lateral fix + ușă culisantă" },
+        "fara-fix":  { "name": "Fără Panou Fix", "pricePerUnit": 0,   "desc": "Doar ușă culisantă" },
+        "buzunar":   { "name": "Cu Buzunar",     "pricePerUnit": 280, "desc": "Ușa dispare în perete" }
+      },
+      "glassTypes": {
+        "10mm":   { "name": "Securit 10mm Clar", "pricePerSqm": 220, "desc": "Standard rezidențial" },
+        "12mm":   { "name": "Securit 12mm",       "pricePerSqm": 280, "desc": "Ușă mare / grea" },
+        "frosted":{ "name": "Securit Sablat",     "pricePerSqm": 310, "desc": "Confidențialitate" }
+      },
+      "options": {
+        "manere":      { "name": "Mânere Inox",    "price": 95,  "desc": "Mâner îngropat sau aplicat" },
+        "incuietoare": { "name": "Încuietoare",    "price": 150, "desc": "Cilindru sau magnetic" },
+        "caroiaj":     { "name": "Profile Caroiaj","pricePerSqm": 35, "desc": "Grilaj decorativ" }
+      }
+    },
+    "partitionari": {
+      "name": "Partiționări",
+      "basePrice": 100,
+      "systemTypes": {
+        "simpla": { "name": "Simplă (fără profile)",       "pricePerSqm": 280, "desc": "Panouri fixe, prinderi punctuale" },
+        "profil": { "name": "Cu Profile (caroiaj)",        "pricePerSqm": 350, "desc": "Profile aluminiu, aspect industrial" },
+        "fono":   { "name": "Cu Izolație Fonică Ridicată", "pricePerSqm": 480, "desc": "Geam laminat acustic, Rw≥45dB" }
+      },
+      "glassTypes": {
+        "8mm":             { "name": "Securit 8mm",          "pricePerSqm": 130, "desc": "Partiție interior standard" },
+        "10mm":            { "name": "Securit 10mm",          "pricePerSqm": 170, "desc": "Rezistență sporită" },
+        "frosted":         { "name": "Sablat / Imprimat",     "pricePerSqm": 210, "desc": "Confidențialitate parțială sau totală" },
+        "laminat-acustic": { "name": "Laminat Acustic 10.4", "pricePerSqm": 260, "desc": "PVB acustic, atenuare fonică maximă" }
+      },
+      "options": {
+        "usa-batanta":   { "name": "Ușă Batantă Inclusă",   "price": 550, "desc": "Ușă din același sistem, cu balamale" },
+        "usa-culisanta": { "name": "Ușă Culisantă Inclusă", "price": 750, "desc": "Ușă culisantă integrată în partiție" },
+        "caroiaj":       { "name": "Profile Caroiaj",       "pricePerSqm": 35, "desc": "Grilaj decorativ" }
+      }
+    },
+    "oglinzi": {
+      "name": "Oglinzi",
+      "basePrice": 30,
+      "mirrorTypes": {
+        "clara":      { "name": "Oglindă Clară",       "pricePerSqm": 80,  "desc": "Reflexie perfectă, standard" },
+        "bronze":     { "name": "Oglindă Bronze",      "pricePerSqm": 95,  "desc": "Nuanță caldă, elegantă" },
+        "gri":        { "name": "Oglindă Gri (Fumée)", "pricePerSqm": 95,  "desc": "Ton neutru, modern" },
+        "antichizata":{ "name": "Oglindă Antichizată", "pricePerSqm": 120, "desc": "Efect vintage, patină artistică" }
+      },
+      "shapes": {
+        "dreptunghi": { "name": "Dreptunghi / Pătrat", "price": 0,  "desc": "Formă standard" },
+        "rotund":     { "name": "Rotund",               "price": 25, "desc": "Tăiere circulară" },
+        "oval":       { "name": "Oval",                 "price": 30, "desc": "Formă eliptică" },
+        "custom":     { "name": "Formă Specială",       "price": 60, "desc": "Contur personalizat la comandă" }
+      },
+      "thicknesses": {
+        "4mm": { "name": "4mm", "pricePerSqm": 0,  "desc": "Standard rezidențial" },
+        "6mm": { "name": "6mm", "pricePerSqm": 25, "desc": "Robustețe sporită, dimensiuni mari" }
+      },
+      "edges": {
+        "slefuit":  { "name": "Șlefuire Simplă",    "pricePerMeter": 8,  "desc": "Margini finisate, fără tăișuri" },
+        "fazetat":  { "name": "Fazetare (bizou)",    "pricePerMeter": 18, "desc": "Bizou decorativ 15-25mm" }
+      },
+      "options": {
+        "led":         { "name": "Iluminare LED Perimetrală", "price": 120, "desc": "Bandă LED 4000K, efect premium" },
+        "antiaburire": { "name": "Folie Anti-Aburire",        "price": 65,  "desc": "Dezaburire electrică, ideal băi" }
+      }
+    }
+  }
+}
