@@ -44,18 +44,14 @@ export default function BalustradeConfiguratorPage() {
         const firstGlass = Object.keys(d.products.balustrade.glassTypes)[0];
         setConfig(c => ({ ...c, glassType: firstGlass }));
       })
-      .catch(() => {
-        setProduct(FALLBACK);
-        setLoadError(true);
-      });
   };
 
   useEffect(() => { loadCatalog(); }, []);
 
   // Error state
-  if (loadError && !product) {
-    return <ErrorBanner message="Nu s-a putut încărca catalogul de produse." onRetry={loadCatalog} onBack />;
-  }
+ if (loadError) {
+  console.warn("Catalog load failed, using fallback");
+}
 
   const p = product;
   const showProfileShape = hardware === "profil-pardoseala";
