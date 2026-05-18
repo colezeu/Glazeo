@@ -24,7 +24,7 @@ export default function BalustradeConfiguratorPage() {
   const [handrail, setHandrail] = useState("none");
   const [includeLed, setIncludeLed] = useState(false);
   const [calculating, setCalculating] = useState(false);
-  const [quote, setQuote] = useState(null);
+  const [, set] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -62,8 +62,8 @@ export default function BalustradeConfiguratorPage() {
     const handrailP  = handrail !== "none" ? len * (p.options[handrail]?.pricePerMeter || 0) : 0;
     const ledP       = includeLed ? (p.options.led?.price || 0) : 0;
     const raw = p.basePrice + hwPrice + profExtra + glassPrice + taxaForma + handrailP + ledP;
-    const { subtotal, vat, total } = calcQuote(raw, vatRate);
-    setQuote({ area:area.toFixed(2), hwPrice:Math.round(hwPrice+profExtra), glassPrice:Math.round(glassPrice), taxaForma:Math.round(taxaForma), handrailP:Math.round(handrailP), ledP, subtotal, vat, total });
+    const { subtotal, vat, total } = calc(raw, vatRate);
+    set({ area:area.toFixed(2), hwPrice:Math.round(hwPrice+profExtra), glassPrice:Math.round(glassPrice), taxaForma:Math.round(taxaForma), handrailP:Math.round(handrailP), ledP, subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -76,7 +76,7 @@ export default function BalustradeConfiguratorPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Balustradă Sticlă" />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Balustradă Sticlă" config={{ length: dims.length, height: dims.height, glassShape, hardware, profileShape, glassType, handrail, includeLed }} />
       <ConfigHeader title="Configurator Balustrade" quote={quote} />
       <main style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
