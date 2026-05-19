@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bot, User, Send, Loader2, AlertTriangle, Wifi, WifiOff } from "lucide-react";
+import { apiUrl } from "./api";
 
-const API = "http://localhost:3001";
 const AI_TIMEOUT = 15000; // 15 secunde timeout
 
 export default function AIConsultant({ productType, currentConfig, onApplyPrefill }) {
@@ -23,7 +23,7 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
   useEffect(() => {
     const checkAI = async () => {
       try {
-        const res = await fetch(`${API}/ai-consultant`, {
+        const res = await fetch(apiUrl("/ai-consultant"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ productType, message: "ping", currentConfig: {} }),
@@ -62,7 +62,7 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
     }, AI_TIMEOUT);
 
     try {
-      const res = await fetch(`${API}/ai-consultant`, {
+      const res = await fetch(apiUrl("/ai-consultant"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

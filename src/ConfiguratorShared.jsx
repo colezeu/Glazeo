@@ -10,7 +10,7 @@ export function ConfigHeader({ title, quote }) {
         </Link>
         <div>
           <div style={{ fontWeight:700, fontSize:"0.95rem" }}>{title}</div>
-          <div style={{ fontSize:"0.73rem", color:"rgba(240,237,232,0.35)" }}>Glass Associates</div>
+          <img src="/logo.png" alt="Glass Associates" style={{ height:18, maxWidth:170, objectFit:"contain", filter:"invert(1)", opacity:0.5, marginTop:4 }} />
         </div>
       </div>
       {quote && (

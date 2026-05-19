@@ -1,5 +1,29 @@
 import { useState, useEffect, useCallback } from "react";
 
+function coerceValue(rawValue, defaultValue) {
+  if (typeof defaultValue === "boolean") {
+    if (rawValue === true || rawValue === "true") return true;
+    if (rawValue === false || rawValue === "false") return false;
+  }
+
+  if (typeof defaultValue === "number") {
+    const num = Number(rawValue);
+    return Number.isFinite(num) ? num : defaultValue;
+  }
+
+  return rawValue;
+}
+
+function normalizeConfig(source, defaultConfig) {
+  const normalized = { ...defaultConfig };
+
+  for (const [key, value] of Object.entries(source || {})) {
+    normalized[key] = coerceValue(value, defaultConfig[key]);
+  }
+
+  return normalized;
+}
+
 /**
  * Hook pentru salvarea/restaurarea configurației din localStorage + URL params
  * @param {string} key - cheia unică pentru localStorage (ex: "balustrade-config")
@@ -9,6 +33,10 @@ import { useState, useEffect, useCallback } from "react";
 export function usePersistedConfig(key, defaultConfig) {
   // Încearcă să restaureze din URL params, apoi localStorage, apoi default
   const [config, setConfigState] = useState(() => {
+    if (typeof window === "undefined") {
+      return defaultConfig;
+    }
+
     // 1. Încearcă URL params
     const params = new URLSearchParams(window.location.search);
     const urlConfig = {};
@@ -20,14 +48,14 @@ export function usePersistedConfig(key, defaultConfig) {
       }
     }
     if (hasUrlParams) {
-      return { ...defaultConfig, ...urlConfig };
+      return normalizeConfig(urlConfig, defaultConfig);
     }
 
     // 2. Încearcă localStorage
     try {
       const saved = localStorage.getItem(`ga_${key}`);
       if (saved) {
-        return { ...defaultConfig, ...JSON.parse(saved) };
+        return normalizeConfig(JSON.parse(saved), defaultConfig);
       }
     } catch {}
 
@@ -45,7 +73,13 @@ export function usePersistedConfig(key, defaultConfig) {
   // Actualizează URL-ul cu configurația curentă
   const setConfig = useCallback((updater) => {
     setConfigState(prev => {
-      const next = typeof updater === "function" ? updater(prev) : { ...prev, ...updater };
+      const nextRaw = typeof updater === "function" ? updater(prev) : { ...prev, ...updater };
+      const next = normalizeConfig(nextRaw, defaultConfig);
+
+      if (typeof window === "undefined") {
+        return next;
+      }
+
       // Update URL without reload
       const params = new URLSearchParams();
       Object.entries(next).forEach(([k, v]) => {
@@ -62,8 +96,10 @@ export function usePersistedConfig(key, defaultConfig) {
   // Resetare la default
   const resetConfig = useCallback(() => {
     setConfigState(defaultConfig);
-    localStorage.removeItem(`ga_${key}`);
-    window.history.replaceState(null, "", window.location.pathname);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(`ga_${key}`);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   }, [key, defaultConfig]);
 
   return [config, setConfig, resetConfig];
@@ -73,6 +109,7 @@ export function usePersistedConfig(key, defaultConfig) {
  * Generează un URL shareable cu configurația curentă
  */
 export function getShareableUrl(config) {
+  if (typeof window === "undefined") return "";
   const params = new URLSearchParams();
   Object.entries(config).forEach(([k, v]) => {
     if (v !== "" && v !== null && v !== undefined) {

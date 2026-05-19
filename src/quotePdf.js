@@ -1,3 +1,45 @@
+import { apiUrl } from "./api";
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
+}
+
+function createQuoteEmail({ productName, quote, config, clientInfo }) {
+  const lines = [
+    `Client: ${clientInfo?.name || "-"}`,
+    clientInfo?.email ? `Email: ${clientInfo.email}` : null,
+    clientInfo?.phone ? `Telefon: ${clientInfo.phone}` : null,
+    "",
+    `Produs: ${productName}`,
+    quote?.total ? `Total estimat: ${quote.total} EUR` : null,
+    quote?.subtotal ? `Subtotal: ${quote.subtotal} EUR` : null,
+    quote?.vat ? `TVA: ${quote.vat} EUR` : null,
+    "",
+    "Configuratie:",
+    ...Object.entries(config || {}).map(([key, value]) => `${key}: ${value}`),
+    clientInfo?.message ? "" : null,
+    clientInfo?.message ? `Mesaj: ${clientInfo.message}` : null,
+  ].filter(line => line !== null);
+
+  return {
+    subject: `Cerere oferta - ${productName}`,
+    body: lines.join("\n"),
+  };
+}
+
+function openMailFallback(payload) {
+  const { subject, body } = createQuoteEmail(payload);
+  const params = new URLSearchParams({ subject, body });
+  window.location.href = `mailto:office@glassassociates.ro?${params.toString()}`;
+  return { ok: true, fallback: "mailto" };
+}
+
 /**
  * Generare PDF ofertă - client side, fără dependențe externe
  * Creează un HTML frumos și deschide print dialog
@@ -39,17 +81,19 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
     if (quote.seatP) lines.push({ label: "Scaun", value: `${quote.seatP}€` });
   }
 
+  const safeProductName = escapeHtml(productName);
+  const logoUrl = `${window.location.origin}/logo.png`;
   const html = `
 <!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <title>Ofertă ${productName} — Glass Associates</title>
+  <title>Ofertă ${safeProductName} — Glass Associates</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px; margin: 0 auto; }
     .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #c8a96e; }
-    .logo { font-size: 1.8rem; font-weight: 700; color: #c8a96e; letter-spacing: -0.5px; }
+    .logo { width: 260px; height: auto; display: block; }
     .logo-sub { font-size: 0.75rem; color: #888; letter-spacing: 2px; text-transform: uppercase; }
     .meta { text-align: right; font-size: 0.85rem; color: #666; }
     .meta strong { color: #1a1a2e; }
@@ -76,7 +120,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
 <body>
   <div class="header">
     <div>
-      <div class="logo">Glass Associates</div>
+      <img class="logo" src="${logoUrl}" alt="Glass Associates">
       <div class="logo-sub">Sticlă Structurală & Balustrade</div>
     </div>
     <div class="meta">
@@ -88,17 +132,17 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
 
   <div class="section">
     <h2>Produs</h2>
-    <p style="font-size: 1.1rem; font-weight: 600;">${productName}</p>
+    <p style="font-size: 1.1rem; font-weight: 600;">${safeProductName}</p>
   </div>
 
   ${clientInfo ? `
   <div class="section">
     <h2>Client</h2>
     <div class="client-info">
-      <p><strong>${clientInfo.name || "—"}</strong></p>
-      ${clientInfo.email ? `<p>Email: ${clientInfo.email}</p>` : ""}
-      ${clientInfo.phone ? `<p>Telefon: ${clientInfo.phone}</p>` : ""}
-      ${clientInfo.message ? `<p style="margin-top:8px; font-style:italic;">"${clientInfo.message}"</p>` : ""}
+      <p><strong>${escapeHtml(clientInfo.name || "—")}</strong></p>
+      ${clientInfo.email ? `<p>Email: ${escapeHtml(clientInfo.email)}</p>` : ""}
+      ${clientInfo.phone ? `<p>Telefon: ${escapeHtml(clientInfo.phone)}</p>` : ""}
+      ${clientInfo.message ? `<p style="margin-top:8px; font-style:italic;">"${escapeHtml(clientInfo.message)}"</p>` : ""}
     </div>
   </div>
   ` : ""}
@@ -107,7 +151,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
   <div class="section">
     <h2>Configurație</h2>
     <div class="config-list">
-      ${configDetails.map(d => `<div class="config-item"><span>•</span> ${d}</div>`).join("")}
+      ${configDetails.map(d => `<div class="config-item"><span>•</span> ${escapeHtml(d)}</div>`).join("")}
     </div>
   </div>
   ` : ""}
@@ -116,7 +160,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
   <div class="section">
     <h2>Detaliu Preț</h2>
     <table class="lines">
-      ${lines.map(l => `<tr><td>${l.label}</td><td>${l.value}</td></tr>`).join("")}
+      ${lines.map(l => `<tr><td>${escapeHtml(l.label)}</td><td>${escapeHtml(l.value)}</td></tr>`).join("")}
       <tr class="subtotal"><td colspan="2" style="text-align:right; padding:8px 0;">
         Subtotal: ${quote.subtotal}€ &nbsp;•&nbsp; TVA: ${quote.vat}€
       </td></tr>
@@ -154,23 +198,26 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
  * Trimite cerere ofertă prin email (backend API)
  */
 export async function sendQuoteEmail({ productName, quote, config, clientInfo }) {
-  const API = "http://localhost:3001";
+  const payload = { productName, quote, config, clientInfo };
 
-  const res = await fetch(`${API}/quote/request`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      productName,
-      quote,
-      config,
-      client: clientInfo,
-    }),
-  });
+  try {
+    const res = await fetch(apiUrl("/quote/request"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productName,
+        quote,
+        config,
+        client: clientInfo,
+      }),
+    });
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data.error || "Eroare la trimiterea cererii");
+    if (!res.ok) {
+      return openMailFallback(payload);
+    }
+
+    return res.json();
+  } catch {
+    return openMailFallback(payload);
   }
-
-  return res.json();
 }

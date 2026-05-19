@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Save, Download, Upload, Lock, LogOut, Check, AlertTriangle } from "lucide-react";
-
-const API = "http://localhost:3001";
+import { apiUrl } from "./api";
 
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -24,7 +23,7 @@ export default function AdminPage() {
 
   const verifyToken = async (tok) => {
     try {
-      const res = await fetch(`${API}/admin/verify`, {
+      const res = await fetch(apiUrl("/admin/verify"), {
         method: "POST",
         headers: { Authorization: `Bearer ${tok}` },
       });
@@ -45,7 +44,7 @@ export default function AdminPage() {
     setLoginError("");
     setLoginLoading(true);
     try {
-      const res = await fetch(`${API}/admin/login`, {
+      const res = await fetch(apiUrl("/admin/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
@@ -68,7 +67,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API}/admin/logout`, {
+      await fetch(apiUrl("/admin/logout"), {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -147,7 +146,8 @@ export default function AdminPage() {
             <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(200,169,110,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <Lock size={24} color="#c8a96e" />
             </div>
-            <h2 style={{ fontSize: "1.5rem", fontWeight: 600, fontFamily: "'DM Serif Display', serif" }}>Admin Glass Associates</h2>
+            <img src="/logo.png" alt="Glass Associates" style={{ height: 28, maxWidth: "100%", objectFit: "contain", filter: "invert(1)", opacity: 0.95, margin: "0 auto" }} />
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 600, marginTop: 16 }}>Admin Catalog</h2>
             <p style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.85rem", marginTop: 8 }}>Introduceți parola pentru a accesa panoul de administrare</p>
           </div>
 

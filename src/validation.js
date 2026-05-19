@@ -14,7 +14,7 @@ export const ValidationRules = {
   name:     { minLength: 2, maxLength: 80, required: true,  label: "Nume" },
   email:    { required: true, label: "Email", type: "email" },
   phone:    { required: false, label: "Telefon", type: "phone" },
-  message:  { minLength: 10, maxLength: 2000, required: true, label: "Mesaj" },
+  message:  { minLength: 10, maxLength: 2000, required: false, label: "Mesaj" },
 };
 
 /**
@@ -33,7 +33,7 @@ export function validateField(field, value) {
   }
 
   // Dacă nu e required și e gol, e OK
-  if (!rules.required && (value === "" || value === null || undefined)) {
+  if (!rules.required && (value === "" || value === null || value === undefined)) {
     return { valid: true, error: null };
   }
 
@@ -63,8 +63,10 @@ export function validateField(field, value) {
     return { valid: false, error: `${rules.label} trebuie să aibă maxim ${rules.maxLength} caractere` };
   }
 
+  const isNumericField = rules.min !== undefined || rules.max !== undefined;
+
   // Numeric
-  if (rules.type !== "email" && rules.type !== "phone") {
+  if (isNumericField) {
     const num = parseFloat(strVal);
     if (isNaN(num)) {
       return { valid: false, error: `${rules.label} trebuie să fie un număr valid` };

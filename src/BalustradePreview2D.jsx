@@ -1,365 +1,210 @@
-import { useEffect, useRef } from "react";
-
-export default function BalustradePreview3D({ dimensions, glassType, glassShape, mountingType, profileShape, skirtOverride, includeHandrail, includeLed }) {
-  const canvasRef = useRef(null);
-
+export default function BalustradePreview3D({
+  dimensions,
+  glassType,
+  glassShape,
+  mountingType,
+  profileShape,
+  skirtOverride,
+  includeHandrail,
+  includeLed,
+}) {
   const length = parseFloat(dimensions.length) || 3;
   const height = parseFloat(dimensions.height) || 0.9;
-  const skirt = skirtOverride !== undefined ? skirtOverride
-    : mountingType === "clips" ? 0.35
-    : (mountingType === "profile" && profileShape === "V") ? 0.10
-    : 0;
-  const hasSkirt = skirt > 0;
+  const skirt = skirtOverride !== undefined ? skirtOverride : mountingType === "clips" ? 0.35 : 0;
   const panelCount = Math.max(1, Math.ceil(length / 1.1));
-  const pW = length / panelCount;
   const isRampa = glassShape === "forma";
-  const stepH = isRampa ? height * 0.35 : 0; // cat urca fiecare panou
+  const viewBoxWidth = 340;
+  const viewBoxHeight = 260;
+  const paddingX = 28;
+  const baseY = 212;
+  const scaleX = (viewBoxWidth - paddingX * 2) / Math.max(length, 1);
+  const maxRise = isRampa ? height * 0.35 * panelCount : 0;
+  const scaleY = 120 / Math.max(height + skirt + maxRise, 1);
+  const panelWidth = length / panelCount;
+  const glassTint = glassType === "882mm" ? "rgba(180,220,255,0.34)" : "rgba(180,220,255,0.26)";
+  const miniMontantHeight = Math.max(0.11, Math.min(height * 0.196, 0.168));
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#0f1117";
-    ctx.fillRect(0, 0, W, H);
+  const rampOffsetAtX = (x) => {
+    if (!isRampa) return 0;
+    return (x / Math.max(length, 0.001)) * maxRise;
+  };
 
-    const totalH = height + skirt;
-    const angleY = 0.5;
-    const angleX = 0.2;
+  const toSvgPoint = (x, y) => ({
+    x: paddingX + x * scaleX,
+    y: baseY - y * scaleY,
+  });
 
-    const project = (x, y, z) => {
-      const cx = x - length / 2;
-      const cy = y - totalH / 2;
-      const cz = z;
-      const rx = cx * Math.cos(angleY) + cz * Math.sin(angleY);
-      const rz = -cx * Math.sin(angleY) + cz * Math.cos(angleY);
-      const ry = cy * Math.cos(angleX) - rz * Math.sin(angleX);
-      const rz2 = cy * Math.sin(angleX) + rz * Math.cos(angleX);
-      const dist = 6;
-      const sc = dist / (dist + rz2);
-      const zoom = Math.max(30, 90 - length * 8);
-      return [W / 2 + rx * sc * zoom, H / 2 - ry * sc * zoom];
-    };
+  const glassPanels = Array.from({ length: panelCount }, (_, index) => {
+    const x1 = index * panelWidth;
+    const x2 = (index + 1) * panelWidth;
+    const bottomLeft = skirt + rampOffsetAtX(x1);
+    const bottomRight = skirt + rampOffsetAtX(x2);
+    const topLeft = bottomLeft + height;
+    const topRight = bottomRight + height;
+    const p1 = toSvgPoint(x1, bottomLeft);
+    const p2 = toSvgPoint(x2, bottomRight);
+    const p3 = toSvgPoint(x2, topRight);
+    const p4 = toSvgPoint(x1, topLeft);
+    return `${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y} ${p4.x},${p4.y}`;
+  });
 
-    const face = (pts, fill, stroke, sw = 1, dash = []) => {
-      if (!pts || pts.length < 3) return;
-      ctx.beginPath();
-      ctx.moveTo(...pts[0]);
-      pts.slice(1).forEach(p => ctx.lineTo(...p));
-      ctx.closePath();
-      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = sw; ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]); }
-    };
+  const skirtPanels = skirt > 0 ? Array.from({ length: panelCount }, (_, index) => {
+    const x1 = index * panelWidth;
+    const x2 = (index + 1) * panelWidth;
+    const bottomLeft = rampOffsetAtX(x1);
+    const bottomRight = rampOffsetAtX(x2);
+    const topLeft = bottomLeft + skirt;
+    const topRight = bottomRight + skirt;
+    const p1 = toSvgPoint(x1, bottomLeft);
+    const p2 = toSvgPoint(x2, bottomRight);
+    const p3 = toSvgPoint(x2, topRight);
+    const p4 = toSvgPoint(x1, topLeft);
+    return `${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y} ${p4.x},${p4.y}`;
+  }) : [];
 
-    const box = (x, y, z, w, h, d, cTop, cFront, cSide, stroke) => {
-      face([project(x,y,z), project(x+w,y,z), project(x+w,y+h,z), project(x,y+h,z)], cFront, stroke, 0.8);
-      face([project(x,y+h,z), project(x+w,y+h,z), project(x+w,y+h,z+d), project(x,y+h,z+d)], cTop, stroke, 0.8);
-      face([project(x+w,y,z), project(x+w,y,z+d), project(x+w,y+h,z+d), project(x+w,y+h,z)], cSide, stroke, 0.8);
-    };
+  const miniMontants = mountingType === "mini-montanti" ? Array.from({ length: panelCount }, (_, index) => {
+    const leftX = index * panelWidth + panelWidth * 0.15;
+    const rightX = (index + 1) * panelWidth - panelWidth * 0.15;
+    return [leftX, rightX].map((x, offsetIndex) => {
+      const bottom = skirt + rampOffsetAtX(x);
+      const top = bottom + miniMontantHeight;
+      const pBottom = toSvgPoint(x, bottom);
+      const pTop = toSvgPoint(x, top);
+      return (
+        <line
+          key={`${index}-${offsetIndex}`}
+          x1={pBottom.x}
+          y1={pBottom.y}
+          x2={pTop.x}
+          y2={pTop.y}
+          stroke="rgba(200,169,110,0.9)"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+      );
+    });
+  }).flat() : [];
 
-    const inox = "rgba(200,169,110,0.9)";
-    const inoxTop = "rgba(220,190,130,0.9)";
-    const inoxSide = "rgba(160,130,80,0.9)";
-    const inoxStroke = "rgba(230,200,140,0.6)";
-    const glassAlpha = glassType === "extraclar" ? 0.22 : glassType === "10mm" ? 0.28 : 0.35;
-    const glassFront = `rgba(180,220,255,${glassAlpha})`;
-    const glassTop = `rgba(180,220,255,${glassAlpha * 0.6})`;
-    const glassSide = `rgba(180,220,255,${glassAlpha * 0.4})`;
-    const glassStroke = "rgba(180,220,255,0.6)";
+  const buttons = mountingType === "clips" ? Array.from({ length: panelCount }, (_, index) => {
+    const leftX = index * panelWidth + panelWidth * 0.18;
+    const rightX = index * panelWidth + panelWidth * 0.82;
+    const leftBase = rampOffsetAtX(leftX);
+    const rightBase = rampOffsetAtX(rightX);
+    return [
+      { x: leftX, y: leftBase + skirt * 0.28 },
+      { x: leftX, y: leftBase + skirt * 0.72 },
+      { x: rightX, y: rightBase + skirt * 0.28 },
+      { x: rightX, y: rightBase + skirt * 0.72 },
+    ].map((point, pointIndex) => {
+      const p = toSvgPoint(point.x, point.y);
+      return (
+        <circle
+          key={`${index}-${pointIndex}`}
+          cx={p.x}
+          cy={p.y}
+          r="4.5"
+          fill="rgba(15,17,23,0.9)"
+          stroke="rgba(200,169,110,0.95)"
+          strokeWidth="1.5"
+        />
+      );
+    });
+  }).flat() : [];
 
-    // Pardoseala
-    face([
-      project(-0.2, 0, -0.1), project(length + 0.2, 0, -0.1),
-      project(length + 0.2, 0, 0.15), project(-0.2, 0, 0.15)
-    ], "#1a1d26", "rgba(200,169,110,0.2)", 0.5);
+  const embeddedSegments = mountingType === "embedded" ? Array.from({ length: panelCount }, (_, index) => {
+    const x1 = index * panelWidth;
+    const x2 = (index + 1) * panelWidth;
+    const y1 = skirt + rampOffsetAtX(x1);
+    const y2 = skirt + rampOffsetAtX(x2);
+    const p1 = toSvgPoint(x1, y1);
+    const p2 = toSvgPoint(x2, y2);
+    const p3 = toSvgPoint(x2, y2 - 0.06);
+    const p4 = toSvgPoint(x1, y1 - 0.06);
+    return (
+      <polygon
+        key={index}
+        points={`${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y} ${p4.x},${p4.y}`}
+        fill="rgba(200,169,110,0.85)"
+        stroke="rgba(230,200,140,0.55)"
+        strokeWidth="1"
+      />
+    );
+  }) : [];
 
-    // ═══════════════════════════════════════════════════════════
-    // FUSTA (skirt) — urmează rampa dacă e cazul
-    // ═══════════════════════════════════════════════════════════
-    if (hasSkirt) {
-      for (let i = 0; i < panelCount; i++) {
-        // Fusta urca la fel ca panourile
-        const yBottomLeft  = isRampa ? i * stepH : 0;
-        const yBottomRight = isRampa ? (i + 1) * stepH : 0;
-        const yTopLeft     = yBottomLeft + skirt;
-        const yTopRight    = yBottomRight + skirt;
+  const handrailSegments = includeHandrail ? Array.from({ length: panelCount }, (_, index) => {
+    const x1 = index * panelWidth;
+    const x2 = (index + 1) * panelWidth;
+    const y1 = skirt + rampOffsetAtX(x1) + height;
+    const y2 = skirt + rampOffsetAtX(x2) + height;
+    const p1 = toSvgPoint(x1, y1);
+    const p2 = toSvgPoint(x2, y2);
+    return (
+      <line
+        key={index}
+        x1={p1.x}
+        y1={p1.y}
+        x2={p2.x}
+        y2={p2.y}
+        stroke="rgba(200,169,110,0.95)"
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+    );
+  }) : [];
 
-        // Fata fustei - paralelogram inclinat
-        face([
-          project(i * pW + 0.01, yBottomLeft,  -0.005),
-          project(i * pW + pW - 0.01, yBottomRight, -0.005),
-          project(i * pW + pW - 0.01, yTopRight,    -0.005),
-          project(i * pW + 0.01, yTopLeft,     -0.005),
-        ], glassFront, glassStroke, 1);
+  const ledSegments = includeLed ? Array.from({ length: panelCount }, (_, index) => {
+    const x1 = index * panelWidth;
+    const x2 = (index + 1) * panelWidth;
+    const y1 = skirt + rampOffsetAtX(x1) + 0.01;
+    const y2 = skirt + rampOffsetAtX(x2) + 0.01;
+    const p1 = toSvgPoint(x1, y1);
+    const p2 = toSvgPoint(x2, y2);
+    return (
+      <line
+        key={index}
+        x1={p1.x}
+        y1={p1.y}
+        x2={p2.x}
+        y2={p2.y}
+        stroke="rgba(255,220,80,0.95)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    );
+  }) : [];
 
-        // Top fustei
-        face([
-          project(i * pW + 0.01, yTopLeft,  -0.005),
-          project(i * pW + pW - 0.01, yTopRight, -0.005),
-          project(i * pW + pW - 0.01, yTopRight,  0.005),
-          project(i * pW + 0.01, yTopLeft,   0.005),
-        ], glassTop, glassStroke, 0.5);
-
-        // Linie punctata delimitare fusta/panou
-        const p1 = project(i * pW + 0.01, yTopLeft, 0);
-        const p2 = project(i * pW + pW - 0.01, yTopRight, 0);
-        ctx.beginPath();
-        ctx.moveTo(...p1); ctx.lineTo(...p2);
-        ctx.strokeStyle = "rgba(180,220,255,0.8)";
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([5, 3]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      // Label fusta
-      if (isRampa) {
-        // Label la mijlocul ultimului panou de fusta
-        const midX = length * 0.7;
-        const midY = (panelCount - 1) * stepH + skirt / 2;
-        const [lx, ly] = project(midX, midY, 0);
-        ctx.fillStyle = "rgba(200,169,110,0.6)";
-        ctx.font = "9px DM Sans";
-        ctx.fillText(skirt === 0.35 ? "350mm" : "100mm", lx + 6, ly);
-      } else {
-        const mid = project(length * 0.85, skirt / 2, 0);
-        ctx.fillStyle = "rgba(200,169,110,0.6)";
-        ctx.font = "9px DM Sans";
-        ctx.fillText(skirt === 0.35 ? "350mm" : "100mm", mid[0] + 6, mid[1]);
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // PANOURI STICLA
-    // ═══════════════════════════════════════════════════════════
-    for (let i = 0; i < panelCount; i++) {
-      if (isRampa) {
-        // Fiecare panou urca - stanga mai jos, dreapta mai sus
-        const yBottomLeft  = skirt + i * stepH;
-        const yBottomRight = skirt + (i + 1) * stepH;
-        const yTopLeft     = yBottomLeft + height;
-        const yTopRight    = yBottomRight + height;
-
-        // Dreptunghi punctat - suprafata platita (dreptunghi maxim)
-        face([
-          project(i * pW + 0.01, skirt, -0.005),
-          project(i * pW + pW - 0.01, skirt, -0.005),
-          project(i * pW + pW - 0.01, yTopRight, -0.005),
-          project(i * pW + 0.01, yTopRight, -0.005),
-        ], null, "rgba(180,220,255,0.2)", 0.8, [4, 3]);
-
-        // Panou real - paralelogram inclinat
-        face([
-          project(i * pW + 0.01, yBottomLeft,  -0.005),
-          project(i * pW + pW - 0.01, yBottomRight, -0.005),
-          project(i * pW + pW - 0.01, yTopRight,    -0.005),
-          project(i * pW + 0.01, yTopLeft,     -0.005),
-        ], glassFront, glassStroke, 1.5);
-
-        // Muchia superioara
-        face([
-          project(i * pW + 0.01, yTopLeft,  -0.005),
-          project(i * pW + pW - 0.01, yTopRight, -0.005),
-          project(i * pW + pW - 0.01, yTopRight,  0.005),
-          project(i * pW + 0.01, yTopLeft,   0.005),
-        ], glassTop, glassStroke, 0.5);
-
-        // Muchia inferioara inclinata
-        face([
-          project(i * pW + 0.01, yBottomLeft,  -0.005),
-          project(i * pW + pW - 0.01, yBottomRight, -0.005),
-          project(i * pW + pW - 0.01, yBottomRight,  0.005),
-          project(i * pW + 0.01, yBottomLeft,   0.005),
-        ], glassTop, glassStroke, 0.5);
-
-      } else {
-        box(i * pW + 0.01, 0, -0.005, pW - 0.02, totalH, 0.01, glassTop, glassFront, glassSide, glassStroke);
-      }
-    }
-
-    // Separatori panouri
-    for (let i = 1; i < panelCount; i++) {
-      const sepY = isRampa ? skirt + i * stepH : 0;
-      box(i * pW - 0.008, sepY, -0.01, 0.016, totalH - sepY, 0.02,
-        "rgba(150,190,210,0.5)", "rgba(150,190,210,0.4)", "rgba(120,160,180,0.4)", "rgba(180,220,255,0.3)");
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // BUTONI INOX — urmează rampa
-    // ═══════════════════════════════════════════════════════════
-    if (mountingType === "clips") {
-      for (let i = 0; i < panelCount; i++) {
-        const yBaseLeft  = isRampa ? i * stepH : 0;
-        const yBaseRight = isRampa ? (i + 1) * stepH : 0;
-        const xLeft  = i * pW + pW * 0.18;
-        const xRight = i * pW + pW * 0.82;
-
-        // 2 butoni pe fiecare parte, urcand odata cu rampa
-        [
-          { x: xLeft,  y: yBaseLeft  + skirt * 0.28 },
-          { x: xLeft,  y: yBaseLeft  + skirt * 0.72 },
-          { x: xRight, y: yBaseRight + skirt * 0.28 },
-          { x: xRight, y: yBaseRight + skirt * 0.72 },
-        ].forEach(pos => {
-          const [cx, cy] = project(pos.x, pos.y, 0.012);
-          ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(200,169,110,0.2)"; ctx.fill();
-          ctx.strokeStyle = inox; ctx.lineWidth = 1.5; ctx.stroke();
-          ctx.beginPath(); ctx.arc(cx, cy, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = inox; ctx.fill();
-        });
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // MINI-MONTANTI — urmează rampa
-    // ═══════════════════════════════════════════════════════════
-    if (mountingType === "mini-montanti") {
-      for (let i = 0; i < panelCount; i++) {
-        const x1 = i * pW + pW * 0.15;
-        const x2 = (i + 1) * pW - pW * 0.15;
-
-        // Montant stanga
-        const yBaseLeft = isRampa ? i * stepH : 0;
-        const montH1 = isRampa ? skirt + height : totalH;
-        box(x1 - 0.025, yBaseLeft, -0.02, 0.05, montH1, 0.04, inoxTop, inox, inoxSide, inoxStroke);
-
-        // Montant dreapta
-        const yBaseRight = isRampa ? (i + 1) * stepH : 0;
-        const montH2 = isRampa ? skirt + height : totalH;
-        box(x2 - 0.025, yBaseRight, -0.02, 0.05, montH2, 0.04, inoxTop, inox, inoxSide, inoxStroke);
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // PROFILE (U / L / V) — urmează rampa
-    // ═══════════════════════════════════════════════════════════════════
-    if (mountingType === "profile") {
-      if (profileShape === "U") {
-        // Baza U — urmează rampa
-        if (isRampa) {
-          // Desenam U ca o serie de segmente
-          for (let i = 0; i < panelCount; i++) {
-            const yBaseLeft  = i * stepH;
-            const yBaseRight = (i + 1) * stepH;
-            const yTop = yBaseLeft + skirt + height;
-
-            // Segment baza
-            box(i * pW, yBaseLeft, -0.03, pW, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-            // Perete stanga segment
-            box(i * pW, yBaseLeft, -0.03, 0.018, yTop - yBaseLeft, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-            // Perete dreapta segment
-            box(i * pW + pW - 0.018, yBaseRight, -0.03, 0.018, yTop - yBaseRight, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          }
-        } else {
-          box(-0.02, -0.07, -0.03, length + 0.04, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          box(-0.02, -0.07, -0.03, 0.018, 0.13, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          box(length + 0.002, -0.07, -0.03, 0.018, 0.13, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-        }
-      }
-      if (profileShape === "L") {
-        if (isRampa) {
-          for (let i = 0; i < panelCount; i++) {
-            const yBaseLeft = i * stepH;
-            const yTop = yBaseLeft + skirt + height;
-            box(i * pW, yBaseLeft, -0.03, pW, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-            box(i * pW, yBaseLeft, -0.03, 0.018, yTop - yBaseLeft, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          }
-        } else {
-          box(-0.02, -0.07, -0.03, length + 0.04, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          box(-0.02, -0.07, -0.03, 0.018, 0.13, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-        }
-      }
-      if (profileShape === "V") {
-        if (isRampa) {
-          for (let i = 0; i < panelCount; i++) {
-            const yBaseLeft  = i * stepH;
-            const yBaseRight = (i + 1) * stepH;
-            const yTopLeft  = yBaseLeft + skirt + height;
-            const yTopRight = yBaseRight + skirt + height;
-            // Baza
-            box(i * pW, yBaseLeft, -0.03, pW, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-            // Perete stanga
-            box(i * pW, yBaseLeft, -0.03, 0.018, yTopLeft - yBaseLeft, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-            // Perete dreapta
-            box(i * pW + pW - 0.018, yBaseRight, -0.03, 0.018, yTopRight - yBaseRight, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          }
-        } else {
-          box(-0.02, -0.07, -0.03, length + 0.04, 0.04, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          box(-0.02, -0.07, -0.03, 0.018, skirt + 0.07, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-          box(length + 0.002, -0.07, -0.03, 0.018, skirt + 0.07, 0.06, inoxTop, inox, inoxSide, inoxStroke);
-        }
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // CANAL INTEGRAT (embedded) — urmează rampa
-    // ═══════════════════════════════════════════════════════════
-    if (mountingType === "embedded") {
-      if (isRampa) {
-        for (let i = 0; i < panelCount; i++) {
-          const yBaseLeft = i * stepH;
-          box(i * pW, yBaseLeft - 0.06, -0.02, pW, 0.06, 0.04, inoxTop, inox, inoxSide, inoxStroke);
-        }
-      } else {
-        box(-0.03, -0.06, -0.02, length + 0.06, 0.06, 0.04, inoxTop, inox, inoxSide, inoxStroke);
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // MANA CURENTA — urmează rampa
-    // ═══════════════════════════════════════════════════════════
-    if (includeHandrail) {
-      if (isRampa) {
-        // Mana curenta urca in trepte
-        for (let i = 0; i < panelCount; i++) {
-          const yBase = skirt + i * stepH + height;
-          box(i * pW - 0.08, yBase, -0.022, pW + 0.16, 0.04, 0.044, inoxTop, inox, inoxSide, inoxStroke);
-        }
-      } else {
-        box(-0.08, totalH, -0.022, length + 0.16, 0.04, 0.044, inoxTop, inox, inoxSide, inoxStroke);
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // LED — urmează rampa
-    // ═══════════════════════════════════════════════════════════
-    if (includeLed) {
-      if (isRampa) {
-        for (let i = 0; i < panelCount; i++) {
-          const yBase = skirt + i * stepH + 0.01;
-          box(i * pW, yBase, 0.006, pW, 0.012, 0.008,
-            "rgba(255,220,80,0.9)", "rgba(255,220,80,0.8)", "rgba(255,200,50,0.7)", "rgba(255,240,100,0.9)");
-        }
-      } else {
-        box(0, skirt + 0.01, 0.006, length, 0.012, 0.008,
-          "rgba(255,220,80,0.9)", "rgba(255,220,80,0.8)", "rgba(255,200,50,0.7)", "rgba(255,240,100,0.9)");
-      }
-    }
-
-  }, [length, height, glassType, glassShape, mountingType, profileShape, skirt, includeHandrail, includeLed, isRampa, panelCount, stepH, hasSkirt, totalH]);
-
-  const skirtLabel = skirt === 0.35 ? "Fustă 350mm" : skirt === 0.10 ? "Fustă 100mm" : null;
+  const profileStroke = mountingType === "profile" ? `Profil ${profileShape || ""}` : mountingType === "embedded" ? "Canal Integrat" : mountingType === "mini-montanti" ? "Mini-Montanți" : `Butoni (${panelCount * 4} buc)`;
 
   return (
     <div style={{ width: "100%", background: "rgba(255,255,255,0.02)", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.07)" }}>
       <div style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.35)", padding: "10px 0 4px", textAlign: "center", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        Previzualizare 3D · {panelCount} {panelCount === 1 ? "panou" : "panouri"} {isRampa ? "· Rampă" : ""}
+        Previzualizare 2D · {panelCount} {panelCount === 1 ? "panou" : "panouri"} {isRampa ? "· Rampă" : ""}
       </div>
-      <canvas ref={canvasRef} width={340} height={260} style={{ width: "100%", display: "block" }} />
+      <svg viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`} style={{ width: "100%", display: "block", background: "#0f1117" }}>
+        <rect x="0" y="0" width={viewBoxWidth} height={viewBoxHeight} fill="#0f1117" />
+        <rect x={paddingX - 10} y={baseY + 3} width={viewBoxWidth - (paddingX - 10) * 2} height="12" rx="4" fill="#1a1d26" />
+
+        {embeddedSegments}
+        {skirtPanels.map((points, index) => (
+          <polygon key={`skirt-${index}`} points={points} fill="rgba(180,220,255,0.18)" stroke="rgba(180,220,255,0.45)" strokeWidth="1" />
+        ))}
+        {glassPanels.map((points, index) => (
+          <polygon key={`glass-${index}`} points={points} fill={glassTint} stroke="rgba(180,220,255,0.75)" strokeWidth="1.5" />
+        ))}
+        {miniMontants}
+        {buttons}
+        {handrailSegments}
+        {ledSegments}
+      </svg>
       <div style={{ display: "flex", gap: 12, justifyContent: "center", padding: "8px 12px 12px", flexWrap: "wrap" }}>
         {[
           { color: "rgba(180,220,255,0.6)", label: "Sticlă" },
-          mountingType === "clips"         && { color: "rgba(200,169,110,0.8)", label: `Butoni (${panelCount * 4} buc)` },
-          mountingType === "mini-montanti" && { color: "rgba(200,169,110,0.8)", label: "Mini-Montanți" },
-          mountingType === "profile"       && { color: "rgba(200,169,110,0.8)", label: `Profil ${profileShape || ""}` },
-          mountingType === "embedded"      && { color: "rgba(200,169,110,0.8)", label: "Canal Integrat" },
-          hasSkirt && skirtLabel           && { color: "rgba(180,220,255,0.25)", label: skirtLabel },
-          includeHandrail                  && { color: "rgba(200,169,110,0.9)", label: "Mână curentă" },
-          includeLed                       && { color: "rgba(255,220,80,0.8)",  label: "LED" },
-        ].filter(Boolean).map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          { color: "rgba(200,169,110,0.85)", label: profileStroke },
+          skirt > 0 && { color: "rgba(180,220,255,0.25)", label: skirt === 0.35 ? "Fustă 350mm" : "Fustă 100mm" },
+          includeHandrail && { color: "rgba(200,169,110,0.95)", label: "Mână curentă" },
+          includeLed && { color: "rgba(255,220,80,0.95)", label: "LED" },
+        ].filter(Boolean).map((item, index) => (
+          <div key={index} style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <div style={{ width: 8, height: 8, borderRadius: 2, background: item.color, border: "1px solid rgba(255,255,255,0.1)" }} />
             <span style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.4)" }}>{item.label}</span>
           </div>

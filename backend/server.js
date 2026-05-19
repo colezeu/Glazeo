@@ -4,14 +4,40 @@ import crypto from "crypto";
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+const isProduction = process.env.NODE_ENV === "production";
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
+  .split(",")
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error("Origin not allowed by CORS"));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 // ─── ADMIN AUTH ────────────────────────────────────────────────
-// Parola e citită din variabila de mediu (fallback pentru dev)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "glass2026";
-const TOKEN_SECRET = process.env.TOKEN_SECRET || "glass-associates-secret-key-2026";
+function readRequiredSecret(name, devFallback) {
+  const value = process.env[name];
+  if (value) return value;
+  if (isProduction) {
+    throw new Error(`${name} must be set in production`);
+  }
+  console.warn(`[config] ${name} is missing. Using development-only fallback.`);
+  return devFallback;
+}
+
+const ADMIN_PASSWORD = readRequiredSecret("ADMIN_PASSWORD", "change-me-dev-password");
+const TOKEN_SECRET = readRequiredSecret("TOKEN_SECRET", crypto.randomBytes(32).toString("hex"));
 const TOKEN_MAX_AGE = 60 * 60 * 1000; // 1 oră
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434/api/chat";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.2";
 
 // Store în memorie pentru token-uri active (suficient pentru un singur admin)
 const activeTokens = new Map();
@@ -28,7 +54,15 @@ function generateToken() {
     .createHmac("sha256", TOKEN_SECRET)
     .update(data)
     .digest("hex");
+  activeTokens.set(payload.jti, payload.exp);
   return Buffer.from(data).toString("base64url") + "." + signature;
+}
+
+function signaturesMatch(signature, expectedSignature) {
+  const signatureBuffer = Buffer.from(signature, "hex");
+  const expectedBuffer = Buffer.from(expectedSignature, "hex");
+  return signatureBuffer.length === expectedBuffer.length &&
+    crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
 }
 
 function verifyToken(token) {
@@ -40,10 +74,11 @@ function verifyToken(token) {
     .createHmac("sha256", TOKEN_SECRET)
     .update(Buffer.from(dataB64, "base64url").toString())
     .digest("hex");
-  if (signature !== expectedSig) return null;
+  if (!signaturesMatch(signature, expectedSig)) return null;
   try {
     const payload = JSON.parse(Buffer.from(dataB64, "base64url").toString());
     if (payload.exp < Date.now()) return null;
+    if (activeTokens.get(payload.jti) !== payload.exp) return null;
     return payload;
   } catch {
     return null;
@@ -61,6 +96,7 @@ function authMiddleware(req, res, next) {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
   req.admin = payload;
+  req.token = token;
   next();
 }
 
@@ -81,6 +117,7 @@ app.post("/admin/verify", authMiddleware, (req, res) => {
 
 // POST /admin/logout — invalidate token (opțional, client șterge)
 app.post("/admin/logout", authMiddleware, (req, res) => {
+  activeTokens.delete(req.admin.jti);
   res.json({ ok: true });
 });
 
@@ -88,6 +125,12 @@ app.post("/admin/logout", authMiddleware, (req, res) => {
 app.post("/ai-consultant", async (req, res) => {
   try {
     const { productType, message, currentConfig, conversation } = req.body || {};
+    if (typeof message !== "string" || message.trim().length === 0) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+    if (message.length > 2000) {
+      return res.status(400).json({ error: "Message is too long" });
+    }
 
     const systemPrompt = `
 Ești un consultant comercial pentru configuratorul de cabine duș Glass Associates.
@@ -134,11 +177,11 @@ Reguli de interpretare:
     }
     messages.push({ role: "user", content: message || "" });
 
-    const ollamaRes = await fetch("http://localhost:11434/api/chat", {
+    const ollamaRes = await fetch(OLLAMA_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama3.2",
+        model: OLLAMA_MODEL,
         stream: false,
         messages,
       }),
