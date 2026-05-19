@@ -162,8 +162,8 @@ export default function HomePage() {
   return (
     <div style={{ minHeight: "100vh", color: "#f0ede8", position: "relative" }}>
 
-      <div style={{ position: "fixed", inset: 0, zIndex: 0, backgroundImage: "url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }} />
-      <div style={{ position: "fixed", inset: 0, zIndex: 0, background: "radial-gradient(ellipse at 30% 50%, rgba(15,17,23,0.82) 0%, rgba(15,17,23,0.6) 50%, rgba(15,17,23,0.4) 100%)" }} />
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 30% 50%, rgba(15,17,23,0.82) 0%, rgba(15,17,23,0.6) 50%, rgba(15,17,23,0.4) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <Navbar />
@@ -204,7 +204,7 @@ export default function HomePage() {
         </section>
 
         {/* Products */}
-        <section style={{ padding: "80px 32px", maxWidth: 1200, margin: "0 auto" }}>
+        <section style={{ padding: "80px 32px", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 56 }}>
             <p style={{ fontSize: "0.75rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 12 }}>Catalog Produse</p>
             <h2 className="serif" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 400 }}>Gama noastră completă</h2>
@@ -213,8 +213,8 @@ export default function HomePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             {PRODUCTS.map((p) => (
               p.active ? (
-                <Link key={p.id} to={p.path} style={{ textDecoration: "none" }}>
-                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", height: "100%", display: "flex", flexDirection: "column", background: "rgba(15,17,23,0.55)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "block", position: "relative", zIndex: 2 }}>
+                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", height: "100%", display: "flex", flexDirection: "column", position: "relative", zIndex: 2, background: "rgba(15,17,23,0.55)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 14 }}>{p.tagline}</div>
                       <h3 style={{ fontSize: "1.35rem", fontWeight: 600, marginBottom: 10, fontFamily: "'DM Serif Display', serif" }}>{p.name}</h3>
