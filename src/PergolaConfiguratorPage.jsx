@@ -103,9 +103,6 @@ export default function PergolaConfiguratorPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-<<<<<<< HEAD
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Pergolă" config={{ width:dims.width, depth:dims.depth, type, glass:glass }} />
-=======
       <QuoteModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -113,7 +110,6 @@ export default function PergolaConfiguratorPage() {
         productName="Pergolă"
         config={{ width: dims.width, depth: dims.depth, type, glass }}
       />
->>>>>>> b71e820 (Fix pergola quote modal config)
       <ConfigHeader title="Configurator Pergole" quote={quote}/>
       <main className="configurator-grid" style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
