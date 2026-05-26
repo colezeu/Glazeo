@@ -40,6 +40,11 @@ export default function BalustradeConfiguratorPage() {
       .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(d => {
         const catalogProduct = d.products.balustrade;
+        if (!catalogProduct) {
+  setProduct(FALLBACK);
+  setLoadError(true);
+  return;
+}
         setProduct(catalogProduct);
         setVatRate(d.vatRate);
         setConfig(c => {
