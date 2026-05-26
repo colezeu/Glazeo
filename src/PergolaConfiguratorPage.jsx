@@ -64,19 +64,29 @@ export default function PergolaConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch("/catalog.json").then(r => r.json())
-      .then(d => {
-        const raw = d.products["pergola-copertina"];
+  fetch("/catalog.json")
+    .then(r => {
+      if (!r.ok) throw new Error("Catalog missing");
+      return r.json();
+    })
+    .then(d => {
+      const raw = d?.products?.["pergola-copertina"];
+      if (raw && raw.typeCategories) {
         setProduct({
           ...raw,
           typeCategories: Object.fromEntries(
             Object.entries(raw.typeCategories).filter(([k]) => k.startsWith("pergola"))
           )
         });
-        setVatRate(d.vatRate);
-      })
-      .catch(() => setProduct(FALLBACK));
-  }, []);
+        setVatRate(d.vatRate || 0.19);
+      } else {
+        setProduct(FALLBACK);
+      }
+    })
+    .catch(() => {
+      setProduct(FALLBACK);
+    });
+}, []);
 
   const p = product;
   const isValid = dims.width && dims.depth && parseFloat(dims.width) > 0;
