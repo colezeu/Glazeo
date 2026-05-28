@@ -1,4 +1,4 @@
-import { supabase } from "./lib/supabase";
+import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared";
 import QuoteModal from "./QuoteModal";
@@ -77,6 +77,7 @@ export default function PartitionConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -90,27 +91,6 @@ export default function PartitionConfiguratorPage() {
 
   const p = product;
   const isValid = dims.width && parseFloat(dims.width) > 0;
-
-  const saveProject = async () => {
-    const projectName = prompt("Nume proiect:", "Partiționare " + new Date().toLocaleDateString());
-    if (!projectName) return;
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Trebuie să fii logat!");
-      return;
-    }
-
-    const { error } = await supabase.from("projects").insert({
-      user_id: user.id,
-      name: projectName,
-      product_type: "partitionari",
-      config: { dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }
-    });
-
-    if (error) alert("Eroare: " + error.message);
-    else alert("Proiect salvat cu succes!");
-  };
 
   const calculate = async () => {
     if (!p) return;
@@ -187,7 +167,7 @@ export default function PartitionConfiguratorPage() {
           />
 
           <button
-            onClick={saveProject}
+            onClick={() => setShowSaveModal(true)}
             className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
             style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
           >
@@ -195,6 +175,14 @@ export default function PartitionConfiguratorPage() {
           </button>
         </div>
       </main>
+
+      {showSaveModal && (
+        <SaveProjectModal
+          productType="partitionari"
+          config={{ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }}
+          onClose={() => setShowSaveModal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { supabase } from "./lib/supabase";
+import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
@@ -50,34 +50,12 @@ export default function SlidingDoorConfiguratorPage() {
   const [mount,setMount]=useState("perete"); const [panel,setPanel]=useState("fara-fix"); const [glass,setGlass]=useState("10mm");
   const [inclManere,setInclManere]=useState(false); const [inclInc,setInclInc]=useState(false); const [inclCar,setInclCar]=useState(false);
   const [calculating,setCalculating]=useState(false); const [quote,setQuote]=useState(null); const [showModal,setShowModal]=useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(()=>{ fetch("/catalog.json").then(r=>r.json()).then(d=>{setProduct(d.products["usi-culisante"]);setVatRate(d.vatRate);}).catch(()=>setProduct(FALLBACK)); },[]);
 
   const p=product; const isValid=dims.width&&dims.height;
-const saveProject = async () => {
-  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
-  if (!projectName) return;
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    alert("Trebuie să fii logat!");
-    return;
-  }
-
-  const { error } = await supabase.from("projects").insert({
-    user_id: user.id,
-    name: projectName,
-    product_type: "sliding",        // ← schimbă aici pentru fiecare pagină
-    config: config                  // sau "dims" / "config" în funcție de pagină
-  });
-
-  if (error) {
-    alert("Eroare: " + error.message);
-  } else {
-    alert("Proiect salvat!");
-  }
-};
-  const calculate=async()=>{
+  const calculate = async () => {
     if(!p)return; setCalculating(true); await new Promise(r=>setTimeout(r,600));
     const w=parseFloat(dims.width)||0,h=parseFloat(dims.height)||0;
     const area=w*h*(panel==="panou-fix"?2:1);
@@ -142,7 +120,7 @@ const saveProject = async () => {
             ]:[]}/>
         
           <button
-            onClick={saveProject}
+            onClick={() => setShowSaveModal(true)}
             className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
             style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
           >
@@ -150,6 +128,14 @@ const saveProject = async () => {
           </button>
         </div>
       </main>
+
+      {showSaveModal && (
+        <SaveProjectModal
+          productType="sliding"
+          config={{ dims, mount, panel, glass, inclManere, inclInc, inclCar }}
+          onClose={() => setShowSaveModal(false)}
+        />
+      )}
     </div>
   );
 }

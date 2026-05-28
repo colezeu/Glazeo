@@ -1,4 +1,4 @@
-import { supabase } from "./lib/supabase";
+import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import { validateForm } from "./validation.js";
@@ -21,6 +21,7 @@ export default function ShowerConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -36,29 +37,6 @@ export default function ShowerConfiguratorPage() {
 
   const validation = validateForm({ width, depth, height });
   const isValid = validation.valid;
-const saveProject = async () => {
-  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
-  if (!projectName) return;
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    alert("Trebuie să fii logat!");
-    return;
-  }
-
-  const { error } = await supabase.from("projects").insert({
-    user_id: user.id,
-    name: projectName,
-    product_type: "shower",        // ← schimbă aici pentru fiecare pagină
-    config: config                  // sau "dims" / "config" în funcție de pagină
-  });
-
-  if (error) {
-    alert("Eroare: " + error.message);
-  } else {
-    alert("Proiect salvat!");
-  }
-};
   const update = (key, value) => setConfig(c => ({ ...c, [key]: value }));
 
   const handleShare = async () => {
@@ -177,7 +155,7 @@ const saveProject = async () => {
           />
         
           <button
-            onClick={saveProject}
+            onClick={() => setShowSaveModal(true)}
             className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
             style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
           >
@@ -185,6 +163,14 @@ const saveProject = async () => {
           </button>
         </div>
       </main>
+
+      {showSaveModal && (
+        <SaveProjectModal
+          productType="shower"
+          config={config}
+          onClose={() => setShowSaveModal(false)}
+        />
+      )}
     </div>
   );
 }

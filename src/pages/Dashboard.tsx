@@ -2,8 +2,17 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
 
+interface Project {
+  id: string;
+  user_id: string;
+  name: string;
+  product_type: string;
+  config: Record<string, unknown>;
+  created_at: string;
+}
+
 export default function Dashboard() {
-  const [projects, setProjects] = useState<any[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
@@ -32,7 +41,7 @@ export default function Dashboard() {
     fetchProjects()
   }, [navigate])
 
- const loadProject = (project: any) => {
+ const loadProject = (project: Project) => {
   // Salvează configurația în localStorage
   localStorage.setItem('loadProject', JSON.stringify({
     config: project.config,

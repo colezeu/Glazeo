@@ -1,10 +1,10 @@
-import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote } from "./ConfiguratorShared";
 import { validateForm } from "./validation";
 import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal";
 import BalustradePreview3D from "./BalustradePreview2D";
+import SaveProjectModal from "./components/SaveProjectModal";
 import { Share2, Check } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
 
@@ -22,6 +22,7 @@ export default function BalustradeConfiguratorPage() {
   const [formTouched, setFormTouched] = useState(false);
   const [copied, setCopied] = useState(false);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   const { length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed } = config;
 
@@ -72,31 +73,6 @@ export default function BalustradeConfiguratorPage() {
   const isValid = validation.valid;
 
   const update = (key, value) => setConfig(c => ({ ...c, [key]: value }));
-
-  const saveProject = async () => {
-    if (!p) return;
-    const projectName = prompt("Nume proiect:", "Balustradă " + new Date().toLocaleDateString());
-    if (!projectName) return;
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Trebuie să fii logat!");
-      return;
-    }
-
-    const { error } = await supabase.from("projects").insert({
-      user_id: user.id,
-      name: projectName,
-      product_type: "balustrade",
-      config: config
-    });
-
-    if (error) {
-      alert("Eroare la salvare: " + error.message);
-    } else {
-      alert("Proiect salvat cu succes!");
-    }
-  };
 
   const handleShare = async () => {
     const url = getShareableUrl({ length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed });
@@ -242,7 +218,7 @@ export default function BalustradeConfiguratorPage() {
           />
 
           <button
-            onClick={saveProject}
+            onClick={() => setShowSaveModal(true)}
             className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
             style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
           >
@@ -250,6 +226,14 @@ export default function BalustradeConfiguratorPage() {
           </button>
         </div>
       </main>
+
+      {showSaveModal && (
+        <SaveProjectModal
+          productType="balustrade"
+          config={config}
+          onClose={() => setShowSaveModal(false)}
+        />
+      )}
     </div>
   );
 }

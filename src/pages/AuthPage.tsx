@@ -24,8 +24,8 @@ export default function AuthPage() {
         if (error) throw error
         setMessage('Cont creat! Verifică-ți email-ul.')
       }
-    } catch (error: any) {
-      setMessage(error.message)
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : 'A apărut o eroare');
     } finally {
       setLoading(false)
     }
