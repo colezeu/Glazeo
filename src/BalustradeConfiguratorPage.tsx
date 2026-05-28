@@ -8,6 +8,74 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { Share2, Check } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
 
+/** Mini SVG cross-section for profile shapes (L, U, Y) */
+function ProfileShapeSVG({ shape }: { shape: string }) {
+  const w = 60, h = 50, m = 6;
+  const gold = "#c8a96e";
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ display: "block", margin: "0 auto" }}>
+      {/* Glass panel (vertical line) */}
+      <rect x={w/2-1.5} y={m} width={3} height={h-m*2} fill="rgba(180,220,255,0.4)" rx={1} />
+      {shape === "U" && (
+        <>
+          <rect x={w/2-8} y={h-m-5} width={16} height={5} fill={gold} rx={1} opacity={0.9} />
+          <rect x={w/2-8} y={h-m-5} width={4} height={h-m-5} fill={gold} rx={0.5} opacity={0.6} />
+          <rect x={w/2+4} y={h-m-5} width={4} height={h-m-5} fill={gold} rx={0.5} opacity={0.6} />
+        </>
+      )}
+      {shape === "L" && (
+        <>
+          <rect x={w/2-8} y={h-m-5} width={16} height={5} fill={gold} rx={1} opacity={0.9} />
+          <rect x={w/2-8} y={h-m-5} width={4} height={h-m-5} fill={gold} rx={0.5} opacity={0.6} />
+        </>
+      )}
+      {shape === "Y" && (
+        <>
+          <rect x={w/2-8} y={h-m-5} width={16} height={5} fill={gold} rx={1} opacity={0.9} />
+          <polygon points={`${w/2-8},${h-m-5} ${w/2-4},${m+4} ${w/2-0},${h-m-5}`} fill={gold} opacity={0.5} />
+          <polygon points={`${w/2+8},${h-m-5} ${w/2+4},${m+4} ${w/2},${h-m-5}`} fill={gold} opacity={0.5} />
+        </>
+      )}
+      {/* Ground line */}
+      <line x1={m} y1={h-m} x2={w-m} y2={h-m} stroke="rgba(255,255,255,0.15)" strokeWidth={1} />
+    </svg>
+  );
+}
+
+/** Mini SVG for handrail cross-sections */
+function HandrailShapeSVG({ type }: { type: string }) {
+  const w = 60, h = 50;
+  const gold = "#c8a96e";
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ display: "block", margin: "0 auto" }}>
+      {type === "none" && (
+        <text x={w/2} y={h/2+4} textAnchor="middle" fill="rgba(240,237,232,0.2)" fontSize={12}>—</text>
+      )}
+      {type.includes("structurala") && (
+        <rect x={8} y={h/2-7} width={w-16} height={10} rx={1} fill={gold} opacity={0.8} stroke={gold} strokeWidth={1} />
+      )}
+      {type.includes("rotunda") && (
+        <>
+          <rect x={8} y={h/2-1} width={w-16} height={6} rx={3} fill={gold} opacity={0.85} />
+          <circle cx={14} cy={h/2+2} r={2.5} fill={gold} opacity={0.5} />
+          <circle cx={w-14} cy={h/2+2} r={2.5} fill={gold} opacity={0.5} />
+        </>
+      )}
+      {type.includes("patrata") && (
+        <rect x={10} y={h/2-5} width={w-20} height={10} rx={1} fill={gold} opacity={0.8} stroke={gold} strokeWidth={1} />
+      )}
+      {type.includes("slim") && (
+        <rect x={10} y={h/2-3} width={w-20} height={4} rx={1} fill={gold} opacity={0.7} />
+      )}
+      {/* Support posts */}
+      <rect x={16} y={h/2+7} width={2.5} height={h/2-10} rx={1} fill={gold} opacity={0.3} />
+      <rect x={w-18} y={h/2+7} width={2.5} height={h/2-10} rx={1} fill={gold} opacity={0.3} />
+      {/* Glass hint */}
+      <rect x={w/2-1} y={10} width={2} height={h/2-8} fill="rgba(180,220,255,0.2)" rx={0.5} />
+    </svg>
+  );
+}
+
 export default function BalustradeConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.21);
@@ -168,6 +236,15 @@ export default function BalustradeConfiguratorPage() {
                     <OptionBtn key={k} selected={profileShape === k} onClick={() => update("profileShape", k)} label={d.name} price={d.pricePerMeter > 0 ? `+${d.pricePerMeter}€/m` : "Inclus"} center />
                   ))}
                 </div>
+                {/* Profil preview SVGs */}
+                <div className="option-preview-grid" style={{ marginTop: 12 }}>
+                  {Object.entries(p.profileShapes).map(([k, d]) => (
+                    <div key={k} className={`option-preview-item ${profileShape === k ? "selected" : ""}`} onClick={() => update("profileShape", k)} title={d.name}>
+                      <ProfileShapeSVG shape={k} />
+                      <div style={{ fontSize: "0.65rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>{d.name}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </SectionCard>
@@ -186,6 +263,18 @@ export default function BalustradeConfiguratorPage() {
               <OptionBtn key={o.key} selected={handrail === o.key} onClick={() => update("handrail", o.key)} label={o.label} desc={o.desc} price={o.price} />
             ))}
             <ToggleOption checked={includeLed} onChange={v => update("includeLed", v)} label={p.options.led.name} desc={p.options.led.desc} price={`${p.options.led.price}€`} />
+            {/* Handrail preview SVGs */}
+            <div className="option-preview-grid">
+              {[
+                { key: "none", label: "Fara" },
+                ...Object.entries(p.options).filter(([k]) => k.startsWith("handrail")).map(([k, d]) => ({ key: k, label: d.name.split(" ").slice(-2).join(" ") })),
+              ].map(o => (
+                <div key={o.key} className={`option-preview-item ${handrail === o.key ? "selected" : ""}`} onClick={() => update("handrail", o.key)} title={o.label}>
+                  <HandrailShapeSVG type={o.key} />
+                  <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>{o.label}</div>
+                </div>
+              ))}
+            </div>
           </SectionCard>
         </div>
 
