@@ -1,5 +1,6 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.jsx";
 
 const FALLBACK = {
@@ -77,6 +78,29 @@ export default function CopertinaConfiguratorPage() {
   const isValid = dims.width && dims.depth && parseFloat(dims.width) > 0;
   const perimeter = 2*((parseFloat(dims.width)||0)+(parseFloat(dims.depth)||0));
 
+  const saveProject = async () => {
+  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
+  if (!projectName) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Trebuie să fii logat!");
+    return;
+  }
+
+  const { error } = await supabase.from("projects").insert({
+    user_id: user.id,
+    name: projectName,
+    product_type: "copertina",        // ← schimbă aici pentru fiecare pagină
+    config: config                  // sau "dims" / "config" în funcție de pagină
+  });
+
+  if (error) {
+    alert("Eroare: " + error.message);
+  } else {
+    alert("Proiect salvat!");
+  }
+};
   const calculate = async () => {
     if (!p) return;
     setCalculating(true);
@@ -134,6 +158,14 @@ export default function CopertinaConfiguratorPage() {
               quote.dezP>0&&{label:"Dezghețare",value:`+${quote.dezP}€`,accent:true},
               quote.panP>0&&{label:"Panouri lat.",value:`+${quote.panP}€`,accent:true},
             ]:[]}/>
+       
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>

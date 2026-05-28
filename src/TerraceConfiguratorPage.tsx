@@ -1,6 +1,7 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
-import QuoteModal from "./QuoteModal.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import QuoteModal from "./QuoteModal.js";
 
 const FALLBACK = { name:"Închidere Mobilă Terase / Balcoane", basePrice:150, systemTypes:{ multitrack:{name:"Multitrack",pricePerSqm:380,desc:"Panouri culisante pe șine multiple, stivuire laterală"}, frameless:{name:"Frameless",pricePerSqm:450,desc:"Full-glass fără profile, pivot la sol și tavan"}, ghilotina:{name:"Ghilotină",pricePerSqm:420,desc:"Panou unic culisant vertical, ascuns în plafon"} }, glassTypes:{ "8mm":{name:"Securit 8mm Clar",pricePerSqm:140,desc:"Standard rezidențial"}, "10mm":{name:"Securit 10mm",pricePerSqm:185,desc:"Rezistență sporită, vânt puternic"}, dgu:{name:"Termoizolant DGU",pricePerSqm:320,desc:"Izolare termică și fonică"} }, options:{ blocator:{name:"Blocator Interior",price:65,desc:"Blocare panou în poziție deschis"}, incuietoare:{name:"Încuietoare Cheie",price:95,desc:"Cilindru de siguranță"}, "profile-lat":{name:"Profile Laterale",price:120,desc:"Profile de etanșare laterale"} } };
 
@@ -49,7 +50,29 @@ export default function TerraceConfiguratorPage() {
   useEffect(()=>{ fetch("/catalog.json").then(r=>r.json()).then(d=>{setProduct(d.products["inchidere-terasa"]);setVatRate(d.vatRate);}).catch(()=>setProduct(FALLBACK)); },[]);
 
   const p=product; const isValid=dims.width&&parseFloat(dims.width)>0;
+const saveProject = async () => {
+  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
+  if (!projectName) return;
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Trebuie să fii logat!");
+    return;
+  }
+
+  const { error } = await supabase.from("projects").insert({
+    user_id: user.id,
+    name: projectName,
+    product_type: "terrace",        // ← schimbă aici pentru fiecare pagină
+    config: config                  // sau "dims" / "config" în funcție de pagină
+  });
+
+  if (error) {
+    alert("Eroare: " + error.message);
+  } else {
+    alert("Proiect salvat!");
+  }
+};
   const calculate=async()=>{
     if(!p)return; setCalculating(true); await new Promise(r=>setTimeout(r,600));
     const w=parseFloat(dims.width)||0,h=parseFloat(dims.height)||0,area=w*h;
@@ -101,6 +124,14 @@ export default function TerraceConfiguratorPage() {
               {label:"Sticlă",value:`${quote.glP}€`},
               quote.optP>0&&{label:"Accesorii",value:`+${quote.optP}€`,accent:true},
             ]:[]}/>
+       
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>

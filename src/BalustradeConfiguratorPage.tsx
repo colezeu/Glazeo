@@ -1,10 +1,12 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote } from "./ConfiguratorShared";
 import { validateForm } from "./validation";
 import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
-import QuoteModal from "./QuoteModal.jsx";
-import BalustradePreview3D from "./BalustradePreview2D.jsx";
+import QuoteModal from "./QuoteModal";
+import BalustradePreview3D from "./BalustradePreview2D";
 import { Share2, Check } from "lucide-react";
+import { getUserMultiplier } from "./lib/user";
 
 export default function BalustradeConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -19,8 +21,28 @@ export default function BalustradeConfiguratorPage() {
   const [loadError, setLoadError] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
 
   const { length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed } = config;
+
+  // Încarcă multiplicatorul de preț al utilizatorului
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
+  }, []);
+
+  // Încarcă configurație salvată din Dashboard
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'balustrade' && parsed.config) {
+          setConfig(parsed.config);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -51,6 +73,31 @@ export default function BalustradeConfiguratorPage() {
 
   const update = (key, value) => setConfig(c => ({ ...c, [key]: value }));
 
+  const saveProject = async () => {
+    if (!p) return;
+    const projectName = prompt("Nume proiect:", "Balustradă " + new Date().toLocaleDateString());
+    if (!projectName) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Trebuie să fii logat!");
+      return;
+    }
+
+    const { error } = await supabase.from("projects").insert({
+      user_id: user.id,
+      name: projectName,
+      product_type: "balustrade",
+      config: config
+    });
+
+    if (error) {
+      alert("Eroare la salvare: " + error.message);
+    } else {
+      alert("Proiect salvat cu succes!");
+    }
+  };
+
   const handleShare = async () => {
     const url = getShareableUrl({ length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed });
     try {
@@ -72,6 +119,7 @@ export default function BalustradeConfiguratorPage() {
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+
     setCalculating(true);
     await new Promise(r => setTimeout(r, 600));
 
@@ -85,8 +133,10 @@ export default function BalustradeConfiguratorPage() {
     const taxaForma = glassShape === "forma" ? (p.glassShapes.forma?.taxaForma || 0) * panelCount : 0;
     const handrailP = handrail !== "none" ? len * (p.options[handrail]?.pricePerMeter || 0) : 0;
     const ledP = normalizedIncludeLed ? (p.options.led?.price || 0) : 0;
+
     const raw = p.basePrice + hwPrice + profExtra + glassPrice + taxaForma + handrailP + ledP;
-    const { subtotal, vat, total } = calcQuote(raw, vatRate);
+    const adjustedRaw = raw * priceMultiplier;
+    const { subtotal, vat, total } = calcQuote(adjustedRaw, vatRate);
 
     setQuote({ area: area.toFixed(2), hwPrice: Math.round(hwPrice + profExtra), glassPrice: Math.round(glassPrice), taxaForma: Math.round(taxaForma), handrailP: Math.round(handrailP), ledP, subtotal, vat, total });
     setCalculating(false);
@@ -174,8 +224,13 @@ export default function BalustradeConfiguratorPage() {
             </button>
           )}
 
-          <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
-            onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
+          <QuoteSidebar
+            quote={quote}
+            isFormValid={isValid}
+            calculating={calculating}
+            onCalculate={calculate}
+            onReset={() => setQuote(null)}
+            onSolicita={() => setShowModal(true)}
             lines={quote ? [
               { label: "Suprafață", value: `${quote.area} m²` },
               { label: "Feronerie", value: `${quote.hwPrice}€` },
@@ -185,6 +240,14 @@ export default function BalustradeConfiguratorPage() {
               quote.ledP > 0 && { label: "LED", value: `+${quote.ledP}€`, accent: true },
             ] : []}
           />
+
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>

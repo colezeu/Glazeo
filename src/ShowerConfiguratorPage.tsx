@@ -1,8 +1,9 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
-import { validateForm } from "./validation";
-import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
-import QuoteModal from "./QuoteModal.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import { validateForm } from "./validation.js";
+import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig.js";
+import QuoteModal from "./QuoteModal.js";
 import ShowerPreview2D from "./ShowerPreview2D.jsx";
 import { Share2, Check } from "lucide-react";
 
@@ -35,7 +36,29 @@ export default function ShowerConfiguratorPage() {
 
   const validation = validateForm({ width, depth, height });
   const isValid = validation.valid;
+const saveProject = async () => {
+  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
+  if (!projectName) return;
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Trebuie să fii logat!");
+    return;
+  }
+
+  const { error } = await supabase.from("projects").insert({
+    user_id: user.id,
+    name: projectName,
+    product_type: "shower",        // ← schimbă aici pentru fiecare pagină
+    config: config                  // sau "dims" / "config" în funcție de pagină
+  });
+
+  if (error) {
+    alert("Eroare: " + error.message);
+  } else {
+    alert("Proiect salvat!");
+  }
+};
   const update = (key, value) => setConfig(c => ({ ...c, [key]: value }));
 
   const handleShare = async () => {
@@ -152,6 +175,14 @@ export default function ShowerConfiguratorPage() {
               quote.ledP   > 0 && { label:"LED",         value:`+${quote.ledP}€`,    accent:true },
             ] : []}
           />
+        
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>

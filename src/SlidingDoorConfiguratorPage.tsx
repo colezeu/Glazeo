@@ -1,6 +1,7 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
-import QuoteModal from "./QuoteModal.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import QuoteModal from "./QuoteModal.js";
 
 const FALLBACK = { name:"Uși Culisante", basePrice:150, mountTypes:{ perete:{name:"Prindere pe Perete",pricePerUnit:0,desc:"Șină montată pe perete"}, tavan:{name:"Prindere pe Tavan",pricePerUnit:80,desc:"Șină ascunsă în tavan"}, sincron:{name:"Sincron (fără șină jos)",pricePerUnit:220,desc:"Fără ghidaj la pardoseală"} }, panelTypes:{ "panou-fix":{name:"Cu Panou Fix",pricePerUnit:0,desc:"Panou lateral fix + ușă culisantă"}, "fara-fix":{name:"Fără Panou Fix",pricePerUnit:0,desc:"Doar ușă culisantă"}, buzunar:{name:"Cu Buzunar",pricePerUnit:280,desc:"Ușa dispare în perete"} }, glassTypes:{ "10mm":{name:"Securit 10mm Clar",pricePerSqm:220,desc:"Standard"}, "12mm":{name:"Securit 12mm",pricePerSqm:280,desc:"Ușă mare / grea"}, frosted:{name:"Securit Sablat",pricePerSqm:310,desc:"Confidențialitate"} }, options:{ manere:{name:"Mânere Inox",price:95,desc:"Mâner îngropat sau aplicat"}, incuietoare:{name:"Încuietoare",price:150,desc:"Cilindru sau magnetic"}, caroiaj:{name:"Profile Caroiaj",pricePerSqm:35,desc:"Grilaj decorativ"} } };
 
@@ -53,7 +54,29 @@ export default function SlidingDoorConfiguratorPage() {
   useEffect(()=>{ fetch("/catalog.json").then(r=>r.json()).then(d=>{setProduct(d.products["usi-culisante"]);setVatRate(d.vatRate);}).catch(()=>setProduct(FALLBACK)); },[]);
 
   const p=product; const isValid=dims.width&&dims.height;
+const saveProject = async () => {
+  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
+  if (!projectName) return;
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Trebuie să fii logat!");
+    return;
+  }
+
+  const { error } = await supabase.from("projects").insert({
+    user_id: user.id,
+    name: projectName,
+    product_type: "sliding",        // ← schimbă aici pentru fiecare pagină
+    config: config                  // sau "dims" / "config" în funcție de pagină
+  });
+
+  if (error) {
+    alert("Eroare: " + error.message);
+  } else {
+    alert("Proiect salvat!");
+  }
+};
   const calculate=async()=>{
     if(!p)return; setCalculating(true); await new Promise(r=>setTimeout(r,600));
     const w=parseFloat(dims.width)||0,h=parseFloat(dims.height)||0;
@@ -117,6 +140,14 @@ export default function SlidingDoorConfiguratorPage() {
               quote.incP>0&&{label:"Încuietoare",value:`+${quote.incP}€`,accent:true},
               quote.carP>0&&{label:"Caroiaj",value:`+${quote.carP}€`,accent:true},
             ]:[]}/>
+        
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>

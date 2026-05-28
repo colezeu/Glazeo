@@ -1,5 +1,6 @@
+import { supabase } from "./lib/supabase";
 import { useState, useEffect } from "react";
-import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.jsx";
+import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.jsx";
 
 const FALLBACK = {
@@ -137,7 +138,29 @@ export default function OglinziConfiguratorPage() {
 
   const p = product;
   const isValid = dims.width && dims.height && parseFloat(dims.width) > 0 && parseFloat(dims.height) > 0;
+const saveProject = async () => {
+  const projectName = prompt("Nume proiect:", "Proiect " + new Date().toLocaleDateString());
+  if (!projectName) return;
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Trebuie să fii logat!");
+    return;
+  }
+
+  const { error } = await supabase.from("projects").insert({
+    user_id: user.id,
+    name: projectName,
+    product_type: "oglinda",        // ← schimbă aici pentru fiecare pagină
+    config: config                  // sau "dims" / "config" în funcție de pagină
+  });
+
+  if (error) {
+    alert("Eroare: " + error.message);
+  } else {
+    alert("Proiect salvat!");
+  }
+};
   const calculate = async () => {
     if (!p) return;
     setCalculating(true);
@@ -247,6 +270,14 @@ export default function OglinziConfiguratorPage() {
               quote.antiAbP > 0 && { label: "Anti-aburire",   value: `+${quote.antiAbP}€`, accent: true },
             ] : []}
           />
+        
+          <button
+            onClick={saveProject}
+            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+          >
+            💾 Salvează proiect
+          </button>
         </div>
       </main>
     </div>
