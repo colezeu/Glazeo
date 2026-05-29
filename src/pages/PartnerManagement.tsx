@@ -153,16 +153,19 @@ export default function PartnerManagement() {
                   <td style={{ padding: '12px 8px' }}>
                     <input
                       type="text"
-                      defaultValue={p.name}
+                      value={p.name}
                       placeholder="Nume partener..."
                       className="input-field"
                       style={{ padding: '6px 10px', fontSize: '0.82rem', width: '100%', maxWidth: 180 }}
+                      onChange={(e) => {
+                        setPartners(prev => prev.map(x => x.User_id === p.User_id ? { ...x, name: e.target.value } : x))
+                      }}
                       onBlur={async (e) => {
                         const newName = e.target.value.trim()
                         if (newName && newName !== p.name) {
-                          await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
-                          setPartners(prev => prev.map(x => x.User_id === p.User_id ? { ...x, name: newName } : x))
-                          setMsg(`Nume salvat: ${newName}`)
+                          const { error } = await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
+                          if (error) setMsg('Eroare salvare: ' + error.message)
+                          else setMsg(`Nume salvat: ${newName}`)
                         }
                       }}
                     />
