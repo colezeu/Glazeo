@@ -172,7 +172,25 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
   </div>
   ` : ""}
 
-  <div class="footer">
+  <div class="footer" style="text-align: left; font-size: 0.7rem; color: #666; line-height: 1.5; border-top: 1px solid #999; padding-top: 16px; margin-top: 40px; page-break-before: always;">
+    <h3 style="font-size: 0.8rem; color: #444; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">Condiții Generale de Vânzare</h3>
+
+    <p style="margin-bottom: 6px;"><strong>1. Informații generale.</strong> Prezentele Condiții Generale de Vânzare reglementează raporturile contractuale dintre Glass Associates („Vânzătorul”) și orice persoană fizică sau juridică („Clientul”) care solicită sau acceptă o ofertă. Aplicabilitatea se extinde inclusiv asupra ofertelor generate automat prin website.</p>
+    <p style="margin-bottom: 6px;"><strong>2. Caracter estimativ.</strong> Ofertele generate automat au caracter orientativ și neangajant. Prețurile, configurațiile și termenele reprezintă estimări preliminare. Glass Associates își rezervă dreptul de a revizui oferta în cazul datelor incomplete, erorilor de sistem sau variațiilor de preț ale materialelor.</p>
+    <p style="margin-bottom: 6px;"><strong>3. Încheierea contractului.</strong> Contractul se consideră încheiat exclusiv după confirmarea scrisă a Glass Associates și acceptul explicit al Clientului asupra condițiilor comerciale finale.</p>
+    <p style="margin-bottom: 6px;"><strong>4. Prețuri și plată.</strong> Prețurile sunt exprimate în EUR sau RON, fără TVA. Glass Associates poate solicita avans, plată integrală sau plăți etapizate. Neachitarea la termen poate duce la suspendare sau anulare.</p>
+    <p style="margin-bottom: 6px;"><strong>5. Produse personalizate.</strong> Majoritatea produselor sunt realizate la comandă. Clientul este responsabil pentru corectitudinea dimensiunilor comunicate. După lansarea în producție, modificările sau anulările nu mai sunt posibile.</p>
+    <p style="margin-bottom: 6px;"><strong>6. Livrare.</strong> Termenele sunt estimative. Întârzierile cauzate de furnizori, transportatori sau condiții meteo nu sunt imputabile Glass Associates. Transportul nu este inclus în preț decât dacă se specifică expres.</p>
+    <p style="margin-bottom: 6px;"><strong>7. Retur.</strong> Produsele personalizate nu pot fi returnate, conform legislației în vigoare.</p>
+    <p style="margin-bottom: 6px;"><strong>8. Garanție.</strong> Produsele beneficiază de garanția legală de conformitate. Reclamațiile pentru defecte vizibile trebuie formulate în 48 de ore de la recepție. Uzura normală sau intervențiile neautorizate exclud garanția.</p>
+    <p style="margin-bottom: 6px;"><strong>9. Limitarea răspunderii.</strong> Răspunderea Glass Associates este limitată la valoarea comenzii achitate. Glass Associates nu răspunde pentru pierderi indirecte sau daune colaterale.</p>
+    <p style="margin-bottom: 6px;"><strong>10. Forța majoră.</strong> Exonerează părțile de răspundere pe durata existenței acesteia, conform legislației române.</p>
+    <p style="margin-bottom: 6px;"><strong>11. Protecția datelor.</strong> Datele personale sunt prelucrate conform GDPR și politicii de confidențialitate Glass Associates.</p>
+    <p style="margin-bottom: 6px;"><strong>12. Legea aplicabilă.</strong> Prezentele CGV sunt guvernate de legea română. Litigiile se soluționează de instanțele competente din România.</p>
+    <p style="margin-top: 8px; font-style: italic;">Versiunea în vigoare la data confirmării comenzii este cea aplicabilă.</p>
+  </div>
+
+  <div class="footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #eee; font-size: 0.75rem; color: #999; text-align: center;">
     <p><strong>Glass Associates</strong> — Sticlă structurală, balustrade, cabine duș, pergole, copertine</p>
     <p>Email: office@glassassociates.ro &nbsp;|&nbsp; Web: www.glassassociates.ro</p>
     <p style="margin-top: 8px;">Această ofertă este valabilă 30 de zile de la data emiterii. Prețurile nu includ transportul și montajul decât dacă este specificat.</p>
