@@ -172,7 +172,7 @@ export default function BalustradeConfiguratorPage() {
                 <div className="option-preview-grid" style={{ marginTop: 12 }}>
                   {Object.entries(p.profileShapes).map(([k, d]) => (
                     <div key={k} className={`option-preview-item ${profileShape === k ? "selected" : ""}`} onClick={() => update("profileShape", k)} title={d.name}>
-                      <img src={`/profil-${k.toLowerCase()}.png`} alt={d.name} style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto" }} />
+                      <img src={`/profil-${k.toLowerCase()}.png`} alt={d.name} style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
                       <div style={{ fontSize: "0.65rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>{d.name}</div>
                     </div>
                   ))}
@@ -206,7 +206,7 @@ export default function BalustradeConfiguratorPage() {
               ].map(o => (
                 <div key={o.key} className={`option-preview-item ${handrail === o.key ? "selected" : ""}`} onClick={() => update("handrail", o.key)} title={o.label}>
                   {o.img ? (
-                    <img src={o.img} alt={o.label} style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto" }} />
+                    <img src={o.img} alt={o.label} style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
                   ) : (
                     <div style={{ width: 80, height: 50, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(240,237,232,0.2)", fontSize: 14 }}>—</div>
                   )}
