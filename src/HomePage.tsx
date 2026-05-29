@@ -188,7 +188,7 @@ export default function HomePage() {
                 <button className="btn-ghost">Contact Direct</button>
               </a>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }} className="anim-fade-up-4">
+            <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }} className="anim-fade-up-4">
               {STATS.map((s, i) => (
                 <div key={i} style={{ padding: "24px 20px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", textAlign: "center" }}>
                   <div style={{ fontSize: "1.8rem", fontWeight: 700, color: "#c8a96e", fontFamily: "'DM Serif Display', serif" }}>{s.value}</div>
@@ -206,7 +206,7 @@ export default function HomePage() {
             <h2 className="serif" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 400 }}>Gama noastră completă</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             {PRODUCTS.map((p) => (
               p.active ? (
                 <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "block", position: "relative", zIndex: 2 }}>
