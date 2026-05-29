@@ -134,6 +134,17 @@ export default function TerraceConfiguratorPage() {
             <ToggleOption checked={manerScoica} onChange={setManerScoica} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 30}€`} />
             <ToggleOption checked={manerRectangular} onChange={setManerRectangular} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 60}€`} />
             <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
+            {/* Handle preview images */}
+            <div className="option-preview-grid" style={{ marginTop: 8 }}>
+              <div className={`option-preview-item ${manerScoica ? "selected" : ""}`} onClick={() => setManerScoica(!manerScoica)} title="Mâner Scoică">
+                <img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
+                <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Scoică</div>
+              </div>
+              <div className={`option-preview-item ${manerRectangular ? "selected" : ""}`} onClick={() => setManerRectangular(!manerRectangular)} title="Mâner Rectangular">
+                <img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
+                <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Rectangular</div>
+              </div>
+            </div>
           </SectionCard>
         </div>
 
