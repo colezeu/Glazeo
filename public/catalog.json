@@ -175,24 +175,24 @@
       "minLungimeMM": 1200,
       "glassTypes": {
         "clar": {
-          "name": "Sticlă Clară 8mm",
-          "pricePerSqm": 56,
-          "desc": "Standard, transparență maximă"
+          "name": "Sticlă Clară 10mm ESG",
+          "pricePerSqm": 62,
+          "desc": "Standard, transparență maximă, securizat"
         },
         "bronze": {
-          "name": "Sticlă Bronze 8mm",
-          "pricePerSqm": 86,
-          "desc": "Nuanță caldă, protecție solară"
+          "name": "Sticlă Bronze 10mm ESG",
+          "pricePerSqm": 94,
+          "desc": "Nuanță caldă, protecție solară, securizat"
         },
         "gri": {
-          "name": "Sticlă Gri 8mm",
-          "pricePerSqm": 88,
-          "desc": "Nuanță neutră, design modern"
+          "name": "Sticlă Gri 10mm ESG",
+          "pricePerSqm": 96,
+          "desc": "Nuanță neutră, design modern, securizat"
         },
         "satin": {
-          "name": "Sticlă Sablată/Satinată 8mm",
-          "pricePerSqm": 92,
-          "desc": "Confidențialitate, aspect mat"
+          "name": "Sticlă Sablată/Satinată 10mm ESG",
+          "pricePerSqm": 100,
+          "desc": "Confidențialitate, aspect mat, securizat"
         }
       },
       "systemPrices": {
