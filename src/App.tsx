@@ -21,6 +21,7 @@ import PartnerManagement from "./pages/PartnerManagement";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const isAdmin = user?.email === 'office@glass.associates';
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
@@ -43,6 +44,16 @@ function App() {
       >
         📁 Proiectele mele
       </Link>
+
+      {/* Buton Admin — doar pentru admin */}
+      {isAdmin && (
+        <Link
+          to="/admin/partners"
+          className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg border border-[#c8a96e]/30"
+        >
+          👥 Parteneri
+        </Link>
+      )}
 
       {/* Buton Logout */}
       <button 
