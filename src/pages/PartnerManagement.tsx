@@ -71,7 +71,31 @@ export default function PartnerManagement() {
           <ArrowLeft size={14} /> Înapoi la Dashboard
         </Link>
         <h1 className="text-3xl font-bold mb-2">👥 Gestionare Parteneri</h1>
-        <p className="text-gray-400 mb-8" style={{ fontSize: "0.9rem" }}>Setează tier-ul de preț pentru fiecare partener.</p>
+        <p className="text-gray-400 mb-4" style={{ fontSize: "0.9rem" }}>Setează tier-ul de preț pentru fiecare partener.</p>
+
+        {/* Invite box */}
+        <div className="glass-card" style={{ borderRadius: 16, padding: "20px 24px", marginBottom: 28, background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.2)" }}>
+          <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#c8a96e", marginBottom: 8 }}>🔗 Cum adaugi parteneri:</div>
+          <p style={{ fontSize: "0.82rem", color: "rgba(240,237,232,0.55)", marginBottom: 12, lineHeight: 1.6 }}>
+            Trimite linkul de mai jos partenerului tău. Își face cont, configurează produse, apoi apare în tabelul de aici unde îi poți seta tier-ul.
+          </p>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              readOnly
+              value="https://glazeo.vercel.app/auth"
+              className="input-field"
+              style={{ flex: 1, fontSize: "0.82rem", padding: "10px 14px", fontFamily: "monospace" }}
+              onFocus={(e) => e.target.select()}
+            />
+            <button
+              onClick={() => { navigator.clipboard.writeText('https://glazeo.vercel.app/auth'); setMsg('Link copiat! Trimite-l partenerului.'); }}
+              className="btn-primary"
+              style={{ padding: "10px 18px", fontSize: "0.82rem", whiteSpace: "nowrap" }}
+            >
+              📋 Copiază
+            </button>
+          </div>
+        </div>
       {msg && (
         <div style={{
           padding: '10px 16px', borderRadius: 10, marginBottom: 16,
