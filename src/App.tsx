@@ -48,24 +48,24 @@ function App() {
   return (
     <BrowserRouter>
       <AppErrorBoundary>
-       <div className="fixed top-20 right-6 z-[100] flex items-center gap-3">
+       <div className="fixed top-20 right-4 md:right-6 z-[100] flex items-center gap-2 md:gap-3">
   {user ? (
     <>
       {/* Buton Dashboard */}
       <Link 
         to="/dashboard" 
-        className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg border border-[#c8a96e]/30"
+        className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
       >
-        📁 Proiectele mele
+        📁 <span className="hidden md:inline">Proiectele mele</span><span className="md:hidden">Proiecte</span>
       </Link>
 
       {/* Buton Admin — doar pentru admin */}
       {isAdmin && (
         <Link
           to="/admin/partners"
-          className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg border border-[#c8a96e]/30"
+          className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
         >
-          👥 Parteneri
+          👥 <span className="hidden md:inline">Parteneri</span>
         </Link>
       )}
 
@@ -75,9 +75,9 @@ function App() {
           await supabase.auth.signOut();
           window.location.href = '/auth';
         }}
-        className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-sm flex items-center gap-2 border border-red-500/30"
+        className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 border border-red-500/30"
       >
-        Deconectare
+        <span className="hidden md:inline">Deconectare</span><span className="md:hidden">🚪</span>
       </button>
     </>
   ) : (
