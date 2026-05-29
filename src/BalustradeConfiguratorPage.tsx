@@ -222,6 +222,41 @@ export default function BalustradeConfiguratorPage() {
             <BalustradePreview3D dimensions={{ length, height }} glassType={glassType} mountingType={mountingType} profileShape={profileShape} skirtOverride={skirt} includeHandrail={handrail !== "none"} includeLed={normalizedIncludeLed} glassShape={glassShape} />
           </PreviewBox>
 
+          {/* Detail preview: profil selectat + mână curentă */}
+          {(showProfileShape || handrail !== "none") && (
+            <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>
+                Detaliu selecție
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {showProfileShape && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginBottom: 8 }}>
+                      Profil: {p.profileShapes[profileShape]?.name || profileShape}
+                    </div>
+                    <img
+                      src={`/profil-${profileShape.toLowerCase()}.png`}
+                      alt={p.profileShapes[profileShape]?.name}
+                      style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }}
+                    />
+                  </div>
+                )}
+                {handrail !== "none" && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginBottom: 8 }}>
+                      Mână curentă: {p.options[handrail]?.name || handrail}
+                    </div>
+                    <img
+                      src={`/mc-${handrail.replace("handrail-", "")}.png`}
+                      alt={p.options[handrail]?.name}
+                      style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {quote && (
             <button onClick={handleShare} className="btn-ghost w-full" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: "0.82rem" }}>
               {copied ? <><Check size={14} color="#22c55e" /> Link copiat!</> : <><Share2 size={14} /> Copiază link configurație</>}
