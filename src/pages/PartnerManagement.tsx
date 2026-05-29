@@ -166,7 +166,12 @@ export default function PartnerManagement() {
                             const newName = (e.target as HTMLInputElement).value.trim()
                             if (!newName) return
                             const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
-                            setMsg(error ? '❌ ' + error.message : '✅ ' + newName)
+                            if (error) return setMsg('❌ Update: ' + error.message)
+                            const { data } = await supabase.from('profiles').select('name').eq('user_id', p.user_id).single()
+                            setMsg('✅ Salvat. DB confirmă: ' + (data?.name || '(gol)'))
+                            if (data?.name === newName) {
+                              setPartners(prev => prev.map(x => x.user_id === p.user_id ? { ...x, name: newName } : x))
+                            }
                           }
                         }}
                       />
@@ -175,7 +180,13 @@ export default function PartnerManagement() {
                           const newName = p.name.trim()
                           if (!newName) return
                           const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
-                          setMsg(error ? '❌ ' + error.message : '✅ ' + newName)
+                          if (error) return setMsg('❌ Update: ' + error.message)
+                          // Verify it saved
+                          const { data } = await supabase.from('profiles').select('name').eq('user_id', p.user_id).single()
+                          setMsg('✅ Salvat. DB confirmă: ' + (data?.name || '(gol)'))
+                          if (data?.name === newName) {
+                            setPartners(prev => prev.map(x => x.user_id === p.user_id ? { ...x, name: newName } : x))
+                          }
                         }}
                         className="btn-primary"
                         style={{ padding: '6px 10px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
