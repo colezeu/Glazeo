@@ -176,22 +176,22 @@
       "glassTypes": {
         "clar": {
           "name": "Sticlă Clară 10mm ESG",
-          "pricePerSqm": 62,
+          "pricePerSqm": 56,
           "desc": "Standard, transparență maximă, securizat"
         },
         "bronze": {
           "name": "Sticlă Bronze 10mm ESG",
-          "pricePerSqm": 94,
+          "pricePerSqm": 86,
           "desc": "Nuanță caldă, protecție solară, securizat"
         },
         "gri": {
           "name": "Sticlă Gri 10mm ESG",
-          "pricePerSqm": 96,
+          "pricePerSqm": 88,
           "desc": "Nuanță neutră, design modern, securizat"
         },
         "satin": {
           "name": "Sticlă Sablată/Satinată 10mm ESG",
-          "pricePerSqm": 100,
+          "pricePerSqm": 92,
           "desc": "Confidențialitate, aspect mat, securizat"
         }
       },
