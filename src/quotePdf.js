@@ -49,36 +49,94 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
     year: "numeric", month: "long", day: "numeric"
   });
 
-  // Detalii configurație în funcție de tip produs
   const configDetails = [];
+  const priceBreakdown = [];
+
   if (config) {
+    // Dimensiuni
     if (config.length) configDetails.push(`Lungime: ${config.length}m`);
     if (config.width) configDetails.push(`Lățime: ${config.width}m`);
     if (config.depth) configDetails.push(`Adâncime: ${config.depth}m`);
     if (config.height) configDetails.push(`Înălțime: ${config.height}m`);
+    if (config.dims?.width && typeof config.dims === 'object') {
+      if (config.dims.width) configDetails.push(`Lungime: ${config.dims.width}m`);
+      if (config.dims.height) configDetails.push(`Înălțime: ${config.dims.height}m`);
+      if (config.dims.depth) configDetails.push(`Adâncime: ${config.dims.depth}m`);
+    }
+
+    // Sticlă
     if (config.glassType) configDetails.push(`Tip sticlă: ${config.glassType}`);
     if (config.glassShape) configDetails.push(`Formă sticlă: ${config.glassShape}`);
+    if (config.glass) configDetails.push(`Tip sticlă: ${config.glass}`);
+
+    // Sistem / feronerie
     if (config.hardware) configDetails.push(`Feronerie: ${config.hardware}`);
-    if (config.enclosure) configDetails.push(`Tip cabină: ${config.enclosure}`);
-    if (config.treatment) configDetails.push(`Tratament: ${config.treatment}`);
-    if (config.handrail && config.handrail !== "none") configDetails.push(`Mână curentă: ${config.handrail}`);
+    if (config.system) configDetails.push(`Sistem: ${config.system}`);
+    if (config.mountingType) configDetails.push(`Tip montaj: ${config.mountingType}`);
+
+    // Terasă specifics
+    if (config.nrCanate) configDetails.push(`Număr canate: ${config.nrCanate}`);
+    if (config.deschidereMijloc) configDetails.push(`Deschidere: la mijloc`);
+    if (config.sineNeintrerupte) configDetails.push(`Șine neîntrerupte: Da (+35%)`);
+
+    // Profile / handrail
+    if (config.profileShape) configDetails.push(`Formă profil: ${config.profileShape}`);
+    if (config.handrail && config.handrail !== "none") {
+      const handrailNames = { "handrail-structurala": "Structurală Aluminiu", "handrail-rotunda": "Rotundă Inox", "handrail-patrata": "Pătrată Inox", "handrail-slim": "Slim Aluminiu" };
+      configDetails.push(`Mână curentă: ${handrailNames[config.handrail] || config.handrail}`);
+    }
+
+    // Accesorii bifate
     if (config.includeLed || config.inclLed) configDetails.push(`Iluminare LED: Da`);
+    if (config.incuietoare) configDetails.push(`Încuietoare cu cheie: Da`);
+    if (config.profileLaterale) configDetails.push(`Profile laterale etanșare: Da`);
+    if (config.vopsireRAL) configDetails.push(`Vopsire electrostatică RAL: Da`);
+    if (config.manerScoica) configDetails.push(`Mâner scoică: Da`);
+    if (config.manerRectangular) configDetails.push(`Mâner rectangular inox: Da`);
+    if (config.inclManere) configDetails.push(`Mânere inox: Da`);
+    if (config.inclIncuietoare) configDetails.push(`Încuietoare: Da`);
+    if (config.inclBlocator || config.blocator) configDetails.push(`Blocator interior: Da`);
+    if (config.inclCaroiaj) configDetails.push(`Profile caroiaj: Da`);
     if (config.inclTowel) configDetails.push(`Port prosop: Da`);
     if (config.inclSeat) configDetails.push(`Scaun rabatabil: Da`);
+    if (config.inclDez) configDetails.push(`Sistem dezghețare: Da`);
+    if (config.inclMob) configDetails.push(`Mobilier integrat: Da`);
+    if (config.inclPan) configDetails.push(`Panouri laterale: Da`);
+    if (config.inclAntiAburire) configDetails.push(`Anti-aburire: Da`);
+    if (config.inclUsaBatanta) configDetails.push(`Ușă batantă: Da`);
+    if (config.inclUsaCulisanta) configDetails.push(`Ușă culisantă: Da`);
+
+    // Altele
+    if (config.enclosure) configDetails.push(`Tip cabină: ${config.enclosure}`);
+    if (config.treatment) configDetails.push(`Tratament: ${config.treatment}`);
+    if (config.shape) configDetails.push(`Formă: ${config.shape}`);
+    if (config.mirrorType) configDetails.push(`Tip oglindă: ${config.mirrorType}`);
+    if (config.thickness) configDetails.push(`Grosime: ${config.thickness}`);
+    if (config.edge) configDetails.push(`Margine: ${config.edge}`);
   }
 
-  const lines = [];
+  // Price breakdown lines
   if (quote) {
-    if (quote.area) lines.push({ label: "Suprafață", value: `${quote.area} m²` });
-    if (quote.hwPrice) lines.push({ label: "Feronerie", value: `${quote.hwPrice}€` });
-    if (quote.glassPrice) lines.push({ label: "Sticlă", value: `${quote.glassPrice}€` });
-    if (quote.encP) lines.push({ label: "Tip cabină", value: `${quote.encP}€` });
-    if (quote.treatP) lines.push({ label: "Tratament", value: `${quote.treatP}€` });
-    if (quote.taxaForma) lines.push({ label: "Taxă formă", value: `${quote.taxaForma}€` });
-    if (quote.handrailP) lines.push({ label: "Mână curentă", value: `${quote.handrailP}€` });
-    if (quote.ledP) lines.push({ label: "LED", value: `${quote.ledP}€` });
-    if (quote.towelP) lines.push({ label: "Port prosop", value: `${quote.towelP}€` });
-    if (quote.seatP) lines.push({ label: "Scaun", value: `${quote.seatP}€` });
+    if (quote.area) priceBreakdown.push({ label: "Suprafață totală", value: `${quote.area} m²` });
+    if (quote.glassP != null) priceBreakdown.push({ label: "Cost sticlă", value: `${quote.glassP}€` });
+    if (quote.glassPrice) priceBreakdown.push({ label: "Sticlă", value: `${quote.glassPrice}€` });
+    if (quote.hwPrice) priceBreakdown.push({ label: "Feronerie", value: `${quote.hwPrice}€` });
+    if (quote.hardwareP != null) priceBreakdown.push({ label: "Feronerie & sistem", value: `${quote.hardwareP}€` });
+    if (quote.sysP) priceBreakdown.push({ label: "Sistem", value: `${quote.sysP}€` });
+    if (quote.encP) priceBreakdown.push({ label: "Tip cabină", value: `${quote.encP}€` });
+    if (quote.treatP) priceBreakdown.push({ label: "Tratament", value: `${quote.treatP}€` });
+    if (quote.taxaForma) priceBreakdown.push({ label: "Taxă formă", value: `${quote.taxaForma}€` });
+    if (quote.handrailP) priceBreakdown.push({ label: "Mână curentă", value: `${quote.handrailP}€` });
+    if (quote.ledP) priceBreakdown.push({ label: "LED", value: `${quote.ledP}€` });
+    if (quote.towelP) priceBreakdown.push({ label: "Port prosop", value: `${quote.towelP}€` });
+    if (quote.seatP) priceBreakdown.push({ label: "Scaun", value: `${quote.seatP}€` });
+    if (quote.optP) priceBreakdown.push({ label: "Accesorii", value: `${quote.optP}€` });
+    if (quote.typeP) priceBreakdown.push({ label: "Structură", value: `${quote.typeP}€` });
+    if (quote.ledP2) priceBreakdown.push({ label: "LED", value: `${quote.ledP2}€` });
+    if (quote.dezP) priceBreakdown.push({ label: "Dezghețare", value: `${quote.dezP}€` });
+    if (quote.mobP) priceBreakdown.push({ label: "Mobilier", value: `${quote.mobP}€` });
+    if (quote.panP) priceBreakdown.push({ label: "Panouri lat.", value: `${quote.panP}€` });
+    if (quote.carP) priceBreakdown.push({ label: "Caroiaj", value: `${quote.carP}€` });
   }
 
   const safeProductName = escapeHtml(productName);
@@ -160,7 +218,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
   <div class="section">
     <h2>Detaliu Preț</h2>
     <table class="lines">
-      ${lines.map(l => `<tr><td>${escapeHtml(l.label)}</td><td>${escapeHtml(l.value)}</td></tr>`).join("")}
+      ${priceBreakdown.map(l => `<tr><td>${escapeHtml(l.label)}</td><td>${escapeHtml(l.value)}</td></tr>`).join("")}
       <tr class="subtotal"><td colspan="2" style="text-align:right; padding:8px 0;">
         Subtotal: ${quote.subtotal}€ &nbsp;•&nbsp; TVA: ${quote.vat}€
       </td></tr>
