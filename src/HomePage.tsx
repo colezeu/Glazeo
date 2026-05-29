@@ -188,7 +188,7 @@ export default function HomePage() {
                 <button className="btn-ghost">Contact Direct</button>
               </a>
             </div>
-            <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }} className="anim-fade-up-4">
+            <div className="stats-grid anim-fade-up-4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }}>
               {STATS.map((s, i) => (
                 <div key={i} style={{ padding: "24px 20px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", textAlign: "center" }}>
                   <div style={{ fontSize: "1.8rem", fontWeight: 700, color: "#c8a96e", fontFamily: "'DM Serif Display', serif" }}>{s.value}</div>
