@@ -26,7 +26,14 @@ function App() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      // Creează profil automat la login dacă nu există
+      if (u) {
+        supabase.from('profiles').select('User_id').eq('User_id', u.id).single().then(({ error }) => {
+          if (error) supabase.from('profiles').insert({ User_id: u.id, price_multiplier: 1.0 }).then(() => {});
+        });
+      }
     });
     return () => listener.subscription.unsubscribe();
   }, []);

@@ -17,10 +17,10 @@ export default function PartnerManagement() {
   const [msg, setMsg] = useState('')
 
   const fetchPartners = async () => {
+    // Get unique users from projects table (RLS-safe)
     const { data, error } = await supabase
-      .from('profiles')
-      .select('User_id, price_multiplier')
-      .order('User_id')
+      .from('projects')
+      .select('user_id')
 
     if (error) {
       console.error(error)
@@ -28,12 +28,29 @@ export default function PartnerManagement() {
       return
     }
 
-    // Get emails for each user
-    const enriched = await Promise.all((data || []).map(async (p) => {
-      // Try to get user email from auth admin
-      // Falls back to showing User_id
-      return { ...p, email: undefined }
-    }))
+    // Get unique user IDs
+    const userIds = [...new Set((data || []).map(p => p.user_id))]
+
+    // Get their profiles
+    const enriched: PartnerRow[] = []
+    for (const uid of userIds) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('price_multiplier')
+        .eq('User_id', uid)
+        .single()
+
+      // Also count their projects
+      const { count } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', uid)
+
+      enriched.push({
+        User_id: uid,
+        price_multiplier: profile?.price_multiplier ?? 1.0,
+      })
+    }
 
     setPartners(enriched)
     setLoading(false)
