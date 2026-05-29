@@ -151,22 +151,38 @@ export default function PartnerManagement() {
               return (
                 <tr key={p.user_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <td style={{ padding: '12px 8px' }}>
-                    <input
-                      type="text"
-                      value={p.name}
-                      placeholder="Nume partener..."
-                      className="input-field"
-                      style={{ padding: '6px 10px', fontSize: '0.82rem', width: '100%', maxWidth: 180 }}
-                      onChange={(e) => {
-                        setPartners(prev => prev.map(x => x.user_id === p.user_id ? { ...x, name: e.target.value } : x))
-                      }}
-                      onBlur={async (e) => {
-                        const newName = e.target.value.trim()
-                        if (!newName || newName === p.name) return
-                        const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
-                        setMsg(error ? '❌ ' + error.message : '✅ ' + newName)
-                      }}
-                    />
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <input
+                        type="text"
+                        value={p.name}
+                        placeholder="Nume..."
+                        className="input-field"
+                        style={{ padding: '6px 10px', fontSize: '0.82rem', width: 130 }}
+                        onChange={(e) => {
+                          setPartners(prev => prev.map(x => x.user_id === p.user_id ? { ...x, name: e.target.value } : x))
+                        }}
+                        onKeyDown={async (e) => {
+                          if (e.key === 'Enter') {
+                            const newName = (e.target as HTMLInputElement).value.trim()
+                            if (!newName) return
+                            const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
+                            setMsg(error ? '❌ ' + error.message : '✅ ' + newName)
+                          }
+                        }}
+                      />
+                      <button
+                        onClick={async () => {
+                          const newName = p.name.trim()
+                          if (!newName) return
+                          const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
+                          setMsg(error ? '❌ ' + error.message : '✅ ' + newName)
+                        }}
+                        className="btn-primary"
+                        style={{ padding: '6px 10px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      >
+                        💾
+                      </button>
+                    </div>
                   </td>
                   <td style={{ padding: '12px 8px', color: 'rgba(240,237,232,0.5)' }}>{p.projectCount}</td>
                   <td style={{ padding: '12px 8px' }}>
