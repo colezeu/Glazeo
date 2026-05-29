@@ -30,12 +30,13 @@ function App() {
       setUser(u);
       // Creează sau actualizează profilul la login (cu email)
       if (u) {
+        const key = `profile_created_${u.id}`;
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, '1');
         supabase.from('profiles').select('user_id,email').eq('user_id', u.id).single().then(({ data, error }) => {
           if (error) {
-            // Profil nou
             supabase.from('profiles').insert({ user_id: u.id, price_multiplier: 1.0, email: u.email }).then(() => {});
           } else if (!data.email) {
-            // Profil vechi fără email — actualizează
             supabase.from('profiles').update({ email: u.email }).eq('user_id', u.id).then(() => {});
           }
         });
