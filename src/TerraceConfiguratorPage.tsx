@@ -3,44 +3,6 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
 
-/** Mâner scoică — clasic, rotund */
-function HandleScoicaSVG() {
-  const gold = "#c8a96e";
-  return (
-    <svg width="60" height="50" viewBox="0 0 60 50" style={{ display: "block", margin: "0 auto" }}>
-      {/* Mount plate */}
-      <rect x="18" y="16" width="24" height="18" rx="3" fill="none" stroke={gold} strokeWidth="1.5" opacity="0.6" />
-      {/* Scoică / shell shape */}
-      <ellipse cx="30" cy="22" rx="10" ry="8" fill={gold} opacity="0.7" />
-      <ellipse cx="30" cy="22" rx="7" ry="5" fill="#0f1117" opacity="0.4" />
-      {/* Keyhole */}
-      <circle cx="30" cy="30" r="2" fill={gold} opacity="0.5" />
-      <rect x="29" y="30" width="2" height="5" rx="0.5" fill={gold} opacity="0.5" />
-    </svg>
-  )
-}
-
-/** Mâner rectangular inox — modern, minimalist */
-function HandleRectangularSVG() {
-  const gold = "#c8a96e";
-  return (
-    <svg width="60" height="50" viewBox="0 0 60 50" style={{ display: "block", margin: "0 auto" }}>
-      {/* Mount plate */}
-      <rect x="14" y="16" width="32" height="18" rx="2" fill="none" stroke={gold} strokeWidth="1.5" opacity="0.6" />
-      {/* Rectangular bar */}
-      <rect x="20" y="13" width="20" height="6" rx="1" fill={gold} opacity="0.75" />
-      {/* Bottom bar */}
-      <rect x="20" y="31" width="20" height="4" rx="1" fill={gold} opacity="0.45" />
-      {/* Vertical connectors */}
-      <rect x="26" y="13" width="3" height="24" rx="0.5" fill={gold} opacity="0.3" />
-      <rect x="31" y="13" width="3" height="24" rx="0.5" fill={gold} opacity="0.3" />
-      {/* Keyhole */}
-      <rect x="28" y="25" width="4" height="3" rx="1" fill="#0f1117" opacity="0.6" />
-      <circle cx="30" cy="25" r="1" fill={gold} opacity="0.5" />
-    </svg>
-  )
-}
-
 export default function TerraceConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.21);
@@ -174,12 +136,12 @@ export default function TerraceConfiguratorPage() {
             <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
             {/* Handle preview images */}
             <div className="option-preview-grid" style={{ marginTop: 8 }}>
-              <div className={`option-preview-item ${manerScoica ? "selected" : ""}`} onClick={() => setManerScoica(!manerScoica)} title="Mâner Scoică">
-                <HandleScoicaSVG />
+              <div className={`option-preview-item ${manerScoica ? "selected" : ""}`} onClick={() => { setManerScoica(!manerScoica); if (!manerScoica) setManerRectangular(false); }} title="Mâner Scoică">
+                <img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
                 <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Scoică</div>
               </div>
-              <div className={`option-preview-item ${manerRectangular ? "selected" : ""}`} onClick={() => setManerRectangular(!manerRectangular)} title="Mâner Rectangular">
-                <HandleRectangularSVG />
+              <div className={`option-preview-item ${manerRectangular ? "selected" : ""}`} onClick={() => { setManerRectangular(!manerRectangular); if (!manerRectangular) setManerScoica(false); }} title="Mâner Rectangular">
+                <img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
                 <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Rectangular</div>
               </div>
             </div>
@@ -200,18 +162,14 @@ export default function TerraceConfiguratorPage() {
               <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
                 {manerScoica && (
                   <div style={{ textAlign: "center" }}>
-                    <svg width={120} height={90} viewBox="0 0 120 90">
-                      <HandleScoicaSVG />
-                    </svg>
-                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Mâner Scoică — 30€</div>
+                    <img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
+                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Scoică — 30€</div>
                   </div>
                 )}
                 {manerRectangular && (
                   <div style={{ textAlign: "center" }}>
-                    <svg width={120} height={90} viewBox="0 0 120 90">
-                      <HandleRectangularSVG />
-                    </svg>
-                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Mâner Rectangular — 60€</div>
+                    <img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
+                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Rectangular — 60€</div>
                   </div>
                 )}
               </div>
