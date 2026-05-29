@@ -5,6 +5,7 @@ import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal";
 import BalustradePreview3D from "./BalustradePreview2D";
 import SaveProjectModal from "./components/SaveProjectModal";
+import PhotoRenderer from "./components/PhotoRenderer";
 import { Share2, Check } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
 
@@ -221,6 +222,18 @@ export default function BalustradeConfiguratorPage() {
           <PreviewBox title="Previzualizare 3D">
             <BalustradePreview3D dimensions={{ length, height }} glassType={glassType} mountingType={mountingType} profileShape={profileShape} skirtOverride={skirt} includeHandrail={handrail !== "none"} includeLed={normalizedIncludeLed} glassShape={glassShape} />
           </PreviewBox>
+
+          {/* Photo render */}
+          <PhotoRenderer
+            length={parseFloat(length) || 0}
+            height={parseFloat(height) || 0}
+            glassType={glassType}
+            mountingType={mountingType}
+            includeHandrail={handrail !== "none"}
+            includeLed={normalizedIncludeLed}
+            glassShape={glassShape}
+            profileShape={profileShape}
+          />
 
           {/* Detail preview: profil selectat + mână curentă */}
           {(showProfileShape || handrail !== "none") && (
