@@ -163,12 +163,8 @@ export default function PartnerManagement() {
                       onBlur={async (e) => {
                         const newName = e.target.value.trim()
                         if (!newName || newName === p.name) return
-                        const { error } = await supabase.rpc('save_partner_name', { partner_id: p.user_id, new_name: newName })
-                        if (error) {
-                          setMsg('❌ Eroare: ' + error.message)
-                        } else {
-                          setMsg('✅ Nume salvat: ' + newName)
-                        }
+                        const { data, error } = await supabase.rpc('save_partner_name', { partner_id: p.user_id, new_name: newName })
+                        setMsg(error ? '❌ ' + error.message + ' | ' + JSON.stringify(error) : (data ? '✅ Salvat: ' + newName + ' | ' + JSON.stringify(data) : '⚠️ Fără răspuns'))
                       }}
                     />
                   </td>
