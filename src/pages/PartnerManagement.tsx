@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 import { TIER_MULTIPLIERS, getTierFromMultiplier, type PricingTier } from '../lib/user'
 
 interface PartnerRow {
-  User_id: string
+  user_id: string
   price_multiplier: number
   email: string
   name: string
@@ -39,7 +39,7 @@ export default function PartnerManagement() {
       const { data: profile } = await supabase
         .from('profiles')
         .select('price_multiplier, email, name')
-        .eq('User_id', uid)
+        .eq('user_id', uid)
         .single()
 
       // Count their projects
@@ -49,7 +49,7 @@ export default function PartnerManagement() {
         .eq('user_id', uid)
 
       enriched.push({
-        User_id: uid,
+        user_id: uid,
         price_multiplier: profile?.price_multiplier ?? 1.0,
         email: profile?.email || uid.substring(0, 12) + '...',
         name: profile?.name || '',
@@ -69,13 +69,13 @@ export default function PartnerManagement() {
     const { error } = await supabase
       .from('profiles')
       .update({ price_multiplier: multiplier })
-      .eq('User_id', userId)
+      .eq('user_id', userId)
 
     if (error) {
       setMsg('Eroare: ' + error.message)
     } else {
       setPartners(prev =>
-        prev.map(p => p.User_id === userId ? { ...p, price_multiplier: multiplier } : p)
+        prev.map(p => p.user_id === userId ? { ...p, price_multiplier: multiplier } : p)
       )
       setMsg(`Tier actualizat pentru ${userId.substring(0, 8)}... → ${tier} (${multiplier})`)
     }
@@ -149,7 +149,7 @@ export default function PartnerManagement() {
             {partners.map(p => {
               const tier = getTierFromMultiplier(p.price_multiplier)
               return (
-                <tr key={p.User_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <tr key={p.user_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <td style={{ padding: '12px 8px' }}>
                     <input
                       type="text"
@@ -158,12 +158,12 @@ export default function PartnerManagement() {
                       className="input-field"
                       style={{ padding: '6px 10px', fontSize: '0.82rem', width: '100%', maxWidth: 180 }}
                       onChange={(e) => {
-                        setPartners(prev => prev.map(x => x.User_id === p.User_id ? { ...x, name: e.target.value } : x))
+                        setPartners(prev => prev.map(x => x.user_id === p.user_id ? { ...x, name: e.target.value } : x))
                       }}
                       onBlur={async (e) => {
                         const newName = e.target.value.trim()
                         if (!newName || newName === p.name) return
-                        const { error } = await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
+                        const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
                         if (error) {
                           setMsg('❌ Eroare: ' + error.message + ' (cod: ' + error.code + ')')
                         } else {
@@ -186,8 +186,8 @@ export default function PartnerManagement() {
                   <td style={{ padding: '12px 8px', textAlign: 'right' }}>
                     <select
                       value={tier}
-                      onChange={(e) => setTier(p.User_id, e.target.value as PricingTier)}
-                      disabled={updating === p.User_id}
+                      onChange={(e) => setTier(p.user_id, e.target.value as PricingTier)}
+                      disabled={updating === p.user_id}
                       className="input-field"
                       style={{ width: 'auto', padding: '6px 12px', fontSize: '0.8rem' }}
                     >

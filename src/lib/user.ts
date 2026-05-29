@@ -28,13 +28,13 @@ export const getUserMultiplier = async (): Promise<number> => {
   let { data, error } = await supabase
     .from('profiles')
     .select('price_multiplier')
-    .eq('User_id', user.id)
+    .eq('user_id', user.id)
     .single()
 
   if (error || !data) {
     const { error: insertError } = await supabase
       .from('profiles')
-      .insert({ User_id: user.id, price_multiplier: 1.0 })
+      .insert({ user_id: user.id, price_multiplier: 1.0 })
 
     if (insertError) console.error('Error creating profile:', insertError)
     return 1.0
