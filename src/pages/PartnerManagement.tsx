@@ -162,10 +162,12 @@ export default function PartnerManagement() {
                       }}
                       onBlur={async (e) => {
                         const newName = e.target.value.trim()
-                        if (newName && newName !== p.name) {
-                          const { error } = await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
-                          if (error) setMsg('Eroare salvare: ' + error.message)
-                          else setMsg(`Nume salvat: ${newName}`)
+                        if (!newName || newName === p.name) return
+                        const { error } = await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
+                        if (error) {
+                          setMsg('❌ Eroare: ' + error.message + ' (cod: ' + error.code + ')')
+                        } else {
+                          setMsg('✅ Nume salvat: ' + newName)
                         }
                       }}
                     />
