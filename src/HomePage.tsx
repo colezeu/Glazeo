@@ -111,9 +111,7 @@ function Navbar() {
         </div>
 
         {/* Link-uri directe */}
-        <Link to="/despre" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Despre</Link>
-        <Link to="/portofoliu" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Portofoliu</Link>
-        <Link to="/contact" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>Contact</Link>
+        <a href="https://glass.associates" target="_blank" rel="noopener" className="nav-link" style={{ fontSize: "0.82rem", padding: "6px 12px" }}>glass.associates</a>
       </div>
 
       {/* Mobile hamburger */}
@@ -148,9 +146,7 @@ function Navbar() {
             </Link>
           ))}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 8, paddingTop: 8 }}>
-            <Link to="/despre" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Despre</Link>
-            <Link to="/portofoliu" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Portofoliu</Link>
-            <Link to="/contact" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>Contact</Link>
+            <a href="https://glass.associates" target="_blank" rel="noopener" style={{ display: "block", padding: "10px 0", textDecoration: "none", color: "rgba(240,237,232,0.6)", fontSize: "0.88rem" }}>glass.associates ↗</a>
           </div>
         </div>
       )}

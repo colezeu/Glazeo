@@ -17,6 +17,7 @@ import SlidingDoorConfiguratorPage from "./SlidingDoorConfiguratorPage";
 import PartitionConfiguratorPage from "./PartitionConfiguratorPage";
 import OglinziConfiguratorPage from "./OglinziConfiguratorPage";
 import CopertinaConfiguratorPage from "./CopertinaConfiguratorPage";
+import PartnerManagement from "./pages/PartnerManagement";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -68,6 +69,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin/partners" element={<ProtectedRoute><PartnerManagement /></ProtectedRoute>} />
 
           {/* Configuratoare */}
           <Route path="/configurator/balustrade" element={<BalustradeConfiguratorPage />} />

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+
+const ADMIN_EMAIL = 'office@glass.associates'
 
 interface Project {
   id: string;
@@ -14,6 +16,7 @@ interface Project {
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -23,6 +26,8 @@ export default function Dashboard() {
         navigate('/auth')
         return
       }
+
+      setIsAdmin(user.email === ADMIN_EMAIL)
 
       const { data, error } = await supabase
         .from('projects')
@@ -80,7 +85,18 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Proiectele mele</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+          <h1 className="text-3xl font-bold">Proiectele mele</h1>
+          {isAdmin && (
+            <Link
+              to="/admin/partners"
+              className="btn-ghost"
+              style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.85rem" }}
+            >
+              👥 Gestionare Parteneri
+            </Link>
+          )}
+        </div>
 
         {projects.length === 0 ? (
           <div className="text-center py-12">
