@@ -163,9 +163,9 @@ export default function PartnerManagement() {
                       onBlur={async (e) => {
                         const newName = e.target.value.trim()
                         if (!newName || newName === p.name) return
-                        const { error } = await supabase.from('profiles').update({ name: newName }).eq('user_id', p.user_id)
+                        const { error } = await supabase.rpc('save_partner_name', { partner_id: p.user_id, new_name: newName })
                         if (error) {
-                          setMsg('❌ Eroare: ' + error.message + ' (cod: ' + error.code + ')')
+                          setMsg('❌ Eroare: ' + error.message)
                         } else {
                           setMsg('✅ Nume salvat: ' + newName)
                         }
