@@ -113,8 +113,8 @@ export default function PhotoRenderer({
     const panelCount = Math.max(1, Math.ceil(length / 1.1))
     const panelPx = pxDist / panelCount
     const angle = Math.atan2(b.y - a.y, b.x - a.x)
-    const perpX = Math.sin(angle)
-    const perpY = -Math.cos(angle)   // perpendicular "up" direction
+    const perpX = -Math.sin(angle)
+    const perpY = Math.cos(angle)   // perpendicular "up" direction (negative Y in canvas)
 
     // Glass tint
     const glassAlpha = glassType === '882mm' ? 0.22 : 0.15
