@@ -8,6 +8,7 @@ interface PartnerRow {
   User_id: string
   price_multiplier: number
   email: string
+  name: string
   projectCount: number
 }
 
@@ -37,7 +38,7 @@ export default function PartnerManagement() {
     for (const uid of userIds) {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('price_multiplier, email')
+        .select('price_multiplier, email, name')
         .eq('User_id', uid)
         .single()
 
@@ -51,6 +52,7 @@ export default function PartnerManagement() {
         User_id: uid,
         price_multiplier: profile?.price_multiplier ?? 1.0,
         email: profile?.email || uid.substring(0, 12) + '...',
+        name: profile?.name || '',
         projectCount: count || 0,
       })
     }
@@ -130,7 +132,7 @@ export default function PartnerManagement() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Partener</th>
+              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Nume</th>
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Proiecte</th>
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Tier</th>
               <th style={{ textAlign: 'right', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Acțiune</th>
@@ -149,7 +151,21 @@ export default function PartnerManagement() {
               return (
                 <tr key={p.User_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <td style={{ padding: '12px 8px' }}>
-                    <div style={{ fontWeight: 500 }}>{p.email}</div>
+                    <input
+                      type="text"
+                      defaultValue={p.name}
+                      placeholder="Nume partener..."
+                      className="input-field"
+                      style={{ padding: '6px 10px', fontSize: '0.82rem', width: '100%', maxWidth: 180 }}
+                      onBlur={async (e) => {
+                        const newName = e.target.value.trim()
+                        if (newName && newName !== p.name) {
+                          await supabase.from('profiles').update({ name: newName }).eq('User_id', p.User_id)
+                          setPartners(prev => prev.map(x => x.User_id === p.User_id ? { ...x, name: newName } : x))
+                          setMsg(`Nume salvat: ${newName}`)
+                        }
+                      }}
+                    />
                   </td>
                   <td style={{ padding: '12px 8px', color: 'rgba(240,237,232,0.5)' }}>{p.projectCount}</td>
                   <td style={{ padding: '12px 8px' }}>
