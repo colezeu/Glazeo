@@ -36,7 +36,7 @@ function createQuoteEmail({ productName, quote, config, clientInfo }) {
 function openMailFallback(payload) {
   const { subject, body } = createQuoteEmail(payload);
   const params = new URLSearchParams({ subject, body });
-  window.location.href = `mailto:office@glassassociates.ro?${params.toString()}`;
+  window.location.href = `mailto:office@glass.associates?${params.toString()}`;
   return { ok: true, fallback: "mailto" };
 }
 
@@ -250,7 +250,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
 
   <div class="footer" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #eee; font-size: 0.75rem; color: #999; text-align: center;">
     <p><strong>Glass Associates</strong> — Sticlă structurală, balustrade, cabine duș, pergole, copertine</p>
-    <p>Email: office@glassassociates.ro &nbsp;|&nbsp; Web: www.glassassociates.ro</p>
+    <p>Email: office@glass.associates &nbsp;|&nbsp; Web: glass.associates</p>
     <p style="margin-top: 8px;">Această ofertă este valabilă 30 de zile de la data emiterii. Prețurile nu includ transportul și montajul decât dacă este specificat.</p>
   </div>
 
