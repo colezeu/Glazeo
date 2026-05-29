@@ -183,11 +183,11 @@ export default function HomePage() {
               Configurați produse din sticlă de înaltă siguranță — balustrade, cabine duș, terase, pergole etc.
             </p>
             <div className="anim-fade-up-4" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <Link to="/configurator/balustrade">
+              <a href="#products">
                 <button className="btn-primary" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   Configurează Acum <ArrowRight size={16} />
                 </button>
-              </Link>
+              </a>
               <a href="mailto:office@glass.associates">
                 <button className="btn-ghost">Contact Direct</button>
               </a>
@@ -204,7 +204,7 @@ export default function HomePage() {
         </section>
 
         {/* Products */}
-        <section style={{ padding: "80px 32px", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
+        <section id="products" style={{ padding: "80px 32px", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 56 }}>
             <p style={{ fontSize: "0.75rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 12 }}>Catalog Produse</p>
             <h2 className="serif" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 400 }}>Gama noastră completă</h2>
@@ -254,9 +254,9 @@ export default function HomePage() {
           <div style={{ maxWidth: 900, margin: "0 auto", background: "linear-gradient(135deg, rgba(200,169,110,0.12), rgba(200,169,110,0.04))", border: "1px solid rgba(200,169,110,0.25)", borderRadius: 24, padding: "60px 48px", textAlign: "center", backdropFilter: "blur(20px)" }}>
             <h2 className="serif" style={{ fontSize: "clamp(1.6rem,3.5vw,2.4rem)", marginBottom: 16, fontWeight: 400 }}>Pregătit să configurați?</h2>
             <p style={{ color: "rgba(240,237,232,0.45)", marginBottom: 32, fontSize: "1rem" }}>Ofertă personalizată în câteva minute.</p>
-            <Link to="/configurator/balustrade">
+            <a href="#products">
               <button className="btn-primary" style={{ fontSize: "1rem", padding: "16px 40px" }}>Începe Configurarea</button>
-            </Link>
+            </a>
           </div>
         </section>
 
