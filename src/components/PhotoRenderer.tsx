@@ -81,30 +81,47 @@ export default function PhotoRenderer(props: PhotoRendererProps) {
 
     const [bl, br, tr, tl] = corners  // bottom-left, bottom-right, top-right, top-left
     const panelCount = Math.max(1, Math.ceil(length / 1.1))
-    const glassAlpha = glassType === '882mm' ? 0.22 : 0.15
 
     // Interpolate between bottom edge and top edge for panel divisions
     const lerp = (t: number, p1: Point, p2: Point) => ({ x: p1.x + t * (p2.x - p1.x), y: p1.y + t * (p2.y - p1.y) })
 
-    // Draw glass as single polygon (follows perspective)
+    // Draw glass — realistic tint (subtle gray-green, like real tempered glass)
+    const glassAlpha = glassType === '882mm' ? 0.16 : 0.10
     ctx.beginPath()
     ctx.moveTo(bl.x, bl.y); ctx.lineTo(br.x, br.y)
     ctx.lineTo(tr.x, tr.y); ctx.lineTo(tl.x, tl.y)
     ctx.closePath()
-    ctx.fillStyle = `rgba(180,220,255,${glassAlpha})`
+    ctx.fillStyle = `rgba(120,135,125,${glassAlpha})`
     ctx.fill()
-    ctx.strokeStyle = 'rgba(180,220,255,0.35)'; ctx.lineWidth = 1.5; ctx.stroke()
+    // Edge — subtle darker greenish
+    ctx.strokeStyle = 'rgba(80,95,85,0.3)'; ctx.lineWidth = 2; ctx.stroke()
+    // Inner edge highlight
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1
+    ctx.stroke()
 
-    // Panel dividers (follow perspective)
+    // Panel dividers
     if (panelCount > 1) {
       for (let i = 1; i < panelCount; i++) {
         const t = i / panelCount
         const bottom = lerp(t, bl, br)
         const top = lerp(t, tl, tr)
         ctx.beginPath(); ctx.moveTo(bottom.x, bottom.y); ctx.lineTo(top.x, top.y)
-        ctx.strokeStyle = 'rgba(180,220,255,0.2)'; ctx.lineWidth = 1; ctx.stroke()
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1.5; ctx.stroke()
+        // Dark line next to divider for depth
+        ctx.beginPath(); ctx.moveTo(bottom.x + 1.5, bottom.y); ctx.lineTo(top.x + 1.5, top.y)
+        ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1; ctx.stroke()
       }
     }
+
+    // Bottom edge — darker shadow for grounding
+    ctx.beginPath()
+    ctx.moveTo(bl.x, bl.y); ctx.lineTo(br.x, br.y)
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 2.5; ctx.stroke()
+
+    // Top edge — subtle light catch
+    ctx.beginPath()
+    ctx.moveTo(tl.x, tl.y); ctx.lineTo(tr.x, tr.y)
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1.5; ctx.stroke()
 
     // Skirt (below bottom edge)
     if (mountingType === 'clips') {
@@ -116,7 +133,7 @@ export default function PhotoRenderer(props: PhotoRendererProps) {
       ctx.moveTo(bl.x, bl.y); ctx.lineTo(br.x, br.y)
       ctx.lineTo(br.x + sx, br.y + sy); ctx.lineTo(bl.x + sx, bl.y + sy)
       ctx.closePath()
-      ctx.fillStyle = 'rgba(180,220,255,0.08)'; ctx.fill()
+      ctx.fillStyle = 'rgba(120,135,125,0.04)'; ctx.fill()
       // Buttons (clips)
       for (let i = 0; i < panelCount; i++) {
         for (let j = 0; j < 2; j++) {
@@ -153,10 +170,19 @@ export default function PhotoRenderer(props: PhotoRendererProps) {
       ctx.strokeStyle = 'rgba(255,240,120,0.8)'; ctx.lineWidth = 1.5; ctx.stroke()
     }
 
-    // Reflection
-    const r1 = lerp(0.35, tl, bl), r2 = lerp(0.35, tr, br)
-    ctx.beginPath(); ctx.moveTo(r1.x, r1.y); ctx.lineTo(r2.x, r2.y)
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke()
+    // Glass reflections — multiple subtle lines for realism
+    // Main highlight at 1/3 from top
+    const h1 = lerp(0.3, tl, bl), h2 = lerp(0.3, tr, br)
+    ctx.beginPath(); ctx.moveTo(h1.x, h1.y); ctx.lineTo(h2.x, h2.y)
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.stroke()
+    // Secondary faint reflection at 2/3
+    const s1 = lerp(0.65, tl, bl), s2 = lerp(0.65, tr, br)
+    ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(s2.x, s2.y)
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.stroke()
+    // Bottom — faint darker line for depth
+    const d1 = lerp(0.05, tl, bl), d2 = lerp(0.05, tr, br)
+    ctx.beginPath(); ctx.moveTo(d1.x, d1.y); ctx.lineTo(d2.x, d2.y)
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke()
 
   }, [image, corners, length, height, glassType, mountingType, includeHandrail, includeLed, profileShape, isValid, draggingIdx])
 
