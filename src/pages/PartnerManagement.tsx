@@ -7,7 +7,8 @@ import { TIER_MULTIPLIERS, getTierFromMultiplier, type PricingTier } from '../li
 interface PartnerRow {
   User_id: string
   price_multiplier: number
-  email?: string
+  email: string
+  projectCount: number
 }
 
 export default function PartnerManagement() {
@@ -36,11 +37,11 @@ export default function PartnerManagement() {
     for (const uid of userIds) {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('price_multiplier')
+        .select('price_multiplier, email')
         .eq('User_id', uid)
         .single()
 
-      // Also count their projects
+      // Count their projects
       const { count } = await supabase
         .from('projects')
         .select('*', { count: 'exact', head: true })
@@ -49,6 +50,8 @@ export default function PartnerManagement() {
       enriched.push({
         User_id: uid,
         price_multiplier: profile?.price_multiplier ?? 1.0,
+        email: profile?.email || uid.substring(0, 12) + '...',
+        projectCount: count || 0,
       })
     }
 
@@ -127,8 +130,8 @@ export default function PartnerManagement() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Utilizator</th>
-              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Multiplicator</th>
+              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Partener</th>
+              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Proiecte</th>
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Tier</th>
               <th style={{ textAlign: 'right', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Acțiune</th>
             </tr>
@@ -137,7 +140,7 @@ export default function PartnerManagement() {
             {partners.length === 0 && (
               <tr>
                 <td colSpan={4} style={{ padding: '32px 8px', textAlign: 'center', color: 'rgba(240,237,232,0.3)' }}>
-                  Niciun partener înregistrat.
+                  Niciun partener. Partenerii apar aici după ce își fac cont și salvează un proiect.
                 </td>
               </tr>
             )}
@@ -146,9 +149,9 @@ export default function PartnerManagement() {
               return (
                 <tr key={p.User_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <td style={{ padding: '12px 8px' }}>
-                    <div style={{ fontWeight: 500 }}>{p.User_id.substring(0, 12)}...</div>
+                    <div style={{ fontWeight: 500 }}>{p.email}</div>
                   </td>
-                  <td style={{ padding: '12px 8px', color: '#c8a96e', fontWeight: 600 }}>×{p.price_multiplier}</td>
+                  <td style={{ padding: '12px 8px', color: 'rgba(240,237,232,0.5)' }}>{p.projectCount}</td>
                   <td style={{ padding: '12px 8px' }}>
                     <span style={{
                       padding: '3px 10px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 600,

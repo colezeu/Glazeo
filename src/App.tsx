@@ -28,10 +28,16 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       const u = session?.user ?? null;
       setUser(u);
-      // Creează profil automat la login dacă nu există
+      // Creează sau actualizează profilul la login (cu email)
       if (u) {
-        supabase.from('profiles').select('User_id').eq('User_id', u.id).single().then(({ error }) => {
-          if (error) supabase.from('profiles').insert({ User_id: u.id, price_multiplier: 1.0 }).then(() => {});
+        supabase.from('profiles').select('User_id,email').eq('User_id', u.id).single().then(({ data, error }) => {
+          if (error) {
+            // Profil nou
+            supabase.from('profiles').insert({ User_id: u.id, price_multiplier: 1.0, email: u.email }).then(() => {});
+          } else if (!data.email) {
+            // Profil vechi fără email — actualizează
+            supabase.from('profiles').update({ email: u.email }).eq('User_id', u.id).then(() => {});
+          }
         });
       }
     });
