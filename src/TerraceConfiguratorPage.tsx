@@ -15,6 +15,7 @@ export default function TerraceConfiguratorPage() {
   const [manerRectangular, setManerRectangular] = useState(false);
   const [incuietoare, setIncuietoare] = useState(false);
   const [profileLaterale, setProfileLaterale] = useState(false);
+  const [vopsireRAL, setVopsireRAL] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -73,8 +74,11 @@ export default function TerraceConfiguratorPage() {
     const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 30) : 0)
                      + (manerRectangular ? (p.accessories?.manerRectangular?.price || 60) : 0);
 
+    // RAL painting — per system flat cost
+    const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : 150) : 0;
+
     // Total hardware
-    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoare + costManere;
+    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoare + costManere + costRAL;
     const factorSine = sineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
 
@@ -129,6 +133,7 @@ export default function TerraceConfiguratorPage() {
             <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 155}€`} />
             <ToggleOption checked={manerScoica} onChange={setManerScoica} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 30}€`} />
             <ToggleOption checked={manerRectangular} onChange={setManerRectangular} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 60}€`} />
+            <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
           </SectionCard>
         </div>
 
@@ -162,7 +167,7 @@ export default function TerraceConfiguratorPage() {
 
       {showSaveModal && (
         <SaveProjectModal productType="terrace"
-          config={{ dims, glass, nrCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale }}
+          config={{ dims, glass, nrCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>
