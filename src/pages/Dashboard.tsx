@@ -51,7 +51,7 @@ export default function Dashboard() {
   // Redirecționează la configuratorul corespunzător
   const routes: Record<string, string> = {
     balustrade: '/configurator/balustrade',
-    pergola: '/configurator/pergola',
+    pergola: '/configurator/pergola-copertina',
     'cabine-dus': '/configurator/cabine-dus',
     'inchidere-terasa': '/configurator/inchidere-terasa',
     'usi-batante': '/configurator/usi-batante',

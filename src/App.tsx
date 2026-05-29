@@ -114,7 +114,7 @@ function App() {
 
             {/* Configuratoare — lazy loaded */}
             <Route path="/configurator/balustrade" element={<BalustradeConfiguratorPage />} />
-            <Route path="/configurator/pergola" element={<PergolaConfiguratorPage />} />
+            <Route path="/configurator/pergola-copertina" element={<PergolaConfiguratorPage />} />
             <Route path="/configurator/cabine-dus" element={<ShowerConfiguratorPage />} />
             <Route path="/configurator/inchidere-terasa" element={<TerraceConfiguratorPage />} />
             <Route path="/configurator/usi-batante" element={<SwingDoorConfiguratorPage />} />
