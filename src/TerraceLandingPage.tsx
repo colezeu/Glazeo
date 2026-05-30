@@ -15,7 +15,7 @@ const TYPES = [
     id: "frameless",
     name: "Frameless Full-Glass",
     tagline: "Panouri fără rame vizibile",
-    price: "de la 350 €/ml",
+    price: "de la 175 €/ml",
     desc: "Design minimalist: panouri full-glass fără rame vizibile. Transparență maximă, sistem premium.",
     path: "/configurator/inchidere-terasa/frameless",
     active: true,
@@ -28,6 +28,7 @@ const TYPES = [
     desc: "Sistem cu contragreutate pentru ridicare verticală. Configurație automată 1+1 sau 1+2 după înălțime. Ghidaje laterale silentioase.",
     path: "/configurator/inchidere-terasa/ghilotina",
     active: false,
+    comingSoon: true,
   },
 ];
 
@@ -59,7 +60,8 @@ export default function TerraceLandingPage() {
 
         {/* Cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {TYPES.filter(t => t.active).map(t => (
+          {TYPES.map(t => (
+            t.active ? (
             <Link key={t.id} to={t.path} style={{ textDecoration: "none" }}>
               <div className="glass-card glass-card-hover" style={{
                 borderRadius: 20, padding: "36px 28px", height: "100%",
@@ -86,6 +88,24 @@ export default function TerraceLandingPage() {
                 </div>
               </div>
             </Link>
+            ) : t.comingSoon ? (
+            <div key={t.id} style={{
+              borderRadius: 20, padding: "36px 28px", height: "100%",
+              display: "flex", flexDirection: "column",
+              background: "rgba(15,17,23,0.35)", backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.06)", opacity: 0.6,
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <div style={{ fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(200,169,110,0.5)" }}>{t.tagline}</div>
+                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "rgba(240,237,232,0.4)", background: "rgba(255,255,255,0.07)", borderRadius: 20, padding: "3px 10px" }}>În curând</span>
+                </div>
+                <h3 style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: 12, fontFamily: "'DM Serif Display', serif", color: "rgba(240,237,232,0.5)" }}>{t.name}</h3>
+                <p style={{ fontSize: "0.83rem", color: "rgba(240,237,232,0.25)", lineHeight: 1.65, marginBottom: 24 }}>{t.desc}</p>
+              </div>
+              <span style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.2)" }}>{t.price}</span>
+            </div>
+            ) : null
           ))}
         </div>
       </div>

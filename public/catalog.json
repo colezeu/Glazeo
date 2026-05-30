@@ -185,7 +185,7 @@
         "frameless": {
           "name": "Frameless Full-Glass",
           "desc": "Panouri sticlă fără rame, prinderi punctuale minimale",
-          "systemPricePerMeter": 350
+          "systemPricePerMeter": 175
         },
         "ghilotina": {
           "name": "Ghilotină Verticală",

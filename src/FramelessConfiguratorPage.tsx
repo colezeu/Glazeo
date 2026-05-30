@@ -46,7 +46,7 @@ export default function FramelessConfiguratorPage() {
 
     const pretSticlaMp = p.glassTypes[glass]?.pricePerSqm || 56;
     const costSticla = mpTotal * pretSticlaMp;
-    let costSistem = Math.round(lungimeM * (st.systemPricePerMeter || 350));
+    let costSistem = Math.round(lungimeM * (st.systemPricePerMeter || 175));
     costSistem += incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
     costSistem += vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
 
