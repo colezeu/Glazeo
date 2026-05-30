@@ -7,7 +7,7 @@ const TYPES = [
     name: "Multitrack",
     tagline: "Șine multiple, 2-8 canate",
     price: "de la 145 €/ml",
-    desc: "Sistem clasic cu șine și canate culisante. Profile laterale, încuietori, mânere, vopsire RAL. Ideal pentru terase și balcoane.",
+    desc: "Sistem clasic cu șine și canate culisante. Garnituri rezistente UV — profilele laterale se montează doar la perete și numai la cerere.",
     path: "/configurator/inchidere-terasa/multitrack",
     active: true,
   },
