@@ -108,13 +108,7 @@ export default function TerraceConfiguratorPage() {
   };
 
 const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
-
-  // Auto-dezactivează șine neîntrerupte peste 6.3m
-  useEffect(() => {
-    if (w > MAX_SINA_CONTINUA && sineNeintrerupte) {
-      setSineNeintrerupte(false);
-    }
-  }, [w]);
+  const effectiveSineNeintrerupte = sineNeintrerupte && w <= MAX_SINA_CONTINUA;
 
   const calculate = async () => {
     if (!p || !isValid) return;
@@ -136,7 +130,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
                      + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
     const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
     const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL;
-    const factorSine = sineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
+    const factorSine = effectiveSineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
 
     const pretFinal = Math.round(costSticla + costFeronerieAjustat);
@@ -237,7 +231,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
               Total sistem: {totalCanate} canate din {sections.length} secțiune{sections.length > 1 ? "i" : ""}
             </div>
             <ToggleOption checked={deschidereMijloc} onChange={setDeschidereMijloc} label="Deschidere la mijloc" desc="Canatele se întâlnesc la mijloc — fără șine suplimentare" />
-            <ToggleOption checked={sineNeintrerupte} onChange={setSineNeintrerupte}
+            <ToggleOption checked={effectiveSineNeintrerupte} onChange={w <= MAX_SINA_CONTINUA ? setSineNeintrerupte : () => {}}
               label={w > MAX_SINA_CONTINUA ? "Șine neîntrerupte (indisponibil)" : "Șine neîntrerupte"}
               desc={w > MAX_SINA_CONTINUA
                 ? `Lungimea totală ${w.toFixed(1)}m depășește șina brută de ${MAX_SINA_CONTINUA}m — șinele se îmbină`
@@ -279,7 +273,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
               { label: `Suprafață (${mpTotal.toFixed(1)}m²)`, value: formatPrice(quote.glassP) },
               { label: `Feronerie (${quote.canate} canate)`, value: formatPrice(quote.hardwareP) },
               quote.sineExtra > 0 && { label: `Șine extra (${quote.sineExtra})`, value: "inclus", accent: true },
-              sineNeintrerupte && { label: "Șine neîntrerupte", value: "+35%", accent: true },
+              effectiveSineNeintrerupte && { label: "Șine neîntrerupte", value: "+35%", accent: true },
               sections.length > 1 && { label: `${sections.length} secțiuni`, value: `total ${w.toFixed(1)}m`, accent: true },
             ] : []}
           />
