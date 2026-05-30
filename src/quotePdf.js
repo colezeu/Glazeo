@@ -105,7 +105,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
       if (copNames[config.type]) configDetails.push(`Tip copertină: ${copNames[config.type]}`);
     }
     if (config.incuietoare) configDetails.push(`Încuietoare cu cheie: Da`);
-    if (config.blocator) configDetails.push(`Blocator canat: Da`);
+    if (config.blocator) configDetails.push(`Blocator interior: Da`);
     if (config.profileLaterale) configDetails.push(`Profile laterale etanșare: Da`);
     if (config.vopsireRAL) configDetails.push(`Vopsire electrostatică RAL: Da`);
     if (config.manerScoica) configDetails.push(`Mâner scoică: Da`);

@@ -241,8 +241,8 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
           </SectionCard>
 
           <SectionCard num={String(sections.length + 4)} label="Accesorii">
-            <ToggleOption checked={profileLaterale} onChange={blocator ? () => {} : setProfileLaterale} label={p.systemPrices?.profilLateral?.name || "Profile laterale"} desc={blocator ? "Obligatoriu pentru blocator canat" : p.systemPrices?.profilLateral?.desc} price={`${p.systemPrices?.profilLateral?.pricePerMeter || 39}€/m`} />
-            <ToggleOption checked={blocator} onChange={(v) => { setBlocator(v); if (v) setProfileLaterale(true); }} label={p.accessories?.blocator?.name || "Blocator canat"} desc={p.accessories?.blocator?.desc || "Limitator deschidere, siguranță copii — necesită profile laterale"} price={`${p.accessories?.blocator?.price || 49}€`} />
+            <ToggleOption checked={profileLaterale} onChange={blocator ? () => {} : setProfileLaterale} label={p.systemPrices?.profilLateral?.name || "Profile laterale"} desc={blocator ? "Obligatoriu pentru blocator interior" : p.systemPrices?.profilLateral?.desc} price={`${p.systemPrices?.profilLateral?.pricePerMeter || 39}€/m`} />
+            <ToggleOption checked={blocator} onChange={(v) => { setBlocator(v); if (v) setProfileLaterale(true); }} label={p.accessories?.blocator?.name || "Blocator interior"} desc={p.accessories?.blocator?.desc || "Limitator deschidere canat principal — necesită profile laterale"} price={`${p.accessories?.blocator?.price || 49}€`} />
             <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 207}€`} />
             <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
             <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
@@ -267,10 +267,10 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
           {blocator && (
             <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>Detaliu blocator</div>
+              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>Blocator interior</div>
               <div style={{ textAlign: "center" }}>
-                <img src="/blocator.png" alt="Blocator canat" style={{ width: "100%", maxHeight: 140, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
-                <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Blocator canat — 49€</div>
+                <img src="/blocator.png" alt="Blocator interior" style={{ width: "100%", maxHeight: 140, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
+                <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Limitator deschidere canat principal — 49€</div>
               </div>
             </div>
           )}

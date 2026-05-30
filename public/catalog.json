@@ -256,9 +256,9 @@
           "desc": "Mâner dreptunghiular modern"
         },
         "blocator": {
-          "name": "Blocator canat",
+          "name": "Blocator interior",
           "price": 49,
-          "desc": "Limitator deschidere, siguranță copii"
+          "desc": "Limitator deschidere canat principal"
         }
       },
       "vatRate": 0.21
