@@ -265,6 +265,16 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
             </div>
           )}
 
+          {blocator && (
+            <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>Detaliu blocator</div>
+              <div style={{ textAlign: "center" }}>
+                <img src="/blocator.png" alt="Blocator canat" style={{ width: "100%", maxHeight: 140, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
+                <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Blocator canat — 49€</div>
+              </div>
+            </div>
+          )}
+
           <QuoteSidebar
             quote={quote}
             isFormValid={isValid}
