@@ -302,11 +302,18 @@ select option {
     grid-template-columns: 1fr !important;
   }
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 480px) {
   .stats-grid {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1fr;
+  }
+  .stats-grid > * {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .stats-grid > *:last-child {
+    border-bottom: none;
   }
 }
