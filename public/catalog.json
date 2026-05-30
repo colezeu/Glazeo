@@ -264,50 +264,30 @@
           "name": "Copertină fără Tiranți",
           "pricePerSqm": 467,
           "desc": "Consolă, fără suport vizibil"
-        },
-        "copertina-spider": {
-          "name": "Copertină pe Suport Spider",
-          "pricePerSqm": 653,
-          "desc": "Prinderi punctuale spider, aspect minimal"
         }
       },
       "glassTypes": {
-        "clear": {
-          "name": "Sticlă Clară",
-          "pricePerSqm": 0,
-          "desc": "Lumină maximă"
-        },
-        "solar": {
-          "name": "Control Solar",
-          "pricePerSqm": 113,
-          "desc": "Reduce căldura, coeficient g=0.35"
-        },
-        "frosted": {
-          "name": "Sablată / Satinată",
-          "pricePerSqm": 60,
-          "desc": "Intimitate, difuzie lumină"
+        "882": {
+          "name": "Sticlă Laminată 882 Clar (17mm)",
+          "pricePerSqm": 131,
+          "desc": "Standard exterior, rezistență ridicată"
         }
       },
       "options": {
         "led": {
           "name": "Iluminare LED",
-          "pricePerMeter": 73,
-          "desc": "Bandă LED integrată în profil"
+          "price": 333,
+          "desc": "Bandă LED 3000K în profil"
         },
-        "dezghetare": {
-          "name": "Dezghețare Electrică",
-          "pricePerSqm": 127,
+        "degivrare": {
+          "name": "Degivrare",
+          "pricePerSqm": 590,
           "desc": "Rezistențe în sticlă, anti-îngheț"
         },
         "mobilier": {
           "name": "Mobilier Pergolă",
           "price": 1600,
           "desc": "Set mobilier rezistent UV"
-        },
-        "panouri-lat": {
-          "name": "Panouri Laterale",
-          "pricePerSqm": 373,
-          "desc": "Închideri laterale suplimentare"
         }
       }
     },

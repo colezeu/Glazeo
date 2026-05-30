@@ -8,17 +8,13 @@ const FALLBACK = {
   typeCategories: {
     "copertina-tiranti": { name: "Copertină cu Tiranți",      pricePerSqm: 380, desc: "Structură susținută cu tiranți din inox" },
     "copertina-fara":    { name: "Copertină fără Tiranți",    pricePerSqm: 350, desc: "Consolă, fără suport vizibil" },
-    "copertina-spider":  { name: "Copertină pe Suport Spider",pricePerSqm: 490, desc: "Prinderi punctuale spider, aspect minimal" },
   },
   glassTypes: {
-    clear:  { name: "Sticlă Clară",      pricePerSqm: 0,  desc: "Lumină maximă" },
-    solar:  { name: "Control Solar",      pricePerSqm: 85, desc: "Reduce căldura, g=0.35" },
-    frosted:{ name: "Sablată / Satinată", pricePerSqm: 45, desc: "Difuzie lumină" },
+    "882": { name: "Sticlă Laminată 882 Clar (17mm)", pricePerSqm: 131, desc: "Standard exterior, rezistență ridicată" },
   },
   options: {
-    led:           { name: "Iluminare LED",        pricePerMeter: 55, desc: "Bandă LED în profil" },
-    dezghetare:    { name: "Dezghețare Electrică", pricePerSqm: 95,   desc: "Rezistențe anti-îngheț" },
-    "panouri-lat": { name: "Panouri Laterale",      pricePerSqm: 280,  desc: "Închideri laterale suplimentare" },
+    led:      { name: "Iluminare LED", price: 333, desc: "Bandă LED 3000K în profil" },
+    degivrare:{ name: "Degivrare",     pricePerSqm: 590, desc: "Rezistențe în sticlă, anti-îngheț" },
   }
 };
 
@@ -35,9 +31,6 @@ function CopertinaPreview({ dims, type, glass, inclLed }) {
         <line x1={x0} y1={y0} x2={x0-20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
         <line x1={x0+gW} y1={y0} x2={x0+gW+20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
       </>}
-      {type==="copertina-spider" && [[x0+gW*0.2,y0+gD*0.2],[x0+gW*0.8,y0+gD*0.2],[x0+gW*0.2,y0+gD*0.8],[x0+gW*0.8,y0+gD*0.8]].map(([cx,cy],i)=>(
-        <circle key={i} cx={cx} cy={cy} r={4} fill="rgba(200,169,110,0.7)"/>
-      ))}
       {inclLed && <rect x={x0+4} y={y0+4} width={gW-8} height={gD-8} fill="none" stroke="rgba(255,220,120,0.35)" strokeWidth="1.5" strokeDasharray="5,3" rx="2"/>}
       <text x={x0+gW/2} y={H-6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
         {dims.width||"—"}m × {dims.depth||"—"}m
@@ -51,10 +44,9 @@ export default function CopertinaConfiguratorPage() {
   const [vatRate, setVatRate] = useState(0.19);
   const [dims, setDims] = useState({ width:"", depth:"" });
   const [type, setType] = useState("copertina-tiranti");
-  const [glass, setGlass] = useState("clear");
+  const [glass, setGlass] = useState("882");
   const [inclLed, setInclLed] = useState(false);
-  const [inclDez, setInclDez] = useState(false);
-  const [inclPan, setInclPan] = useState(false);
+  const [inclDegivrare, setInclDegivrare] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -86,11 +78,10 @@ export default function CopertinaConfiguratorPage() {
     const w=parseFloat(dims.width)||0, d=parseFloat(dims.depth)||0, area=w*d;
     const typeP = area * p.typeCategories[type].pricePerSqm;
     const glP   = area * (p.glassTypes[glass]?.pricePerSqm||0);
-    const ledP  = inclLed ? perimeter * p.options.led.pricePerMeter : 0;
-    const dezP  = inclDez ? area * p.options.dezghetare.pricePerSqm : 0;
-    const panP  = inclPan ? area * p.options["panouri-lat"].pricePerSqm : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice+typeP+glP+ledP+dezP+panP, vatRate);
-    setQuote({ area:area.toFixed(2), typeP:Math.round(typeP), glP:Math.round(glP), ledP:Math.round(ledP), dezP:Math.round(dezP), panP:Math.round(panP), subtotal, vat, total });
+    const ledP  = inclLed ? (p.options.led.price || 0) : 0;
+    const degP  = inclDegivrare ? area * p.options.degivrare.pricePerSqm : 0;
+    const { subtotal, vat, total } = calcQuote(p.basePrice+typeP+glP+ledP+degP, vatRate);
+    setQuote({ area:area.toFixed(2), typeP:Math.round(typeP), glP:Math.round(glP), ledP:Math.round(ledP), degP:Math.round(degP), subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -119,9 +110,8 @@ export default function CopertinaConfiguratorPage() {
             ))}
           </SectionCard>
           <SectionCard num="04" label="Opțiuni & Accesorii">
-            <ToggleOption checked={inclLed} onChange={setInclLed} label={p.options.led.name} desc={p.options.led.desc} price={`${p.options.led.pricePerMeter}€/m`}/>
-            <ToggleOption checked={inclDez} onChange={setInclDez} label={p.options.dezghetare.name} desc={p.options.dezghetare.desc} price={`${p.options.dezghetare.pricePerSqm}€/m²`}/>
-            <ToggleOption checked={inclPan} onChange={setInclPan} label={p.options["panouri-lat"].name} desc={p.options["panouri-lat"].desc} price={`${p.options["panouri-lat"].pricePerSqm}€/m²`}/>
+            <ToggleOption checked={inclLed} onChange={setInclLed} label={p.options.led.name} desc={p.options.led.desc} price={`${p.options.led.price}€`}/>
+            <ToggleOption checked={inclDegivrare} onChange={setInclDegivrare} label={p.options.degivrare.name} desc={p.options.degivrare.desc} price={`${p.options.degivrare.pricePerSqm}€/m²`}/>
           </SectionCard>
         </div>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
@@ -133,8 +123,7 @@ export default function CopertinaConfiguratorPage() {
               {label:"Structură",value:`${quote.typeP}€`},
               quote.glP>0&&{label:"Sticlă",value:`+${quote.glP}€`,accent:true},
               quote.ledP>0&&{label:"LED",value:`+${quote.ledP}€`,accent:true},
-              quote.dezP>0&&{label:"Dezghețare",value:`+${quote.dezP}€`,accent:true},
-              quote.panP>0&&{label:"Panouri lat.",value:`+${quote.panP}€`,accent:true},
+              quote.degP>0&&{label:"Degivrare",value:`+${quote.degP}€`,accent:true},
             ]:[]}/>
        
           <button
@@ -150,7 +139,7 @@ export default function CopertinaConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="copertina"
-          config={{ dims, type, glass, inclLed, inclDez, inclPan }}
+          config={{ dims, type, glass, inclLed, inclDegivrare }}
           onClose={() => setShowSaveModal(false)}
         />
       )}
