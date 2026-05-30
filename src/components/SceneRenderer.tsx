@@ -2,15 +2,15 @@ import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Scene {
-  id: string; name: string; colors: string[]; baseY: number; baseLeft: number; baseWidth: number
+  id: string; name: string; colors: string[]; baseY: number; baseLeft: number; baseWidth: number; img?: string
 }
 
 const SCENES: Scene[] = [
-  { id: 'balcony', name: 'Balcon modern',   colors: ['#3a5068','#4a6a85','#5a7a95','#7a9a95'], baseY: 62, baseLeft: 8,  baseWidth: 84 },
-  { id: 'terrace', name: 'Terasă spațioasă',colors: ['#2d4a3e','#4d6a4e','#6d8a60','#9aaa80'], baseY: 55, baseLeft: 5,  baseWidth: 90 },
-  { id: 'stairs',  name: 'Scară interioară', colors: ['#1a1a2e','#2a2a3e','#3a3a4a','#4a4a55'], baseY: 45, baseLeft: 10, baseWidth: 80 },
-  { id: 'pool',    name: 'Lângă piscină',   colors: ['#1e3a5f','#2e5a7f','#4e7a9f','#7eaab5'], baseY: 58, baseLeft: 6,  baseWidth: 88 },
-  { id: 'garden',  name: 'Grădină / teren', colors: ['#2d3a2e','#4d5a4e','#6d7a60','#9aaa88'], baseY: 60, baseLeft: 4,  baseWidth: 92 },
+  { id: 'balcony', name: 'Balcon modern',   colors: ['#3a5068','#4a6a85','#5a7a95','#7a9a95'], baseY: 62, baseLeft: 8,  baseWidth: 84, img: '/scene-balcon.jpg' },
+  { id: 'terrace', name: 'Terasă spațioasă',colors: ['#2d4a3e','#4d6a4e','#6d8a60','#9aaa80'], baseY: 55, baseLeft: 5,  baseWidth: 90, img: '/scene-terasa.jpg' },
+  { id: 'stairs',  name: 'Scară interioară', colors: ['#1a1a2e','#2a2a3e','#3a3a4a','#4a4a55'], baseY: 45, baseLeft: 10, baseWidth: 80, img: '/scene-scara.jpg' },
+  { id: 'pool',    name: 'Lângă piscină',   colors: ['#1e3a5f','#2e5a7f','#4e7a9f','#7eaab5'], baseY: 58, baseLeft: 6,  baseWidth: 88, img: '/scene-piscina.jpg' },
+  { id: 'garden',  name: 'Grădină / teren', colors: ['#2d3a2e','#4d5a4e','#6d7a60','#9aaa88'], baseY: 60, baseLeft: 4,  baseWidth: 92, img: '/scene-gradina.jpg' },
 ]
 
 interface SceneRendererProps {
@@ -40,6 +40,7 @@ export default function SceneRenderer({ length, height, glassType, mountingType,
       </div>
 
       <svg viewBox="0 0 400 240" style={{ width: '100%', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }}>
+        {/* Background — image or gradient */}
         <defs>
           <linearGradient id={`grad-${scene.id}`} x1="0" y1="0" x2="0" y2="1">
             {scene.colors.map((c, i) => (
@@ -47,9 +48,11 @@ export default function SceneRenderer({ length, height, glassType, mountingType,
             ))}
           </linearGradient>
         </defs>
-
-        {/* Background */}
-        <rect width="400" height="240" fill={`url(#grad-${scene.id})`} />
+        {scene.img ? (
+          <image href={scene.img} width="400" height="240" preserveAspectRatio="xMidYMid slice" />
+        ) : (
+          <rect width="400" height="240" fill={`url(#grad-${scene.id})`} />
+        )}
 
         {/* Ground */}
         <rect x="0" y={scene.baseY * 2.4 + 2} width="400" height="240" fill="rgba(0,0,0,0.15)" />
