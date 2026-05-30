@@ -219,7 +219,7 @@ export default function HomePage() {
             </div>
             <div className="stats-grid anim-fade-up-6" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }}>
               {STATS.map((s, i) => (
-                <div key={i} style={{ padding: "24px 20px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", textAlign: "center" }}>
+                <div key={i} style={{ padding: "24px 20px", borderRight: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
                   <div style={{ fontSize: "1.8rem", fontWeight: 700, color: "#c8a96e", fontFamily: "'DM Serif Display', serif" }}>{s.value}</div>
                   <div style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.45)", marginTop: 4 }}>{s.label}</div>
                 </div>
