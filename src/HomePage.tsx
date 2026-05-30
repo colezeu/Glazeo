@@ -170,29 +170,42 @@ export default function HomePage() {
             {/* Glazeo Logo */}
             <div className="anim-fade-up" style={{ textAlign: "center", marginBottom: 40 }}>
               <div style={{
-                display: "inline-flex", alignItems: "center", gap: 12,
-                padding: "12px 32px",
-                border: "1px solid rgba(200,169,110,0.3)",
-                borderRadius: 16,
-                background: "rgba(200,169,110,0.06)",
-                backdropFilter: "blur(12px)",
+                display: "inline-flex", alignItems: "baseline", gap: 14,
               }}>
-                <svg width="32" height="32" viewBox="0 0 32 32" style={{ flexShrink: 0 }}>
-                  <rect x="2" y="2" width="28" height="28" rx="6" fill="none" stroke="#c8a96e" strokeWidth="1.5" opacity="0.8" />
-                  <line x1="8" y1="16" x2="24" y2="16" stroke="#c8a96e" strokeWidth="1.5" opacity="0.6" />
-                  <line x1="8" y1="12" x2="20" y2="12" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
-                  <line x1="8" y1="20" x2="22" y2="20" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
+                {/* Marcă sticlă */}
+                <svg width="38" height="38" viewBox="0 0 38 38" style={{ flexShrink: 0 }}>
+                  <defs>
+                    <linearGradient id="glazeoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#c8a96e" />
+                      <stop offset="100%" stopColor="#e8d5a3" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="3" y="3" width="32" height="32" rx="8" fill="none" stroke="url(#glazeoGrad)" strokeWidth="1.8" opacity="0.9" />
+                  <rect x="10" y="10" width="18" height="18" rx="4" fill="url(#glazeoGrad)" opacity="0.12" />
+                  <line x1="9" y1="17" x2="29" y2="17" stroke="url(#glazeoGrad)" strokeWidth="1.2" opacity="0.5" />
+                  <line x1="9" y1="22" x2="25" y2="22" stroke="url(#glazeoGrad)" strokeWidth="1.2" opacity="0.35" />
                 </svg>
-                <span style={{
-                  fontSize: "1.6rem", fontWeight: 400,
-                  fontFamily: "'Suisse Intl', serif",
-                  background: "linear-gradient(135deg, #c8a96e, #e8c98e)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  letterSpacing: "0.12em",
-                }}>GLAZEO</span>
-              </div>
-              <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.25)", marginTop: 8, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                Configurator de produse din sticlă
+                <div style={{ textAlign: "left" }}>
+                  <span style={{
+                    fontSize: "2.4rem", fontWeight: 300,
+                    fontFamily: "'Suisse Intl', serif",
+                    background: "linear-gradient(135deg, #c8a96e 0%, #e8d5a3 50%, #c8a96e 100%)",
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                    letterSpacing: "0.14em", lineHeight: 1,
+                  }}>GLAZEO</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 2 }}>
+                    <span style={{
+                      fontSize: "0.62rem", color: "rgba(200,169,110,0.5)",
+                      letterSpacing: "0.18em", textTransform: "uppercase",
+                      border: "1px solid rgba(200,169,110,0.2)",
+                      borderRadius: 4, padding: "1px 6px",
+                    }}>v1.0</span>
+                    <span style={{
+                      fontSize: "0.62rem", color: "rgba(240,237,232,0.3)",
+                      letterSpacing: "0.1em",
+                    }}>Configurator sticlă</span>
+                  </div>
+                </div>
               </div>
             </div>
 
