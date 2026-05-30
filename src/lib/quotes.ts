@@ -45,7 +45,7 @@ export async function fetchQuotes() {
   return data || []
 }
 
-export async function updateQuoteStatus(id: string, status: 'pending' | 'accepted' | 'rejected' | 'ordered') {
+export async function updateQuoteStatus(id: string, status: 'pending' | 'ordered' | 'rejected') {
   const { error } = await supabase
     .from('quotes')
     .update({ status, updated_at: new Date().toISOString() })

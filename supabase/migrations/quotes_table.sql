@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.quotes (
   quote_subtotal NUMERIC(10,2),
   quote_vat     NUMERIC(10,2),
   send_method   TEXT NOT NULL DEFAULT 'email',
-  status        TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','accepted','rejected','ordered')),
+  status        TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','ordered','rejected')),
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ
 );

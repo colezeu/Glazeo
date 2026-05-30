@@ -6,9 +6,8 @@ import { ro } from 'date-fns/locale'
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   pending:  { label: 'În așteptare', color: '#f59e0b' },
-  accepted: { label: 'Acceptată',    color: '#22c55e' },
-  rejected: { label: 'Respinsă',     color: '#ef4444' },
   ordered:  { label: 'Comandă fermă',color: '#3b82f6' },
+  rejected: { label: 'Respinsă',     color: '#ef4444' },
 }
 
 export default function QuotesAdmin() {
@@ -62,7 +61,6 @@ export default function QuotesAdmin() {
           {[
             { key: 'all', label: 'Toate' },
             { key: 'pending', label: 'În așteptare' },
-            { key: 'accepted', label: 'Acceptate' },
             { key: 'ordered', label: 'Comenzi ferme' },
             { key: 'rejected', label: 'Respinse' },
           ].map(tab => (
