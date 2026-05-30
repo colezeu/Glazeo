@@ -2,13 +2,35 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
+import { Plus, Trash2 } from "lucide-react";
+
+interface Section {
+  id: number;
+  width: string;
+  nrCanate: number;
+}
+
+function panelOptionsForWidth(w: number): { value: number; label: string }[] {
+  if (w <= 0) return [];
+  const wMm = w * 1000;
+  const minPanels = Math.ceil(wMm / 1250);
+  const maxPanels = Math.floor(wMm / 500);
+  const options = [];
+  for (let n = minPanels; n <= maxPanels; n++) {
+    const pw = Math.round(wMm / n);
+    options.push({ value: n, label: `${n} canate (≈${pw}mm)` });
+  }
+  return options;
+}
 
 export default function TerraceConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.21);
-  const [dims, setDims] = useState({ width: "", height: "2.4" });
+  const [sections, setSections] = useState<Section[]>([
+    { id: 1, width: "", nrCanate: 3 },
+  ]);
+  const [height, setHeight] = useState("2.4");
   const [glass, setGlass] = useState("clar");
-  const [nrCanate, setNrCanate] = useState(3);
   const [deschidereMijloc, setDeschidereMijloc] = useState(false);
   const [sineNeintrerupte, setSineNeintrerupte] = useState(false);
   const [manerScoica, setManerScoica] = useState(false);
@@ -38,47 +60,73 @@ export default function TerraceConfiguratorPage() {
   if (!product) return <PageLoader />;
 
   const p = product;
-  const w = parseFloat(dims.width) || 0;
-  const h = parseFloat(dims.height) || 0;
-  const isValid = w >= (p.minLungimeMM || 1200) / 1000 && h > 0;
+  const maxHeight = 3; // m
+
+  // Total width from all sections
+  const totalW = sections.reduce((sum, s) => sum + (parseFloat(s.width) || 0), 0);
+  const h = parseFloat(height) || 0;
+
+  // Validation
+  const w = totalW;
+  const minWidth = (p.minLungimeMM || 1200) / 1000;
+  const hasInvalidSection = sections.some(s => {
+    const sw = parseFloat(s.width) || 0;
+    if (sw <= 0) return true;
+    const opts = panelOptionsForWidth(sw);
+    return opts.length === 0 || !opts.find(o => o.value === s.nrCanate);
+  });
+  const isValid = w >= minWidth && h > 0 && h <= maxHeight && !hasInvalidSection;
+
   const lungimeM = Math.ceil(w);
   const inaltimeM = Math.ceil(h);
   const mpTotal = w * h;
+  const totalCanate = sections.reduce((sum, s) => sum + s.nrCanate, 0);
+
+  const updateSection = (id: number, field: string, value: any) => {
+    setSections(prev => prev.map(s => {
+      if (s.id !== id) return s;
+      const updated = { ...s, [field]: value };
+      // Auto-adjust panels when width changes
+      if (field === "width") {
+        const opts = panelOptionsForWidth(parseFloat(value) || 0);
+        if (opts.length > 0 && !opts.find(o => o.value === s.nrCanate)) {
+          updated.nrCanate = opts[0].value;
+        }
+      }
+      return updated;
+    }));
+  };
+
+  const addSection = () => {
+    const newId = Math.max(0, ...sections.map(s => s.id)) + 1;
+    setSections(prev => [...prev, { id: newId, width: "", nrCanate: 3 }]);
+  };
+
+  const removeSection = (id: number) => {
+    if (sections.length <= 1) return;
+    setSections(prev => prev.filter(s => s.id !== id));
+  };
 
   const calculate = async () => {
     if (!p || !isValid) return;
     setCalculating(true);
     await new Promise(r => setTimeout(r, 400));
 
-    // Glass cost
     const pretSticlaMp = p.glassTypes[glass]?.pricePerSqm || 56;
     const costSticla = mpTotal * pretSticlaMp;
 
-    // Base system — per linear meter of length
-    const costSistemBaza = lungimeM * (p.systemPrices?.sistemBaza?.pricePerMeter || 109);
-
-    // Extra rails — only if NOT middle opening and panels > 3
+    const costSistemBaza = lungimeM * (p.systemPrices?.sistemBaza?.pricePerMeter || 145);
     const esteMijloc = deschidereMijloc;
-    const nrSineExtra = (!esteMijloc && nrCanate > 3) ? nrCanate - 3 : 0;
-    const pretSinaExtra = p.systemPrices?.sinaExtra?.pricePerMeter || 29;
+    const nrSineExtra = (!esteMijloc && totalCanate > 3) ? totalCanate - 3 : 0;
+    const pretSinaExtra = p.systemPrices?.sinaExtra?.pricePerMeter || 39;
     const costSineExtra = nrSineExtra * lungimeM * pretSinaExtra;
-
-    // Side profiles
-    const pretProfilLat = p.systemPrices?.profilLateral?.pricePerMeter || 29;
+    const pretProfilLat = p.systemPrices?.profilLateral?.pricePerMeter || 39;
     const costProfileLaterale = profileLaterale ? inaltimeM * pretProfilLat : 0;
-
-    // Security lock
-    const costIncuietoare = incuietoare ? (p.accessories?.incuietoare?.price || 155) : 0;
-
-    // Handles
-    const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 30) : 0)
-                     + (manerRectangular ? (p.accessories?.manerRectangular?.price || 60) : 0);
-
-    // RAL painting — per system flat cost
+    const costIncuietoareVal = incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
+    const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
+                     + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
     const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : 150) : 0;
-
-    // Total hardware
-    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoare + costManere + costRAL;
+    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL;
     const factorSine = sineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
 
@@ -86,11 +134,8 @@ export default function TerraceConfiguratorPage() {
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
 
     setQuote({
-      area: mpTotal.toFixed(2),
-      glassP: Math.round(costSticla),
-      hardwareP: costFeronerieAjustat,
-      canate: nrCanate,
-      sineExtra: nrSineExtra,
+      area: mpTotal.toFixed(2), glassP: Math.round(costSticla), hardwareP: costFeronerieAjustat,
+      canate: totalCanate, sineExtra: nrSineExtra, sections: sections.length,
       subtotal, vat, total
     });
     setCalculating(false);
@@ -98,80 +143,114 @@ export default function TerraceConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Multitrack" config={{ dims, glass, nrCanate }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Multitrack" config={{ sections, glass, nrCanate: totalCanate }} />
       <ConfigHeader title="Configurator Terase — Multitrack" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <SectionCard num="01" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lungime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 4.0" step="0.1" min={1.2} />
-              <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Ex: 2.4" step="0.1" />
-            </div>
-            {w > 0 && w < (p.minLungimeMM || 1200) / 1000 && (
-              <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Lungimea minimă este {(p.minLungimeMM || 1200) / 1000}m
-              </div>
-            )}
+          {/* Global height */}
+          <SectionCard num="00" label="Înălțime sistem">
+            <NumberInput label="Înălțime (m)" value={height} onChange={setHeight} placeholder="Ex: 2.4" step="0.1" />
+            <div style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.3)", marginTop: 6 }}>Maxim 3.0m</div>
           </SectionCard>
 
-          <SectionCard num="02" label="Tip Sticlă">
+          {/* Sections */}
+          {sections.map((section, idx) => {
+            const sw = parseFloat(section.width) || 0;
+            const opts = panelOptionsForWidth(sw);
+            const panelMm = sw > 0 && section.nrCanate > 0 ? Math.round((sw * 1000) / section.nrCanate) : null;
+            const panelValid = panelMm !== null && panelMm >= 500 && panelMm <= 1250;
+
+            return (
+              <SectionCard key={section.id} num={`S${idx + 1}`} label={`Secțiunea ${idx + 1}`}>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+                  {sections.length > 1 && (
+                    <button onClick={() => removeSection(section.id)} className="btn-ghost" style={{ padding: "4px 10px", fontSize: "0.7rem", color: "#ef4444" }}>
+                      <Trash2 size={12} /> Șterge
+                    </button>
+                  )}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <NumberInput label="Lungime (m)" value={section.width}
+                    onChange={v => updateSection(section.id, "width", v)}
+                    placeholder="Ex: 2.0" step="0.1" />
+                  {opts.length > 0 ? (
+                    <SelectInput label="Canate" value={section.nrCanate}
+                      onChange={v => updateSection(section.id, "nrCanate", Number(v))}
+                      options={opts.map(o => ({ value: o.value, label: o.label }))} />
+                  ) : (
+                    <div style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.3)", paddingTop: 28 }}>
+                      {sw > 0 ? "Dimensiune invalidă pt canate" : "Completează lungimea"}
+                    </div>
+                  )}
+                </div>
+                {panelMm !== null && !panelValid && (
+                  <div style={{ marginTop: 8, fontSize: "0.72rem", color: "#ef4444" }}>
+                    Canat {panelMm}mm — trebuie 500–1250mm. Ajustează lungimea sau nr. canate.
+                  </div>
+                )}
+              </SectionCard>
+            );
+          })}
+
+          <button onClick={addSection} className="btn-ghost"
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "12px", border: "1px dashed rgba(200,169,110,0.3)", borderRadius: 12, fontSize: "0.82rem" }}>
+            <Plus size={14} /> Adaugă secțiune
+          </button>
+
+          {/* Summary */}
+          {totalW > 0 && (
+            <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.15)", fontSize: "0.82rem", color: "rgba(240,237,232,0.6)" }}>
+              Total: <strong style={{ color: "#c8a96e" }}>{totalW.toFixed(1)}m</strong> · {totalCanate} canate · {sections.length} secțiune{sections.length > 1 ? "i" : ""}
+            </div>
+          )}
+
+          {/* Warnings */}
+          {w > 0 && w < minWidth && (
+            <div style={{ padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+              Lungimea totală minimă este {minWidth}m (actual: {w.toFixed(1)}m)
+            </div>
+          )}
+          {h > maxHeight && (
+            <div style={{ padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+              Înălțimea maximă este {maxHeight}m (actual: {h.toFixed(1)}m)
+            </div>
+          )}
+
+          <SectionCard num={String(sections.length + 2)} label="Tip Sticlă">
             {Object.entries(p.glassTypes).map(([k, d]) => (
               <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
             ))}
           </SectionCard>
 
-          <SectionCard num="03" label="Număr Canate & Deschidere">
-            <SelectInput label="Număr canate culisante" value={nrCanate} onChange={v => setNrCanate(Number(v))}
-              options={[2,3,4,5,6,7,8].map(n => ({ value: n, label: `${n} canate` }))} />
+          <SectionCard num={String(sections.length + 3)} label="Număr Canate & Deschidere">
+            <div style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.4)", marginBottom: 12 }}>
+              Total sistem: {totalCanate} canate din {sections.length} secțiune{sections.length > 1 ? "i" : ""}
+            </div>
             <ToggleOption checked={deschidereMijloc} onChange={setDeschidereMijloc} label="Deschidere la mijloc" desc="Canatele se întâlnesc la mijloc — fără șine suplimentare" />
             <ToggleOption checked={sineNeintrerupte} onChange={setSineNeintrerupte} label="Șine neîntrerupte" desc="Feronerie majorată cu 35% pentru șine continue" />
           </SectionCard>
 
-          <SectionCard num="04" label="Accesorii">
-            <ToggleOption checked={profileLaterale} onChange={setProfileLaterale} label={p.systemPrices?.profilLateral?.name || "Profile laterale"} desc={p.systemPrices?.profilLateral?.desc} price={`${p.systemPrices?.profilLateral?.pricePerMeter || 29}€/m`} />
-            <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 155}€`} />
-            <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 30}€`} />
-            <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 60}€`} />
+          <SectionCard num={String(sections.length + 4)} label="Accesorii">
+            <ToggleOption checked={profileLaterale} onChange={setProfileLaterale} label={p.systemPrices?.profilLateral?.name || "Profile laterale"} desc={p.systemPrices?.profilLateral?.desc} price={`${p.systemPrices?.profilLateral?.pricePerMeter || 39}€/m`} />
+            <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 207}€`} />
+            <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
+            <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
             <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
-            {/* Handle preview images */}
-            <div className="option-preview-grid" style={{ marginTop: 8 }}>
-              <div className={`option-preview-item ${manerScoica ? "selected" : ""}`} onClick={() => { setManerScoica(!manerScoica); if (!manerScoica) setManerRectangular(false); }} title="Mâner Scoică">
-                <img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
-                <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Scoică</div>
-              </div>
-              <div className={`option-preview-item ${manerRectangular ? "selected" : ""}`} onClick={() => { setManerRectangular(!manerRectangular); if (!manerRectangular) setManerScoica(false); }} title="Mâner Rectangular">
-                <img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: 80, height: 50, objectFit: "contain", display: "block", margin: "0 auto", filter: "invert(1)" }} />
-                <div style={{ fontSize: "0.6rem", color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Rectangular</div>
-              </div>
-            </div>
           </SectionCard>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox title="Previzualizare">
-            <TerracePreview w={w} h={h} nrCanate={nrCanate} glass={glass} />
+            <TerracePreview w={w} h={h} nrCanate={totalCanate} glass={glass} sections={sections} />
           </PreviewBox>
 
-          {/* Handle detail preview */}
           {(manerScoica || manerRectangular) && (
             <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>
-                Detaliu mâner
-              </div>
+              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>Detaliu mâner</div>
               <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-                {manerScoica && (
-                  <div style={{ textAlign: "center" }}>
-                    <img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
-                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Scoică — 30€</div>
-                  </div>
-                )}
-                {manerRectangular && (
-                  <div style={{ textAlign: "center" }}>
-                    <img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
-                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Rectangular — 60€</div>
-                  </div>
-                )}
+                {manerScoica && <div style={{ textAlign: "center" }}><img src="/maner-scoica.png" alt="Mâner Scoică" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} /><div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Scoică — {p.accessories?.manerScoica?.price || 40}€</div></div>}
+                {manerRectangular && <div style={{ textAlign: "center" }}><img src="/maner-rectangular.png" alt="Mâner Rectangular" style={{ width: "100%", maxHeight: 120, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} /><div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Mâner Rectangular — {p.accessories?.manerRectangular?.price || 80}€</div></div>}
               </div>
             </div>
           )}
@@ -188,6 +267,7 @@ export default function TerraceConfiguratorPage() {
               { label: `Feronerie (${quote.canate} canate)`, value: formatPrice(quote.hardwareP) },
               quote.sineExtra > 0 && { label: `Șine extra (${quote.sineExtra})`, value: "inclus", accent: true },
               sineNeintrerupte && { label: "Șine neîntrerupte", value: "+35%", accent: true },
+              sections.length > 1 && { label: `${sections.length} secțiuni`, value: `total ${w.toFixed(1)}m`, accent: true },
             ] : []}
           />
 
@@ -200,22 +280,21 @@ export default function TerraceConfiguratorPage() {
       </main>
 
       {showSaveModal && (
-        <SaveProjectModal productType="terrace"
-          config={{ dims, glass, nrCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
+        <SaveProjectModal productType="terrace-multitrack"
+          config={{ sections, glass, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>
   );
 }
 
-/** SVG preview scaled after real dimensions */
-function TerracePreview({ w, h, nrCanate, glass }: { w: number; h: number; nrCanate: number; glass: string }) {
+function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: number; nrCanate: number; glass: string; sections: Section[] }) {
   const W = 300, H = 170, M = 16;
   const realW = w || 4, realH = h || 2.4;
   const sc = Math.min((W - M * 2) / realW, (H - M * 2) / realH);
   const gW = realW * sc, gH = realH * sc;
   const x0 = (W - gW) / 2, y0 = H - M - gH;
-  const pw = gW / nrCanate;
+
   const glassColors: Record<string, { fill: string; stroke: string }> = {
     clar:   { fill: 'rgba(160,200,180,0.15)', stroke: 'rgba(160,200,180,0.4)' },
     bronze: { fill: 'rgba(140,100,60,0.2)',   stroke: 'rgba(140,100,60,0.5)' },
@@ -223,23 +302,43 @@ function TerracePreview({ w, h, nrCanate, glass }: { w: number; h: number; nrCan
     satin:  { fill: 'rgba(200,200,210,0.25)', stroke: 'rgba(200,200,210,0.5)' },
   };
   const gc = glassColors[glass] || glassColors.clar;
+
+  // Build panel data from sections
+  const panels: { w: number; x: number }[] = [];
+  let cx = x0;
+  const totalSW = sections.reduce((sum, s) => sum + (parseFloat(s.width) || 0), 0) || realW;
+  for (const s of sections) {
+    const sw = (parseFloat(s.width) || 0) || (realW / sections.length);
+    const sx = (sw / totalSW) * gW;
+    const pw = sx / (s.nrCanate || 1);
+    for (let i = 0; i < (s.nrCanate || 1); i++) {
+      panels.push({ w: pw, x: cx + i * pw });
+    }
+    cx += sx;
+  }
+
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: '#0f1117' }}>
-      {/* Ground line */}
       <line x1={x0 - 8} y1={y0 + gH} x2={x0 + gW + 8} y2={y0 + gH} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
-      {/* Top rail */}
       <line x1={x0} y1={y0 - 5} x2={x0 + gW} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
-      {/* Panels */}
-      {Array.from({ length: nrCanate }, (_, i) => (
+      {panels.map((panel, i) => (
         <g key={i}>
-          <rect x={x0 + i * pw + 1} y={y0} width={pw - 2} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1.2" />
-          {/* Rail guides */}
-          {i < 3 && <line x1={x0 + i * pw + pw * 0.5} y1={y0 - 4} x2={x0 + i * pw + pw * 0.5} y2={y0 + gH + 2} stroke="rgba(200,169,110,0.15)" strokeWidth="1" />}
+          <rect x={panel.x + 1} y={y0} width={panel.w - 2} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1.2" />
         </g>
       ))}
-      {/* Labels */}
+      {/* Section dividers */}
+      {sections.length > 1 && (() => {
+        let dx = x0;
+        const result = [];
+        for (let i = 0; i < sections.length - 1; i++) {
+          const sw = (parseFloat(sections[i].width) || 0) || (realW / sections.length);
+          dx += (sw / totalSW) * gW;
+          result.push(<line key={`div-${i}`} x1={dx} y1={y0} x2={dx} y2={y0 + gH} stroke="rgba(200,169,110,0.2)" strokeWidth="1.5" strokeDasharray="3,3" />);
+        }
+        return result;
+      })()}
       <text x={x0 + gW / 2} y={H - 4} textAnchor="middle" fill="rgba(200,169,110,0.5)" fontSize="7" fontFamily="DM Sans">
-        {realW.toFixed(1)}m × {realH.toFixed(1)}m · {nrCanate} canate
+        {realW.toFixed(1)}m × {realH.toFixed(1)}m · {nrCanate} canate{sections.length > 1 ? ` · ${sections.length} sec.` : ""}
       </text>
     </svg>
   );
