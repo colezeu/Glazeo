@@ -98,7 +98,7 @@ export default function TerraceLandingPage() {
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                   <div style={{ fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(200,169,110,0.5)" }}>{t.tagline}</div>
-                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "rgba(240,237,232,0.4)", background: "rgba(255,255,255,0.07)", borderRadius: 20, padding: "3px 10px" }}>În curând</span>
+                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#c8a96e", background: "rgba(200,169,110,0.12)", borderRadius: 20, padding: "4px 12px", border: "1px solid rgba(200,169,110,0.25)" }}>În curând</span>
                 </div>
                 <h3 style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: 12, fontFamily: "'DM Serif Display', serif", color: "rgba(240,237,232,0.5)" }}>{t.name}</h3>
                 <p style={{ fontSize: "0.83rem", color: "rgba(240,237,232,0.25)", lineHeight: 1.65, marginBottom: 24 }}>{t.desc}</p>
