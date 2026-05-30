@@ -151,13 +151,19 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
     const pretSticlaMp = p.glassTypes[glass]?.pricePerSqm || 56;
     const costSticla = mpTotal * pretSticlaMp;
 
-    const costSistemBaza = lungimeM * (p.systemPrices?.sistemBaza?.pricePerMeter || 145);
-    const esteMijloc = deschidereMijloc;
-    const nrSineExtra = (!esteMijloc && totalCanate > 3) ? totalCanate - 3 : 0;
-    const pretSinaExtra = p.systemPrices?.sinaExtra?.pricePerMeter || 39;
-    const costSineExtra = nrSineExtra * lungimeM * pretSinaExtra;
-    const pretProfilLat = p.systemPrices?.profilLateral?.pricePerMeter || 39;
-    const costProfileLaterale = profileLaterale ? inaltimeM * pretProfilLat : 0;
+    // System cost — per section (fiecare secțiune e un produs independent)
+    let costSistemBaza = 0;
+    let costSineExtra = 0;
+    let nrSineExtraTotal = 0;
+    for (const s of sections) {
+      const sw = Math.ceil(parseFloat(s.width) || 0);
+      costSistemBaza += sw * (p.systemPrices?.sistemBaza?.pricePerMeter || 145);
+      const extraPerSection = (!deschidereMijloc && s.nrCanate > 3) ? s.nrCanate - 3 : 0;
+      nrSineExtraTotal += extraPerSection;
+      costSineExtra += extraPerSection * sw * (p.systemPrices?.sinaExtra?.pricePerMeter || 39);
+    }
+
+    const costProfileLaterale = profileLaterale ? inaltimeM * (p.systemPrices?.profilLateral?.pricePerMeter || 39) : 0;
     const costIncuietoareVal = incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
     const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
                      + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
@@ -172,7 +178,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
     setQuote({
       area: mpTotal.toFixed(2), glassP: Math.round(costSticla * priceMultiplier), hardwareP: Math.round(costFeronerieAjustat * priceMultiplier),
-      canate: totalCanate, sineExtra: nrSineExtra, sections: sections.length,
+      canate: totalCanate, sineExtra: nrSineExtraTotal, sections: sections.length,
       subtotal, vat, total
     });
     setCalculating(false);
