@@ -94,13 +94,7 @@ export default function FramelessConfiguratorPage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox title="Previzualizare">
-            <svg width="100%" viewBox="0 0 300 170" style={{ background: '#0f1117' }}>
-              <rect x={30} y={20} width={240} height={120} fill="rgba(160,200,180,0.12)" stroke="rgba(160,200,180,0.35)" strokeWidth="1.5" />
-              {[0.25, 0.5, 0.75].map(p => <line key={p} x1={30 + 240 * p} y1={20} x2={30 + 240 * p} y2={140} stroke="rgba(200,169,110,0.1)" strokeWidth="0.8" />)}
-              {[[30, 50], [270, 50], [30, 110], [270, 110]].map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={3} fill="none" stroke="rgba(200,169,110,0.4)" strokeWidth="1" />)}
-              <line x1={20} y1={140} x2={280} y2={140} stroke="rgba(200,169,110,0.3)" strokeWidth="2" />
-              <text x={150} y={162} textAnchor="middle" fill="rgba(200,169,110,0.45)" fontSize="7" fontFamily="DM Sans">{dims.width || "—"}m × {dims.height || "—"}m</text>
-            </svg>
+            <FramelessPreview w={w} h={h} glass={glass} />
           </PreviewBox>
 
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
@@ -121,5 +115,33 @@ export default function FramelessConfiguratorPage() {
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>
+  );
+}
+
+function FramelessPreview({ w, h, glass }: { w: number; h: number; glass: string }) {
+  const W = 300, H = 170, M = 16;
+  const realW = w || 4, realH = h || 2.4;
+  const sc = Math.min((W - M * 2) / realW, (H - M * 2) / realH);
+  const gW = realW * sc, gH = realH * sc;
+  const x0 = (W - gW) / 2, y0 = H - M - gH;
+  const glassColors: Record<string, { fill: string; stroke: string }> = {
+    clar:   { fill: 'rgba(160,200,180,0.15)', stroke: 'rgba(160,200,180,0.4)' },
+    bronze: { fill: 'rgba(140,100,60,0.2)',   stroke: 'rgba(140,100,60,0.5)' },
+    gri:    { fill: 'rgba(160,160,160,0.18)',  stroke: 'rgba(160,160,160,0.45)' },
+    satin:  { fill: 'rgba(200,200,210,0.25)', stroke: 'rgba(200,200,210,0.5)' },
+  };
+  const gc = glassColors[glass] || glassColors.clar;
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: '#0f1117' }}>
+      <line x1={x0 - 8} y1={y0 + gH + 6} x2={x0 + gW + 8} y2={y0 + gH + 6} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
+      <rect x={x0} y={y0 + gH - 2} width={gW} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
+      <line x1={x0} y1={y0 - 5} x2={x0 + gW} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
+      <rect x={x0 + 1} y={y0} width={gW - 2} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1.5" />
+      <line x1={x0 + gW * 0.33} y1={y0} x2={x0 + gW * 0.33} y2={y0 + gH} stroke="rgba(200,169,110,0.1)" strokeWidth="0.8" />
+      <line x1={x0 + gW * 0.66} y1={y0} x2={x0 + gW * 0.66} y2={y0 + gH} stroke="rgba(200,169,110,0.1)" strokeWidth="0.8" />
+      <text x={x0 + gW / 2} y={H - 4} textAnchor="middle" fill="rgba(200,169,110,0.5)" fontSize="7" fontFamily="DM Sans">
+        {realW.toFixed(1)}m × {realH.toFixed(1)}m
+      </text>
+    </svg>
   );
 }

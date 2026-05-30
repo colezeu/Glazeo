@@ -15,7 +15,7 @@ const TYPES = [
     name: "Frameless Full-Glass",
     tagline: "Panouri fără rame vizibile",
     price: "de la 350 €/ml",
-    desc: "Design minimalist: panouri full-glass cu prinderi punctuale din inox. Fără rame, transparență maximă. Ideal pentru terase premium.",
+    desc: "Design minimalist: panouri full-glass fără rame vizibile. Transparență maximă, sistem premium.",
     path: "/configurator/inchidere-terasa/frameless",
   },
   {
