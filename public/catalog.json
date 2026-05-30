@@ -173,6 +173,28 @@
       "name": "Închidere Mobilă Terase / Balcoane",
       "basePrice": 0,
       "minLungimeMM": 1200,
+      "systemTypes": {
+        "multitrack": {
+          "name": "Multitrack",
+          "desc": "Șine multiple, 2-8 canate culisante",
+          "systemPricePerMeter": 145,
+          "sinaExtraPricePerMeter": 39,
+          "profilLateralPricePerMeter": 39,
+          "sineMajorareFactor": 1.35
+        },
+        "frameless": {
+          "name": "Frameless Full-Glass",
+          "desc": "Panouri sticlă fără rame, prinderi punctuale minimale",
+          "systemPricePerMeter": 350
+        },
+        "ghilotina": {
+          "name": "Ghilotină Verticală",
+          "desc": "Sistem ridicare verticală, contragreutate, 1+1 sau 1+2 mobil",
+          "price1plus1": 480,
+          "price1plus2": 620,
+          "heightThreshold": 2.5
+        }
+      },
       "glassTypes": {
         "clar": {
           "name": "Sticlă Clară 10mm ESG",
