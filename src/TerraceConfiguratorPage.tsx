@@ -58,6 +58,31 @@ export default function TerraceConfiguratorPage() {
       })
       .catch(() => setLoadError(true));
   }, []);
+   
+  // Restore saved project from Dashboard
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'terrace-multitrack' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.sections) setSections(cfg.sections);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.height) setHeight(cfg.height);
+          if (cfg.deschidereMijloc) setDeschidereMijloc(cfg.deschidereMijloc);
+          if (cfg.sineNeintrerupte) setSineNeintrerupte(cfg.sineNeintrerupte);
+          if (cfg.manerScoica) setManerScoica(cfg.manerScoica);
+          if (cfg.manerRectangular) setManerRectangular(cfg.manerRectangular);
+          if (cfg.incuietoare) setIncuietoare(cfg.incuietoare);
+          if (cfg.profileLaterale) setProfileLaterale(cfg.profileLaterale);
+          if (cfg.vopsireRAL) setVopsireRAL(cfg.vopsireRAL);
+          if (cfg.blocator) setBlocator(cfg.blocator);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
 
   // Load B2B price tier
   useEffect(() => {
