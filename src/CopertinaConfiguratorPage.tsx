@@ -21,10 +21,20 @@ const FALLBACK = {
 
 function CopertinaPreview({ dims, type, glass, inclLed }) {
   const imgMap = {
+    "copertina-tiranti": "/copertina-tiranti.jpg",
     "copertina-fara-1.2": "/copertina-fara-1.2.png",
     "copertina-fara-1.5": "/copertina-fara-1.5.png",
   };
-  const hasImage = imgMap[type];
+  const imgSrc = imgMap[type];
+
+  if (imgSrc) {
+    return (
+      <div style={{ width: "100%", aspectRatio: "16/10", overflow: "hidden", borderRadius: 12, background: "#000" }}>
+        <img src={imgSrc} alt=""
+          style={{ width: "100%", height: "100%", objectFit: "contain", filter: "invert(1)" }} />
+      </div>
+    );
+  }
 
   const w = parseFloat(dims.width)||4, d = parseFloat(dims.depth)||2;
   const W = 308, H = 180, M = 24;
@@ -33,11 +43,7 @@ function CopertinaPreview({ dims, type, glass, inclLed }) {
   const glFill = glass==="solar"?"rgba(80,160,100,0.12)":"rgba(180,220,255,0.1)";
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
-      {hasImage ? (
-        <image href={hasImage} x={0} y={0} width={W} height={H} preserveAspectRatio="xMidYMid slice" style={{ filter: "invert(1)", opacity: 0.85 }} />
-      ) : (
-        <rect x={x0} y={y0} width={gW} height={gD} fill={glFill} stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" rx="2"/>
-      )}
+      <rect x={x0} y={y0} width={gW} height={gD} fill={glFill} stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" rx="2"/>
       {type==="copertina-tiranti" && <>
         <line x1={x0} y1={y0} x2={x0-20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
         <line x1={x0+gW} y1={y0} x2={x0+gW+20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
