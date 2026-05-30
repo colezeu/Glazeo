@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Send, Check, Loader2, FileText, Mail, Download } from "lucide-react";
 import { validateForm } from "./validation";
 import { generateQuotePDF, sendQuoteEmail } from "./quotePdf";
+import { saveQuote } from "./lib/quotes";
 import { formatPrice } from "./ConfiguratorShared";
 
 export default function QuoteModal({ isOpen, onClose, quote, productName, config }) {
@@ -26,6 +27,20 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
     setTouched(true);
     const check = validateForm({ name: form.name, email: form.email, phone: form.phone, message: form.message });
     if (!check.valid) return;
+
+    // Salvează oferta în Supabase indiferent de metoda de trimitere
+    saveQuote({
+      client_name: form.name,
+      client_email: form.email,
+      client_phone: form.phone || undefined,
+      client_message: form.message || undefined,
+      product_name: productName,
+      config,
+      quote_total: quote?.total ? parseFloat(String(quote.total)) : undefined,
+      quote_subtotal: quote?.subtotal ? parseFloat(String(quote.subtotal)) : undefined,
+      quote_vat: quote?.vat ? parseFloat(String(quote.vat)) : undefined,
+      send_method: sendMethod as 'email' | 'whatsapp' | 'pdf',
+    });
 
     if (sendMethod === "pdf") {
       // Generare PDF

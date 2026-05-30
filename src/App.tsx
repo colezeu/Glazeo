@@ -21,6 +21,7 @@ const SlidingDoorConfiguratorPage = lazy(() => import("./SlidingDoorConfigurator
 const PartitionConfiguratorPage = lazy(() => import("./PartitionConfiguratorPage"));
 const OglinziConfiguratorPage = lazy(() => import("./OglinziConfiguratorPage"));
 const CopertinaConfiguratorPage = lazy(() => import("./CopertinaConfiguratorPage"));
+const QuotesAdmin = lazy(() => import("./pages/QuotesAdmin"));
 
 /** Loading fallback pentru lazy components */
 function PageLoader() {
@@ -95,12 +96,20 @@ function App() {
 
       {/* Buton Admin — doar pentru admin */}
       {isAdmin && (
+        <>
+        <Link
+          to="/admin/quotes"
+          className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
+        >
+          📋 <span className="hidden md:inline">Oferte</span>
+        </Link>
         <Link
           to="/admin/partners"
           className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
         >
           👥 <span className="hidden md:inline">Parteneri</span>
         </Link>
+        </>
       )}
 
       <button 
@@ -129,6 +138,7 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin/partners" element={<ProtectedRoute><PartnerManagement /></ProtectedRoute>} />
+            <Route path="/admin/quotes" element={<ProtectedRoute><QuotesAdmin /></ProtectedRoute>} />
 
             {/* Configuratoare — lazy loaded */}
             <Route path="/configurator/balustrade" element={<BalustradeConfiguratorPage />} />
