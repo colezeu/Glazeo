@@ -88,7 +88,8 @@ export default function CopertinaConfiguratorPage() {
   const w = parseFloat(dims.width)||0, d = parseFloat(dims.depth)||0;
   const isValid = dims.width && dims.depth && w > 0 && d > 0 &&
     (type !== "copertina-tiranti" || (w <= 4 && d <= 2)) &&
-    (type !== "copertina-fara-1.2" || w <= 3);
+    (type !== "copertina-fara-1.2" || (w <= 3 && d <= 1.2)) &&
+    (type !== "copertina-fara-1.5" || d <= 1.5);
 
   const calculate = async () => {
     if (!p) return;
@@ -130,12 +131,17 @@ export default function CopertinaConfiguratorPage() {
             </div>
             {type === "copertina-tiranti" && dims.width && dims.depth && (w > 4 || d > 2) && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Copertina cu tiranți: max 4m lățime × 2m consolă.
+                Max: {w > 4 ? `${w.toFixed(1)}m > 4m lățime` : ""}{w > 4 && d > 2 ? " / " : ""}{d > 2 ? `${d.toFixed(1)}m > 2m consolă` : ""}.
               </div>
             )}
-            {type === "copertina-fara-1.2" && dims.width && w > 3 && (
+            {type === "copertina-fara-1.2" && dims.width && dims.depth && (w > 3 || d > 1.2) && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Copertină fără tiranți 1.2m: max 3m lățime.
+                Max: {w > 3 ? `${w.toFixed(1)}m > 3m lățime` : ""}{w > 3 && d > 1.2 ? " / " : ""}{d > 1.2 ? `${d.toFixed(1)}m > 1.2m consolă` : ""}.
+              </div>
+            )}
+            {type === "copertina-fara-1.5" && dims.depth && d > 1.5 && (
+              <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+                Max consolă: {d.toFixed(1)}m > 1.5m.
               </div>
             )}
           </SectionCard>
