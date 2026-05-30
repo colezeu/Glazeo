@@ -21,7 +21,7 @@ const FALLBACK = {
 
 function CopertinaPreview({ dims, type, glass, inclLed }) {
   const imgMap = {
-    "copertina-tiranti": "/copertina-tiranti.jpg",
+    "copertina-tiranti": "/copertina-tiranti.png",
     "copertina-fara-1.2": "/copertina-fara-1.2.png",
     "copertina-fara-1.5": "/copertina-fara-1.5.png",
   };
