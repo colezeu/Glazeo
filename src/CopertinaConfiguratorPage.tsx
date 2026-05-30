@@ -131,17 +131,17 @@ export default function CopertinaConfiguratorPage() {
             </div>
             {type === "copertina-tiranti" && dims.width && dims.depth && (w > 4 || d > 2) && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Max: {w > 4 ? `${w.toFixed(1)}m > 4m lățime` : ""}{w > 4 && d > 2 ? " / " : ""}{d > 2 ? `${d.toFixed(1)}m > 2m consolă` : ""}.
+                Max: {w > 4 ? `${w.toFixed(1)}m {'>'} 4m lățime` : ""}{w > 4 && d > 2 ? " / " : ""}{d > 2 ? `${d.toFixed(1)}m {'>'} 2m consolă` : ""}.
               </div>
             )}
             {type === "copertina-fara-1.2" && dims.width && dims.depth && (w > 3 || d > 1.2) && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Max: {w > 3 ? `${w.toFixed(1)}m > 3m lățime` : ""}{w > 3 && d > 1.2 ? " / " : ""}{d > 1.2 ? `${d.toFixed(1)}m > 1.2m consolă` : ""}.
+                Max: {w > 3 ? `${w.toFixed(1)}m {'>'} 3m lățime` : ""}{w > 3 && d > 1.2 ? " / " : ""}{d > 1.2 ? `${d.toFixed(1)}m {'>'} 1.2m consolă` : ""}.
               </div>
             )}
             {type === "copertina-fara-1.5" && dims.depth && d > 1.5 && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
-                Max consolă: {d.toFixed(1)}m > 1.5m.
+                Max consolă: {d.toFixed(1)}m {'>'} 1.5m.
               </div>
             )}
           </SectionCard>
