@@ -169,42 +169,29 @@ export default function HomePage() {
           <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "120px 32px 80px" }}>
             {/* Glazeo Logo */}
             <div className="anim-fade-up" style={{ textAlign: "center", marginBottom: 40 }}>
-              <div style={{
-                display: "inline-flex", alignItems: "baseline", gap: 14,
-              }}>
-                {/* Marcă sticlă */}
-                <svg width="38" height="38" viewBox="0 0 38 38" style={{ flexShrink: 0 }}>
-                  <defs>
-                    <linearGradient id="glazeoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#c8a96e" />
-                      <stop offset="100%" stopColor="#e8d5a3" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="3" y="3" width="32" height="32" rx="8" fill="none" stroke="url(#glazeoGrad)" strokeWidth="1.8" opacity="0.9" />
-                  <rect x="10" y="10" width="18" height="18" rx="4" fill="url(#glazeoGrad)" opacity="0.12" />
-                  <line x1="9" y1="17" x2="29" y2="17" stroke="url(#glazeoGrad)" strokeWidth="1.2" opacity="0.5" />
-                  <line x1="9" y1="22" x2="25" y2="22" stroke="url(#glazeoGrad)" strokeWidth="1.2" opacity="0.35" />
-                </svg>
-                <div style={{ textAlign: "left" }}>
+              <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
+                <span style={{
+                  fontSize: "2.8rem", fontWeight: 300,
+                  fontFamily: "'Suisse Intl', serif",
+                  background: "linear-gradient(135deg, #c8a96e 0%, #f0e0b0 50%, #c8a96e 100%)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  letterSpacing: "0.16em", lineHeight: 1,
+                }}>GLAZEO</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+                  {/* Linie decorativă stânga */}
+                  <div style={{ width: 24, height: 1, background: "linear-gradient(90deg, transparent, rgba(200,169,110,0.5))" }} />
                   <span style={{
-                    fontSize: "2.4rem", fontWeight: 300,
-                    fontFamily: "'Suisse Intl', serif",
-                    background: "linear-gradient(135deg, #c8a96e 0%, #e8d5a3 50%, #c8a96e 100%)",
-                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                    letterSpacing: "0.14em", lineHeight: 1,
-                  }}>GLAZEO</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 2 }}>
-                    <span style={{
-                      fontSize: "0.62rem", color: "rgba(200,169,110,0.5)",
-                      letterSpacing: "0.18em", textTransform: "uppercase",
-                      border: "1px solid rgba(200,169,110,0.2)",
-                      borderRadius: 4, padding: "1px 6px",
-                    }}>v1.0</span>
-                    <span style={{
-                      fontSize: "0.62rem", color: "rgba(240,237,232,0.3)",
-                      letterSpacing: "0.1em",
-                    }}>Configurator sticlă</span>
-                  </div>
+                    fontSize: "0.6rem", color: "rgba(200,169,110,0.45)",
+                    letterSpacing: "0.2em", textTransform: "uppercase",
+                    border: "1px solid rgba(200,169,110,0.18)",
+                    borderRadius: 3, padding: "1px 7px",
+                  }}>v1.0</span>
+                  <span style={{
+                    fontSize: "0.6rem", color: "rgba(240,237,232,0.25)",
+                    letterSpacing: "0.12em",
+                  }}>configurator sticlă</span>
+                  {/* Linie decorativă dreapta */}
+                  <div style={{ width: 24, height: 1, background: "linear-gradient(90deg, rgba(200,169,110,0.5), transparent)" }} />
                 </div>
               </div>
             </div>
