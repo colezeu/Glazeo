@@ -183,11 +183,13 @@ export default function HomePage() {
                   <line x1="8" y1="12" x2="20" y2="12" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
                   <line x1="8" y1="20" x2="22" y2="20" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
                 </svg>
-                <span className="serif" style={{
+                <span style={{
                   fontSize: "1.6rem", fontWeight: 400,
+                  fontFamily: "'DM Serif Display', serif",
+                  fontStyle: "italic",
                   background: "linear-gradient(135deg, #c8a96e, #e8c98e)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  letterSpacing: "0.15em",
+                  letterSpacing: "0.12em",
                 }}>GLAZEO</span>
               </div>
               <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.25)", marginTop: 8, letterSpacing: "0.12em", textTransform: "uppercase" }}>
