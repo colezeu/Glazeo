@@ -11,6 +11,20 @@ interface Project {
   created_at: string;
 }
 
+const PRODUCT_NAMES: Record<string, string> = {
+  balustrade: 'Balustrade',
+  pergola: 'Pergolă',
+  shower: 'Cabină Duș',
+  'terrace-multitrack': 'Multitrack',
+  'terrace-frameless': 'Frameless',
+  'terrace-ghilotina': 'Ghilotină',
+  swingdoor: 'Uși Batante',
+  sliding: 'Uși Culisante',
+  partitionari: 'Partiționări',
+  oglinda: 'Oglinzi',
+  copertina: 'Copertină',
+};
+
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -102,7 +116,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="font-semibold text-lg">{project.name}</h3>
                   <p className="text-sm text-gray-400">
-                    {project.product_type} • {new Date(project.created_at).toLocaleDateString('ro-RO')}
+                    {PRODUCT_NAMES[project.product_type] || project.product_type} • {new Date(project.created_at).toLocaleDateString('ro-RO')}
                   </p>
                 </div>
                 <div className="flex gap-3">
