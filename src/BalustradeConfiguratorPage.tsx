@@ -256,6 +256,19 @@ export default function BalustradeConfiguratorPage() {
             </div>
           )}
 
+          {hardware === "profil-pardoseala-reglaj" && (
+            <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(240,237,232,0.4)", marginBottom: 16 }}>
+                Detaliu profil
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <img src="/profil-reglaj.png" alt="Profil Pardoseală cu Reglaj Mecanic"
+                  style={{ width: "100%", maxHeight: 140, objectFit: "contain", filter: "invert(1)", background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 8 }} />
+                <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)", marginTop: 6 }}>Profil Pardoseală cu Reglaj Mecanic — 227€/ml</div>
+              </div>
+            </div>
+          )}
+
           {quote && (
             <button onClick={handleShare} className="btn-ghost w-full" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: "0.82rem" }}>
               {copied ? <><Check size={14} color="#22c55e" /> Link copiat!</> : <><Share2 size={14} /> Copiază link configurație</>}
