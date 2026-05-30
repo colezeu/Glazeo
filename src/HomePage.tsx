@@ -185,8 +185,7 @@ export default function HomePage() {
                 </svg>
                 <span style={{
                   fontSize: "1.6rem", fontWeight: 400,
-                  fontFamily: "'DM Serif Display', serif",
-                  fontStyle: "italic",
+                  fontFamily: "'Suisse Intl', serif",
                   background: "linear-gradient(135deg, #c8a96e, #e8c98e)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                   letterSpacing: "0.12em",
