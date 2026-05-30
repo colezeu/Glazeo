@@ -28,9 +28,14 @@
           "desc": "Montanți intermediari inox"
         },
         "profil-pardoseala": {
-          "name": "Profil Pardoseală",
+          "name": "Profil Pardoseală cu Cale",
           "pricePerMeter": 67,
           "desc": "Canal montat pe pardoseală"
+        },
+        "profil-pardoseala-reglaj": {
+          "name": "Profil Pardoseală cu Reglaj Mecanic",
+          "pricePerMeter": 170,
+          "desc": "Reglaj mecanic de precizie, montaj rapid"
         }
       },
       "profileShapes": {

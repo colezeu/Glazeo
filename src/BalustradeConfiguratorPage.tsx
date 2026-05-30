@@ -67,7 +67,7 @@ export default function BalustradeConfiguratorPage() {
 
   const p = product;
   const normalizedIncludeLed = includeLed === true || includeLed === "true";
-  const showProfileShape = hardware === "profil-pardoseala";
+  const showProfileShape = hardware === "profil-pardoseala" || hardware === "profil-pardoseala-reglaj";
 
   const validation = validateForm({ width: length, height });
   const isValid = validation.valid;
@@ -83,7 +83,7 @@ export default function BalustradeConfiguratorPage() {
     } catch {}
   };
 
-  const skirt = hardware === "butoni" ? 0.35 : (hardware === "profil-pardoseala" && profileShape === "Y") ? 0.10 : 0;
+  const skirt = hardware === "butoni" ? 0.35 : ((hardware === "profil-pardoseala" || hardware === "profil-pardoseala-reglaj") && profileShape === "Y") ? 0.10 : 0;
 
   const calculate = async () => {
     if (!p) return;
@@ -118,7 +118,8 @@ export default function BalustradeConfiguratorPage() {
     setCalculating(false);
   };
 
-  const mountingType = hardware === "butoni" ? "clips" : hardware === "mini-montanti" ? "mini-montanti" : hardware === "profil-pardoseala" ? "embedded" : "profile";
+  const isPardoseala = hardware === "profil-pardoseala" || hardware === "profil-pardoseala-reglaj";
+  const mountingType = hardware === "butoni" ? "clips" : hardware === "mini-montanti" ? "mini-montanti" : isPardoseala ? "embedded" : "profile";
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
