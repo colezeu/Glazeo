@@ -38,6 +38,7 @@ export default function TerraceConfiguratorPage() {
   const [incuietoare, setIncuietoare] = useState(false);
   const [profileLaterale, setProfileLaterale] = useState(false);
   const [vopsireRAL, setVopsireRAL] = useState(false);
+  const [blocator, setBlocator] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -129,7 +130,8 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
     const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
                      + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
     const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
-    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL;
+    const costBlocator = blocator ? (p.accessories?.blocator?.price || 35) : 0;
+    const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL + costBlocator;
     const factorSine = effectiveSineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
 
@@ -244,6 +246,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
             <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
             <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
             <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : lungimeM <= 4 ? '150€' : '300€') : '120-300€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : lungimeM <= 4 ? '150' : '300'}€` : '120-300€'} />
+            <ToggleOption checked={blocator} onChange={setBlocator} label={p.accessories?.blocator?.name || "Blocator canat"} desc={p.accessories?.blocator?.desc || "Limitator deschidere, siguranță copii"} price={`${p.accessories?.blocator?.price || 35}€`} />
           </SectionCard>
         </div>
 
@@ -288,7 +291,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
       {showSaveModal && (
         <SaveProjectModal productType="terrace-multitrack"
-          config={{ sections, glass, height, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
+          config={{ sections, glass, height, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL, blocator }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>

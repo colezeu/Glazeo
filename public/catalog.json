@@ -254,6 +254,11 @@
           "name": "Mâner Rectangular",
           "price": 80,
           "desc": "Mâner dreptunghiular modern"
+        },
+        "blocator": {
+          "name": "Blocator canat",
+          "price": 35,
+          "desc": "Limitator deschidere, siguranță copii"
         }
       },
       "vatRate": 0.21
