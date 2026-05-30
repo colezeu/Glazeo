@@ -59,7 +59,7 @@ export default function TerraceLandingPage() {
         </div>
 
         {/* Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+        <div className="terrace-landing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
           {TYPES.map(t => (
             t.active ? (
             <Link key={t.id} to={t.path} style={{ textDecoration: "none" }}>
