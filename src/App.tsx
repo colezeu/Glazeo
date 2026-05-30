@@ -40,6 +40,7 @@ function PageLoader() {
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [userMultiplier, setUserMultiplier] = useState(1.0);
   const isAdmin = user?.email === 'office@glass.associates';
 
   useEffect(() => {
@@ -48,6 +49,10 @@ function App() {
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
+        // Fetch multiplier for badge
+        supabase.from('profiles').select('price_multiplier').eq('user_id', u.id).single()
+          .then(({ data }) => { if (data) setUserMultiplier(data.price_multiplier); });
+        // Auto-create profile
         const key = `profile_created_${u.id}`;
         if (sessionStorage.getItem(key)) return;
         sessionStorage.setItem(key, '1');
@@ -76,6 +81,19 @@ function App() {
         📁 <span className="hidden md:inline">Proiectele mele</span><span className="md:hidden">Proiecte</span>
       </Link>
 
+      {/* Tier badge */}
+      {userMultiplier < 1.0 && (
+        <span style={{
+          padding: '3px 10px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 600,
+          background: userMultiplier <= 0.75 ? 'rgba(34,197,94,0.15)' : 'rgba(59,130,246,0.15)',
+          color: userMultiplier <= 0.75 ? '#22c55e' : '#3b82f6',
+          border: `1px solid ${userMultiplier <= 0.75 ? 'rgba(34,197,94,0.3)' : 'rgba(59,130,246,0.3)'}`,
+        }}>
+          {userMultiplier <= 0.75 ? 'Volum' : 'Partener'} -{Math.round((1 - userMultiplier) * 100)}%
+        </span>
+      )}
+
+      {/* Buton Admin — doar pentru admin */}
       {isAdmin && (
         <Link
           to="/admin/partners"
