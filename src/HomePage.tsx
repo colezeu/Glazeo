@@ -275,12 +275,11 @@ export default function HomePage() {
         </section>
 
         {/* CTA */}
-        <section style={{ padding: "80px 32px" }}>
-          <div style={{ maxWidth: 900, margin: "0 auto", background: "linear-gradient(135deg, rgba(200,169,110,0.12), rgba(200,169,110,0.04))", border: "1px solid rgba(200,169,110,0.25)", borderRadius: 24, padding: "60px 48px", textAlign: "center", backdropFilter: "blur(20px)" }}>
-            <h2 className="serif" style={{ fontSize: "clamp(1.6rem,3.5vw,2.4rem)", marginBottom: 16, fontWeight: 400 }}>Pregătit să configurați?</h2>
-            <p style={{ color: "rgba(240,237,232,0.45)", marginBottom: 32, fontSize: "1rem" }}>Ofertă personalizată în câteva minute.</p>
+        <section style={{ padding: "60px 32px" }}>
+          <div style={{ maxWidth: 700, margin: "0 auto", background: "linear-gradient(135deg, rgba(200,169,110,0.12), rgba(200,169,110,0.04))", border: "1px solid rgba(200,169,110,0.25)", borderRadius: 24, padding: "36px 32px", textAlign: "center", backdropFilter: "blur(20px)" }}>
+            <h2 className="serif" style={{ fontSize: "1.4rem", marginBottom: 20, fontWeight: 400 }}>Pregătit să configurezi?</h2>
             <a href="#products">
-              <button className="btn-primary" style={{ fontSize: "1rem", padding: "16px 40px" }}>Începe Configurarea</button>
+              <button className="btn-primary" style={{ fontSize: "0.95rem", padding: "14px 36px" }}>Începe Configurarea</button>
             </a>
           </div>
         </section>
