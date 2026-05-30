@@ -9,6 +9,7 @@ const TYPES = [
     price: "de la 145 €/ml",
     desc: "Sistem clasic cu șine și canate culisante. Profile laterale, încuietori, mânere, vopsire RAL. Ideal pentru terase și balcoane.",
     path: "/configurator/inchidere-terasa/multitrack",
+    active: true,
   },
   {
     id: "frameless",
@@ -17,6 +18,7 @@ const TYPES = [
     price: "de la 350 €/ml",
     desc: "Design minimalist: panouri full-glass fără rame vizibile. Transparență maximă, sistem premium.",
     path: "/configurator/inchidere-terasa/frameless",
+    active: true,
   },
   {
     id: "ghilotina",
@@ -25,6 +27,7 @@ const TYPES = [
     price: "de la 480 €/ml",
     desc: "Sistem cu contragreutate pentru ridicare verticală. Configurație automată 1+1 sau 1+2 după înălțime. Ghidaje laterale silentioase.",
     path: "/configurator/inchidere-terasa/ghilotina",
+    active: false,
   },
 ];
 
@@ -56,7 +59,7 @@ export default function TerraceLandingPage() {
 
         {/* Cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {TYPES.map(t => (
+          {TYPES.filter(t => t.active).map(t => (
             <Link key={t.id} to={t.path} style={{ textDecoration: "none" }}>
               <div className="glass-card glass-card-hover" style={{
                 borderRadius: 20, padding: "36px 28px", height: "100%",
