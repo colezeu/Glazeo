@@ -15,8 +15,8 @@ const PRODUCTS = [
 ];
 
 const STATS = [
-  { value: "2400+", label: "Proiecte finalizate" },
-  { value: "18 ani", label: "Experiență" },
+  { value: "4200+", label: "Proiecte finalizate" },
+  { value: "23 ani", label: "Experiență" },
   { value: "CE", label: "Certificare europeană" },
   { value: "instant", label: "Ofertă personalizată" },
 ];
