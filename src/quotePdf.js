@@ -88,6 +88,11 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
 
     // Accesorii bifate
     if (config.includeLed || config.inclLed) configDetails.push(`Iluminare LED: Da`);
+    if (config.inclDegivrare) configDetails.push(`Degivrare: Da`);
+    if (config.type) {
+      const copNames = { "copertina-tiranti": "Cu tiranți", "copertina-fara-1.2": "Fără tiranți max 1.2m", "copertina-fara-1.5": "Fără tiranți max 1.5m" };
+      if (copNames[config.type]) configDetails.push(`Tip copertină: ${copNames[config.type]}`);
+    }
     if (config.incuietoare) configDetails.push(`Încuietoare cu cheie: Da`);
     if (config.profileLaterale) configDetails.push(`Profile laterale etanșare: Da`);
     if (config.vopsireRAL) configDetails.push(`Vopsire electrostatică RAL: Da`);
@@ -132,8 +137,11 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
     if (quote.seatP) priceBreakdown.push({ label: "Scaun", value: `${quote.seatP}€` });
     if (quote.optP) priceBreakdown.push({ label: "Accesorii", value: `${quote.optP}€` });
     if (quote.typeP) priceBreakdown.push({ label: "Structură", value: `${quote.typeP}€` });
+    if (quote.structP) priceBreakdown.push({ label: "Structură", value: `${quote.structP}€` });
+    if (quote.glP) priceBreakdown.push({ label: "Sticlă", value: `${quote.glP}€` });
     if (quote.ledP2) priceBreakdown.push({ label: "LED", value: `${quote.ledP2}€` });
     if (quote.dezP) priceBreakdown.push({ label: "Dezghețare", value: `${quote.dezP}€` });
+    if (quote.degP) priceBreakdown.push({ label: "Degivrare", value: `${quote.degP}€` });
     if (quote.mobP) priceBreakdown.push({ label: "Mobilier", value: `${quote.mobP}€` });
     if (quote.panP) priceBreakdown.push({ label: "Panouri lat.", value: `${quote.panP}€` });
     if (quote.carP) priceBreakdown.push({ label: "Caroiaj", value: `${quote.carP}€` });
