@@ -16,6 +16,9 @@ const BalustradeConfiguratorPage = lazy(() => import("./BalustradeConfiguratorPa
 const PergolaConfiguratorPage = lazy(() => import("./PergolaConfiguratorPage"));
 const ShowerConfiguratorPage = lazy(() => import("./ShowerConfiguratorPage"));
 const TerraceConfiguratorPage = lazy(() => import("./TerraceConfiguratorPage"));
+const FramelessConfiguratorPage = lazy(() => import("./FramelessConfiguratorPage"));
+const GhilotinaConfiguratorPage = lazy(() => import("./GhilotinaConfiguratorPage"));
+const TerraceLandingPage = lazy(() => import("./TerraceLandingPage"));
 const SwingDoorConfiguratorPage = lazy(() => import("./SwingDoorConfiguratorPage"));
 const SlidingDoorConfiguratorPage = lazy(() => import("./SlidingDoorConfiguratorPage"));
 const PartitionConfiguratorPage = lazy(() => import("./PartitionConfiguratorPage"));
@@ -144,7 +147,10 @@ function App() {
             <Route path="/configurator/balustrade" element={<BalustradeConfiguratorPage />} />
             <Route path="/configurator/pergola-copertina" element={<PergolaConfiguratorPage />} />
             <Route path="/configurator/cabine-dus" element={<ShowerConfiguratorPage />} />
-            <Route path="/configurator/inchidere-terasa" element={<TerraceConfiguratorPage />} />
+            <Route path="/configurator/inchidere-terasa" element={<TerraceLandingPage />} />
+            <Route path="/configurator/inchidere-terasa/multitrack" element={<TerraceConfiguratorPage />} />
+            <Route path="/configurator/inchidere-terasa/frameless" element={<FramelessConfiguratorPage />} />
+            <Route path="/configurator/inchidere-terasa/ghilotina" element={<GhilotinaConfiguratorPage />} />
             <Route path="/configurator/usi-batante" element={<SwingDoorConfiguratorPage />} />
             <Route path="/configurator/usi-culisante" element={<SlidingDoorConfiguratorPage />} />
             <Route path="/configurator/partitionari" element={<PartitionConfiguratorPage />} />
