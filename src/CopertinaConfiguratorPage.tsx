@@ -119,7 +119,7 @@ export default function CopertinaConfiguratorPage() {
     const ledP  = inclLed ? (p.options.led.price || 0) : 0;
     const degP  = inclDegivrare ? area * p.options.degivrare.pricePerSqm : 0;
     const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice+typeP+glP+ledP+degP) * priceMultiplier), vatRate);
-    setQuote({ area:area.toFixed(2), structP:Math.round(structP), structLabel, glP:Math.round(glP), ledP:Math.round(ledP), degP:Math.round(degP), subtotal, vat, total });
+setQuote({ area:area.toFixed(2), typeP:Math.round(typeP * priceMultiplier), glP:Math.round(glP * priceMultiplier), ledP:Math.round(ledP * priceMultiplier), degP:Math.round(degP * priceMultiplier), subtotal, vat, total });
     setCalculating(false);
   };
 

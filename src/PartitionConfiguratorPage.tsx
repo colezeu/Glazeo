@@ -112,7 +112,7 @@ export default function PartitionConfiguratorPage() {
     const ucuP = inclUsaCulisanta ? p.options["usa-culisanta"]?.price || 0 : 0;
     const carP = inclCaroiaj ? area * (p.options.caroiaj?.pricePerSqm || 0) : 0;
     const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice + sysP + glP + ubaP + ucuP + carP) * priceMultiplier), vatRate);
-    setQuote({ area: area.toFixed(2), sysP: Math.round(sysP), glP: Math.round(glP), ubaP, ucuP, carP: Math.round(carP), subtotal, vat, total });
+    setQuote({ area: area.toFixed(2), sysP: Math.round(sysP * priceMultiplier), glP: Math.round(glP * priceMultiplier), ubaP, ucuP, carP: Math.round(carP), subtotal, vat, total });
     setCalculating(false);
   };
 

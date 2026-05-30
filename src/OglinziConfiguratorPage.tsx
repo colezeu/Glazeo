@@ -168,8 +168,8 @@ export default function OglinziConfiguratorPage() {
 
     setQuote({
       area: area.toFixed(2),
+      mirrorP: Math.round(mirrorP * priceMultiplier),
       perimeter: perimeter.toFixed(1),
-      mirrorP: Math.round(mirrorP),
       shapeP,
       thickP: Math.round(thickP),
       edgeP: Math.round(edgeP),

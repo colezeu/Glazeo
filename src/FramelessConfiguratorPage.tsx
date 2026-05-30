@@ -59,7 +59,7 @@ export default function FramelessConfiguratorPage() {
 
     const pretFinal = Math.round((costSticla + costSistem) * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
-    setQuote({ area: mpTotal.toFixed(2), glassP: Math.round(costSticla), hardwareP: costSistem, subtotal, vat, total });
+    setQuote({ area: mpTotal.toFixed(2), glassP: Math.round(costSticla * priceMultiplier), hardwareP: Math.round(costSistem * priceMultiplier), subtotal, vat, total });
     setCalculating(false);
   };
 

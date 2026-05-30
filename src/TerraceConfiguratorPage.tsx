@@ -171,7 +171,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
 
     setQuote({
-      area: mpTotal.toFixed(2), glassP: Math.round(costSticla), hardwareP: costFeronerieAjustat,
+      area: mpTotal.toFixed(2), glassP: Math.round(costSticla * priceMultiplier), hardwareP: Math.round(costFeronerieAjustat * priceMultiplier),
       canate: totalCanate, sineExtra: nrSineExtra, sections: sections.length,
       subtotal, vat, total
     });
