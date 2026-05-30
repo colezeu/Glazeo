@@ -238,7 +238,7 @@
     },
     "pergola-copertina": {
       "name": "Pergolă & Copertină",
-      "basePrice": 400,
+      "basePrice": 0,
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
@@ -257,18 +257,18 @@
         },
         "copertina-tiranti": {
           "name": "Copertină cu Tiranți",
-          "pricePerSqm": 507,
-          "desc": "Structură susținută cu tiranți din inox"
+          "kitPrice": 70,
+          "desc": "Kit tirant 70€+TVA/buc, max 4m lățime × 2m consolă"
         },
         "copertina-fara-1.2": {
           "name": "Copertină fără Tiranți (max 1.2m)",
-          "pricePerSqm": 467,
-          "desc": "Consolă fără suport vizibil, până la 1.2m"
+          "pricePerMeter": 209,
+          "desc": "Consolă fără suport, până la 1.2m"
         },
         "copertina-fara-1.5": {
           "name": "Copertină fără Tiranți (max 1.5m)",
-          "pricePerSqm": 587,
-          "desc": "Consolă ranforsată fără suport vizibil, până la 1.5m"
+          "pricePerMeter": 340,
+          "desc": "Consolă ranforsată fără suport, până la 1.5m"
         }
       },
       "glassTypes": {

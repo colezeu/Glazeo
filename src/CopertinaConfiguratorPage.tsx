@@ -4,11 +4,11 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteS
 import QuoteModal from "./QuoteModal.jsx";
 
 const FALLBACK = {
-  name: "Copertină", basePrice: 300,
+  name: "Copertină", basePrice: 0,
   typeCategories: {
-    "copertina-tiranti":   { name: "Copertină cu Tiranți",            pricePerSqm: 380, desc: "Structură susținută cu tiranți din inox" },
-    "copertina-fara-1.2": { name: "Copertină fără Tiranți (max 1.2m)", pricePerSqm: 350, desc: "Consolă fără suport vizibil, până la 1.2m" },
-    "copertina-fara-1.5": { name: "Copertină fără Tiranți (max 1.5m)", pricePerSqm: 440, desc: "Consolă ranforsată fără suport vizibil, până la 1.5m" },
+    "copertina-tiranti":   { name: "Copertină cu Tiranți",            kitPrice: 70,  desc: "Kit tirant 70€+TVA, max 4m×2m" },
+    "copertina-fara-1.2": { name: "Copertină fără Tiranți (max 1.2m)", pricePerMeter: 209, desc: "Consolă fără suport, până la 1.2m" },
+    "copertina-fara-1.5": { name: "Copertină fără Tiranți (max 1.5m)", pricePerMeter: 340, desc: "Consolă ranforsată fără suport, până la 1.5m" },
   },
   glassTypes: {
     "882": { name: "Sticlă Laminată 882 Clar (17mm)", pricePerSqm: 131, desc: "Standard exterior, rezistență ridicată" },
@@ -85,20 +85,32 @@ export default function CopertinaConfiguratorPage() {
   }, []);
 
   const p = product;
-  const isValid = dims.width && dims.depth && parseFloat(dims.width) > 0;
-  const perimeter = 2*((parseFloat(dims.width)||0)+(parseFloat(dims.depth)||0));
+  const w = parseFloat(dims.width)||0, d = parseFloat(dims.depth)||0;
+  const isValid = dims.width && dims.depth && w > 0 && d > 0 &&
+    (type !== "copertina-tiranti" || (w <= 4 && d <= 2));
 
   const calculate = async () => {
     if (!p) return;
     setCalculating(true);
     await new Promise(r => setTimeout(r, 600));
-    const w=parseFloat(dims.width)||0, d=parseFloat(dims.depth)||0, area=w*d;
-    const typeP = area * p.typeCategories[type].pricePerSqm;
+    const area = w * d;
+
+    // Structural price
+    let structP = 0, structLabel = "";
+    if (type === "copertina-tiranti") {
+      const kits = 2 + Math.ceil(Math.max(0, w - 1.3) / 1.3);
+      structP = kits * p.typeCategories[type].kitPrice;
+      structLabel = `${kits} kit × ${p.typeCategories[type].kitPrice}€`;
+    } else {
+      structP = w * p.typeCategories[type].pricePerMeter;
+      structLabel = `${w.toFixed(1)}m × ${p.typeCategories[type].pricePerMeter}€/m`;
+    }
+
     const glP   = area * (p.glassTypes[glass]?.pricePerSqm||0);
     const ledP  = inclLed ? (p.options.led.price || 0) : 0;
     const degP  = inclDegivrare ? area * p.options.degivrare.pricePerSqm : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice+typeP+glP+ledP+degP, vatRate);
-    setQuote({ area:area.toFixed(2), typeP:Math.round(typeP), glP:Math.round(glP), ledP:Math.round(ledP), degP:Math.round(degP), subtotal, vat, total });
+    const { subtotal, vat, total } = calcQuote(p.basePrice+structP+glP+ledP+degP, vatRate);
+    setQuote({ area:area.toFixed(2), structP:Math.round(structP), structLabel, glP:Math.round(glP), ledP:Math.round(ledP), degP:Math.round(degP), subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -115,11 +127,19 @@ export default function CopertinaConfiguratorPage() {
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v=>setDims(d=>({...d,width:v}))} placeholder="Ex: 4.0"/>
               <NumberInput label="Proiecție (m)" value={dims.depth} onChange={v=>setDims(d=>({...d,depth:v}))} placeholder="Ex: 2.0"/>
             </div>
+            {type === "copertina-tiranti" && dims.width && dims.depth && (w > 4 || d > 2) && (
+              <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+                Copertina cu tiranți: max 4m lățime × 2m consolă.
+              </div>
+            )}
           </SectionCard>
           <SectionCard num="02" label="Tip Copertină">
-            {Object.entries(p.typeCategories).map(([k,d]) => (
-              <OptionBtn key={k} selected={type===k} onClick={() => setType(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`}/>
-            ))}
+            {Object.entries(p.typeCategories).map(([k,d]) => {
+              const price = d.kitPrice
+                ? `${d.kitPrice}€/kit`
+                : `${d.pricePerMeter}€/ml`;
+              return <OptionBtn key={k} selected={type===k} onClick={() => setType(k)} label={d.name} desc={d.desc} price={price} />;
+            })}
           </SectionCard>
           <SectionCard num="03" label="Tip Sticlă">
             {Object.entries(p.glassTypes).map(([k,d]) => (
@@ -137,7 +157,7 @@ export default function CopertinaConfiguratorPage() {
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
             lines={quote?[
               {label:"Suprafață",value:`${quote.area} m²`},
-              {label:"Structură",value:`${quote.typeP}€`},
+              {label:"Structură",value:`${quote.structP}€`, hint: quote.structLabel},
               quote.glP>0&&{label:"Sticlă",value:`+${quote.glP}€`,accent:true},
               quote.ledP>0&&{label:"LED",value:`+${quote.ledP}€`,accent:true},
               quote.degP>0&&{label:"Degivrare",value:`+${quote.degP}€`,accent:true},
