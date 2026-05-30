@@ -185,7 +185,7 @@ export default function HomePage() {
                     letterSpacing: "0.2em", textTransform: "uppercase",
                     border: "1px solid rgba(200,169,110,0.18)",
                     borderRadius: 3, padding: "1px 7px",
-                  }}>v1.0</span>
+                  }}>v1.01</span>
                   <span style={{
                     fontSize: "0.6rem", color: "rgba(240,237,232,0.25)",
                     letterSpacing: "0.12em",
