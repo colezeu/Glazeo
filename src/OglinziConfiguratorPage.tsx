@@ -139,6 +139,27 @@ export default function OglinziConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'oglinda' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.mirrorType) setMirrorType(cfg.mirrorType);
+          if (cfg.shape) setShape(cfg.shape);
+          if (cfg.thickness) setThickness(cfg.thickness);
+          if (cfg.edge) setEdge(cfg.edge);
+          if (cfg.inclLed) setInclLed(cfg.inclLed);
+          if (cfg.inclAntiAburire) setInclAntiAburire(cfg.inclAntiAburire);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   // Load B2B price tier
   useEffect(() => {
     getUserMultiplier().then(mult => setPriceMultiplier(mult));

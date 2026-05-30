@@ -91,6 +91,26 @@ export default function PartitionConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'partitionari' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.system) setSystem(cfg.system);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.inclUsaBatanta) setInclUsaBatanta(cfg.inclUsaBatanta);
+          if (cfg.inclUsaCulisanta) setInclUsaCulisanta(cfg.inclUsaCulisanta);
+          if (cfg.inclCaroiaj) setInclCaroiaj(cfg.inclCaroiaj);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   // Load B2B price tier
   useEffect(() => {
     getUserMultiplier().then(mult => setPriceMultiplier(mult));

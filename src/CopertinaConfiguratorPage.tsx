@@ -86,6 +86,25 @@ export default function CopertinaConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  // Restore saved project from Dashboard
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'copertina' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.type) setType(cfg.type);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.inclLed) setInclLed(cfg.inclLed);
+          if (cfg.inclDegivrare) setInclDegivrare(cfg.inclDegivrare);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   // Load B2B price tier
   useEffect(() => {
     getUserMultiplier().then(mult => setPriceMultiplier(mult));

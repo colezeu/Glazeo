@@ -30,6 +30,24 @@ export default function FramelessConfiguratorPage() {
       .catch(() => setLoadError(true));
   }, []);
 
+  // Restore saved project from Dashboard
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'terrace-frameless' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.incuietoare) setIncuietoare(cfg.incuietoare);
+          if (cfg.vopsireRAL) setVopsireRAL(cfg.vopsireRAL);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   // Load B2B price tier
   useEffect(() => {
     getUserMultiplier().then(mult => setPriceMultiplier(mult));

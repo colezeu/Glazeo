@@ -52,15 +52,15 @@ export default function Dashboard() {
   const routes: Record<string, string> = {
     balustrade: '/configurator/balustrade',
     pergola: '/configurator/pergola-copertina',
-    'cabine-dus': '/configurator/cabine-dus',
+    shower: '/configurator/cabine-dus',
     'inchidere-terasa': '/configurator/inchidere-terasa',
     'terrace-multitrack': '/configurator/inchidere-terasa/multitrack',
     'terrace-frameless': '/configurator/inchidere-terasa/frameless',
     'terrace-ghilotina': '/configurator/inchidere-terasa/ghilotina',
-    'usi-batante': '/configurator/usi-batante',
-    'usi-culisante': '/configurator/usi-culisante',
+    swingdoor: '/configurator/usi-batante',
+    sliding: '/configurator/usi-culisante',
     partitionari: '/configurator/partitionari',
-    oglinzi: '/configurator/oglinzi',
+    oglinda: '/configurator/oglinzi',
     copertina: '/configurator/copertina',
   };
 

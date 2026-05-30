@@ -35,6 +35,21 @@ export default function ShowerConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'shower' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.config) setConfig(cfg.config);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   // Load B2B price tier
   useEffect(() => {
     getUserMultiplier().then(mult => setPriceMultiplier(mult));
