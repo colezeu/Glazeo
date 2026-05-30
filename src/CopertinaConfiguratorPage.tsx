@@ -2,6 +2,7 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.jsx";
+import { getUserMultiplier } from "./lib/user";
 
 const FALLBACK = {
   name: "Copertină", basePrice: 0,
@@ -67,6 +68,7 @@ export default function CopertinaConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
@@ -82,6 +84,11 @@ export default function CopertinaConfiguratorPage() {
         setVatRate(d.vatRate);
       })
       .catch(() => setProduct(FALLBACK));
+  }, []);
+
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
   }, []);
 
   const p = product;
@@ -111,7 +118,7 @@ export default function CopertinaConfiguratorPage() {
     const glP   = area * (p.glassTypes[glass]?.pricePerSqm||0);
     const ledP  = inclLed ? (p.options.led.price || 0) : 0;
     const degP  = inclDegivrare ? area * p.options.degivrare.pricePerSqm : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice+structP+glP+ledP+degP, vatRate);
+    const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice+typeP+glP+ledP+degP) * priceMultiplier), vatRate);
     setQuote({ area:area.toFixed(2), structP:Math.round(structP), structLabel, glP:Math.round(glP), ledP:Math.round(ledP), degP:Math.round(degP), subtotal, vat, total });
     setCalculating(false);
   };

@@ -1,6 +1,7 @@
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.jsx";
 
 const FALLBACK = {
@@ -122,6 +123,7 @@ export default function OglinziConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
@@ -135,6 +137,11 @@ export default function OglinziConfiguratorPage() {
         }
       })
       .catch(() => setProduct(FALLBACK));
+  }, []);
+
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
   }, []);
 
   const p = product;
@@ -157,7 +164,7 @@ export default function OglinziConfiguratorPage() {
     const antiAbP   = inclAntiAburire ? (p.options.antiaburire?.price || 0) : 0;
 
     const raw = p.basePrice + mirrorP + shapeP + thickP + edgeP + ledP + antiAbP;
-    const { subtotal, vat, total } = calcQuote(raw, vatRate);
+    const { subtotal, vat, total } = calcQuote(Math.round(raw * priceMultiplier), vatRate);
 
     setQuote({
       area: area.toFixed(2),

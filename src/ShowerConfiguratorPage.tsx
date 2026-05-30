@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, ValidatedNumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import { validateForm } from "./validation.js";
 import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig.js";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 import ShowerPreview2D from "./ShowerPreview2D.jsx";
 import { Share2, Check } from "lucide-react";
@@ -21,6 +22,7 @@ export default function ShowerConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -33,7 +35,12 @@ export default function ShowerConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
-  const p = product;
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
+  }, []);
+
+  if (loadError) return
 
   const validation = validateForm({ width, depth, height });
   const isValid = validation.valid;
@@ -69,7 +76,7 @@ export default function ShowerConfiguratorPage() {
     const seatP  = inclSeat  ? p.options.seat.price     : 0;
     const ledP   = inclLed   ? p.options.led.price      : 0;
     const raw = p.basePrice + encP + glassP + treatP + towelP + seatP + ledP;
-    const { subtotal, vat, total } = calcQuote(raw, vatRate);
+    const { subtotal, vat, total } = calcQuote(Math.round(raw * priceMultiplier), vatRate);
     setQuote({ area:area.toFixed(2), encP, glassP:Math.round(glassP), treatP:Math.round(treatP), towelP, seatP, ledP, subtotal, vat, total });
     setCalculating(false);
   };

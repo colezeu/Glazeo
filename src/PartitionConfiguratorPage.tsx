@@ -1,6 +1,7 @@
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal";
 
 const FALLBACK = { 
@@ -77,6 +78,7 @@ export default function PartitionConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
@@ -87,6 +89,11 @@ export default function PartitionConfiguratorPage() {
         setVatRate(d.vatRate || 0.19);
       })
       .catch(() => setProduct(FALLBACK));
+  }, []);
+
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
   }, []);
 
   const p = product;
@@ -104,7 +111,7 @@ export default function PartitionConfiguratorPage() {
     const ubaP = inclUsaBatanta ? p.options["usa-batanta"]?.price || 0 : 0;
     const ucuP = inclUsaCulisanta ? p.options["usa-culisanta"]?.price || 0 : 0;
     const carP = inclCaroiaj ? area * (p.options.caroiaj?.pricePerSqm || 0) : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice + sysP + glP + ubaP + ucuP + carP, vatRate);
+    const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice + sysP + glP + ubaP + ucuP + carP) * priceMultiplier), vatRate);
     setQuote({ area: area.toFixed(2), sysP: Math.round(sysP), glP: Math.round(glP), ubaP, ucuP, carP: Math.round(carP), subtotal, vat, total });
     setCalculating(false);
   };

@@ -1,6 +1,7 @@
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 
 const FALLBACK = { name:"Uși Batante", basePrice:120, doorConfigs:{ simpla:{name:"Simplă",pricePerUnit:0,desc:"Un canat, standard"}, "pe-toc":{name:"Cu Închidere pe Toc",pricePerUnit:150,desc:"Închidere precisă, etanșare sporită"}, fono:{name:"Cu Izolație Fonică Ridicată",pricePerUnit:350,desc:"Garnituri multiple, Rw≥42dB"} }, closerTypes:{ balama:{name:"Balamale Standard",pricePerUnit:0,desc:"Balamale inox reglabile"}, hidraulic:{name:"Amortizor Hidraulic",pricePerUnit:95,desc:"Soft-close, reglabil"} }, glassTypes:{ "10mm":{name:"Securit 10mm Clar",pricePerSqm:220,desc:"Standard"}, "12mm":{name:"Securit 12mm",pricePerSqm:280,desc:"Greutate și rezistență sporită"}, frosted:{name:"Securit Sablat",pricePerSqm:310,desc:"Confidențialitate"} }, options:{ manere:{name:"Mânere Inox Premium",price:120,desc:"Push-pull, diverse finisaje"}, incuietoare:{name:"Încuietoare Magnetică",price:180,desc:"Blocare automată la închidere"}, blocator:{name:"Blocator Interior",price:65,desc:"Blocare din interior"}, caroiaj:{name:"Profile Caroiaj",pricePerSqm:35,desc:"Grilaj decorativ"} } };
@@ -37,6 +38,7 @@ export default function SwingDoorConfiguratorPage() {
   const [inclManere,setInclManere]=useState(false); const [inclIncuietoare,setInclIncuietoare]=useState(false);
   const [inclBlocator,setInclBlocator]=useState(false); const [inclCaroiaj,setInclCaroiaj]=useState(false);
   const [calculating,setCalculating]=useState(false); const [quote,setQuote]=useState(null); const [showModal,setShowModal]=useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(()=>{ fetch("/catalog.json").then(r=>r.json()).then(d=>{setProduct(d.products["usi-batante"]);setVatRate(d.vatRate);}).catch(()=>setProduct(FALLBACK)); },[]);

@@ -1,6 +1,7 @@
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 
 const FALLBACK = { name:"Uși Culisante", basePrice:150, mountTypes:{ perete:{name:"Prindere pe Perete",pricePerUnit:0,desc:"Șină montată pe perete"}, tavan:{name:"Prindere pe Tavan",pricePerUnit:80,desc:"Șină ascunsă în tavan"}, sincron:{name:"Sincron (fără șină jos)",pricePerUnit:220,desc:"Fără ghidaj la pardoseală"} }, panelTypes:{ "panou-fix":{name:"Cu Panou Fix",pricePerUnit:0,desc:"Panou lateral fix + ușă culisantă"}, "fara-fix":{name:"Fără Panou Fix",pricePerUnit:0,desc:"Doar ușă culisantă"}, buzunar:{name:"Cu Buzunar",pricePerUnit:280,desc:"Ușa dispare în perete"} }, glassTypes:{ "10mm":{name:"Securit 10mm Clar",pricePerSqm:220,desc:"Standard"}, "12mm":{name:"Securit 12mm",pricePerSqm:280,desc:"Ușă mare / grea"}, frosted:{name:"Securit Sablat",pricePerSqm:310,desc:"Confidențialitate"} }, options:{ manere:{name:"Mânere Inox",price:95,desc:"Mâner îngropat sau aplicat"}, incuietoare:{name:"Încuietoare",price:150,desc:"Cilindru sau magnetic"}, caroiaj:{name:"Profile Caroiaj",pricePerSqm:35,desc:"Grilaj decorativ"} } };
@@ -50,6 +51,7 @@ export default function SlidingDoorConfiguratorPage() {
   const [mount,setMount]=useState("perete"); const [panel,setPanel]=useState("fara-fix"); const [glass,setGlass]=useState("10mm");
   const [inclManere,setInclManere]=useState(false); const [inclInc,setInclInc]=useState(false); const [inclCar,setInclCar]=useState(false);
   const [calculating,setCalculating]=useState(false); const [quote,setQuote]=useState(null); const [showModal,setShowModal]=useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(()=>{ fetch("/catalog.json").then(r=>r.json()).then(d=>{setProduct(d.products["usi-culisante"]);setVatRate(d.vatRate);}).catch(()=>setProduct(FALLBACK)); },[]);

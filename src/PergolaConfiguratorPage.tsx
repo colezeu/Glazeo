@@ -1,7 +1,9 @@
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
+import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.jsx";
+import { getUserMultiplier } from "./lib/user";
 
 export default function PergolaConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -16,6 +18,7 @@ export default function PergolaConfiguratorPage() {
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {

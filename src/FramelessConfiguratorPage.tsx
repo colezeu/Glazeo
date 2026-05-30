@@ -2,6 +2,7 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
+import { getUserMultiplier } from "./lib/user";
 
 export default function FramelessConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -10,6 +11,7 @@ export default function FramelessConfiguratorPage() {
   const [glass, setGlass] = useState("clar");
   const [incuietoare, setIncuietoare] = useState(false);
   const [vopsireRAL, setVopsireRAL] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +28,11 @@ export default function FramelessConfiguratorPage() {
         setVatRate(d.vatRate || p.vatRate || 0.21);
       })
       .catch(() => setLoadError(true));
+  }, []);
+
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
   }, []);
 
   if (loadError) return <ErrorBanner message="Nu s-a putut încărca catalogul." onRetry={() => window.location.reload()} onBack />;
@@ -50,7 +57,7 @@ export default function FramelessConfiguratorPage() {
     costSistem += incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
     costSistem += vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
 
-    const pretFinal = Math.round(costSticla + costSistem);
+    const pretFinal = Math.round((costSticla + costSistem) * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
     setQuote({ area: mpTotal.toFixed(2), glassP: Math.round(costSticla), hardwareP: costSistem, subtotal, vat, total });
     setCalculating(false);

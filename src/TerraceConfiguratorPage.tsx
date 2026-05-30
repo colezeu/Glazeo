@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
 import { Plus, Trash2 } from "lucide-react";
+import { getUserMultiplier } from "./lib/user";
 
 interface Section {
   id: number;
@@ -39,6 +40,7 @@ export default function TerraceConfiguratorPage() {
   const [profileLaterale, setProfileLaterale] = useState(false);
   const [vopsireRAL, setVopsireRAL] = useState(false);
   const [blocator, setBlocator] = useState(false);
+  const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -55,6 +57,11 @@ export default function TerraceConfiguratorPage() {
         setVatRate(d.vatRate || p.vatRate || 0.21);
       })
       .catch(() => setLoadError(true));
+  }, []);
+
+  // Load B2B price tier
+  useEffect(() => {
+    getUserMultiplier().then(mult => setPriceMultiplier(mult));
   }, []);
 
   if (loadError) return <ErrorBanner message="Nu s-a putut încărca catalogul." onRetry={() => window.location.reload()} onBack />;
@@ -135,7 +142,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
     const factorSine = effectiveSineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
 
-    const pretFinal = Math.round(costSticla + costFeronerieAjustat);
+    const pretFinal = Math.round((costSticla + costFeronerieAjustat) * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
 
     setQuote({
