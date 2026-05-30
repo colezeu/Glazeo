@@ -107,6 +107,15 @@ export default function TerraceConfiguratorPage() {
     setSections(prev => prev.filter(s => s.id !== id));
   };
 
+const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
+
+  // Auto-dezactivează șine neîntrerupte peste 6.3m
+  useEffect(() => {
+    if (w > MAX_SINA_CONTINUA && sineNeintrerupte) {
+      setSineNeintrerupte(false);
+    }
+  }, [w]);
+
   const calculate = async () => {
     if (!p || !isValid) return;
     setCalculating(true);
@@ -228,7 +237,11 @@ export default function TerraceConfiguratorPage() {
               Total sistem: {totalCanate} canate din {sections.length} secțiune{sections.length > 1 ? "i" : ""}
             </div>
             <ToggleOption checked={deschidereMijloc} onChange={setDeschidereMijloc} label="Deschidere la mijloc" desc="Canatele se întâlnesc la mijloc — fără șine suplimentare" />
-            <ToggleOption checked={sineNeintrerupte} onChange={setSineNeintrerupte} label="Șine neîntrerupte" desc="Feronerie majorată cu 35% pentru șine continue" />
+            <ToggleOption checked={sineNeintrerupte} onChange={setSineNeintrerupte}
+              label={w > MAX_SINA_CONTINUA ? "Șine neîntrerupte (indisponibil)" : "Șine neîntrerupte"}
+              desc={w > MAX_SINA_CONTINUA
+                ? `Lungimea totală ${w.toFixed(1)}m depășește șina brută de ${MAX_SINA_CONTINUA}m — șinele se îmbină`
+                : "Feronerie majorată cu 35% pentru șine continue"} />
           </SectionCard>
 
           <SectionCard num={String(sections.length + 4)} label="Accesorii">
@@ -319,7 +332,11 @@ function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: num
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: '#0f1117' }}>
-      <line x1={x0 - 8} y1={y0 + gH} x2={x0 + gW + 8} y2={y0 + gH} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
+      {/* Ground */}
+      <line x1={x0 - 8} y1={y0 + gH + 6} x2={x0 + gW + 8} y2={y0 + gH + 6} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
+      {/* Bottom rail — profil gros în care stă sticla + căruciorul */}
+      <rect x={x0} y={y0 + gH - 2} width={gW} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
+      {/* Top rail */}
       <line x1={x0} y1={y0 - 5} x2={x0 + gW} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
       {panels.map((panel, i) => (
         <g key={i}>
