@@ -5,3 +5,4 @@ node_modules
 backend/.env
 .bun-cache
 dist
+.DS_Store
