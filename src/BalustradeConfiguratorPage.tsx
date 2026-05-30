@@ -5,7 +5,7 @@ import { usePersistedConfig, getShareableUrl } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal";
 import BalustradePreview3D from "./BalustradePreview2D";
 import SaveProjectModal from "./components/SaveProjectModal";
-import PhotoRenderer from "./components/PhotoRenderer";
+import SceneRenderer from "./components/SceneRenderer";
 import { Share2, Check } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
 
@@ -223,16 +223,14 @@ export default function BalustradeConfiguratorPage() {
             <BalustradePreview3D dimensions={{ length, height }} glassType={glassType} mountingType={mountingType} profileShape={profileShape} skirtOverride={skirt} includeHandrail={handrail !== "none"} includeLed={normalizedIncludeLed} glassShape={glassShape} />
           </PreviewBox>
 
-          {/* Photo render */}
-          <PhotoRenderer
+          {/* Scene render */}
+          <SceneRenderer
             length={parseFloat(length) || 0}
             height={parseFloat(height) || 0}
             glassType={glassType}
             mountingType={mountingType}
             includeHandrail={handrail !== "none"}
             includeLed={normalizedIncludeLed}
-            glassShape={glassShape}
-            profileShape={profileShape}
           />
 
           {/* Detail preview: profil selectat + mână curentă */}
@@ -302,6 +300,38 @@ export default function BalustradeConfiguratorPage() {
           </button>
         </div>
       </main>
+
+      {/* Real projects gallery */}
+      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 60px" }}>
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: "0.75rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 8 }}>Proiecte reale</p>
+          <h2 className="serif" style={{ fontSize: "1.6rem", fontWeight: 400 }}>Balustrade finalizate</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
+          {[
+            { title: "Balcon rezidențial", desc: "Butoni inox, sticlă 10mm, Cluj", img: null },
+            { title: "Terasă pensiune", desc: "Profil pardoseală U, sticlă 882, Brașov", img: null },
+            { title: "Scară interioară", desc: "Mini-montanți, mână curentă, Sibiu", img: null },
+          ].map((proj, i) => (
+            <div key={i} className="glass-card" style={{ borderRadius: 16, overflow: "hidden" }}>
+              <div style={{
+                height: 160, background: "linear-gradient(135deg, rgba(200,169,110,0.08), rgba(200,169,110,0.03))",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                borderBottom: "1px solid rgba(255,255,255,0.06)",
+              }}>
+                <Image size={32} color="rgba(200,169,110,0.3)" />
+              </div>
+              <div style={{ padding: "14px 16px" }}>
+                <h3 style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: 4 }}>{proj.title}</h3>
+                <p style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.4)" }}>{proj.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ textAlign: "center", marginTop: 16, fontSize: "0.75rem", color: "rgba(240,237,232,0.25)" }}>
+          Poze reale din proiecte — înlocuiește cu fotografiile tale din folderul public
+        </p>
+      </section>
 
       {showSaveModal && (
         <SaveProjectModal
