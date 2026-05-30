@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Image, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Scene {
   id: string; name: string; colors: string[]; baseY: number; baseLeft: number; baseWidth: number

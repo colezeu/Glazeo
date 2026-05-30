@@ -319,7 +319,7 @@ export default function BalustradeConfiguratorPage() {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
               }}>
-                <Image size={32} color="rgba(200,169,110,0.3)" />
+                <div style={{ fontSize: 32, opacity: 0.3, color: "#c8a96e" }}>🖼️</div>
               </div>
               <div style={{ padding: "14px 16px" }}>
                 <h3 style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: 4 }}>{proj.title}</h3>
