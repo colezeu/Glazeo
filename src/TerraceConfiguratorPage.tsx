@@ -134,7 +134,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
     const costIncuietoareVal = incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
     const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
                      + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
-    const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : 150) : 0;
+    const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
     const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL;
     const factorSine = sineNeintrerupte ? (p.systemPrices?.sineMajorare?.factor || 1.35) : 1.0;
     const costFeronerieAjustat = Math.round(costFeronerie * factorSine);
@@ -249,7 +249,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
             <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 207}€`} />
             <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
             <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
-            <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
+            <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : lungimeM <= 4 ? '150€' : '300€') : '120-300€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : lungimeM <= 4 ? '150' : '300'}€` : '120-300€'} />
           </SectionCard>
         </div>
 

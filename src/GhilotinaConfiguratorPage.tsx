@@ -53,7 +53,7 @@ export default function GhilotinaConfiguratorPage() {
     let costSistem = Math.round(lungimeM * pretMl);
     costSistem += (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
                 + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
-    costSistem += vopsireRAL ? (lungimeM <= 3 ? 120 : 150) : 0;
+    costSistem += vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
 
     const pretFinal = Math.round(costSticla + costSistem);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
@@ -94,7 +94,7 @@ export default function GhilotinaConfiguratorPage() {
           <SectionCard num="03" label="Accesorii">
             <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
             <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
-            <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix per sistem: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : '150€') : '120-150€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : '150'}€` : '120-150€'} />
+            <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : lungimeM <= 4 ? '150€' : '300€') : '120-300€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : lungimeM <= 4 ? '150' : '300'}€` : '120-300€'} />
           </SectionCard>
         </div>
 
