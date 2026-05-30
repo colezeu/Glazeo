@@ -64,6 +64,17 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
       if (config.dims.depth) configDetails.push(`Adâncime: ${config.dims.depth}m`);
     }
 
+    // Multitrack sections
+    if (config.sections && Array.isArray(config.sections)) {
+      const totalW = config.sections.reduce((s, sec) => s + (parseFloat(sec.width) || 0), 0);
+      configDetails.push(`Lungime totală: ${totalW.toFixed(1)}m`);
+      configDetails.push(`Nr. secțiuni: ${config.sections.length}`);
+      configDetails.push(`Total canate: ${config.totalCanate || config.sections.reduce((s, sec) => s + (sec.nrCanate || 0), 0)}`);
+      config.sections.forEach((sec, i) => {
+        configDetails.push(`  Secțiunea ${i + 1}: ${sec.width || '—'}m × ${sec.nrCanate || '—'} canate`);
+      });
+    }
+
     // Sticlă
     if (config.glassType) configDetails.push(`Tip sticlă: ${config.glassType}`);
     if (config.glassShape) configDetails.push(`Formă sticlă: ${config.glassShape}`);

@@ -146,7 +146,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Multitrack" config={{ sections, glass, nrCanate: totalCanate }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Multitrack" config={{ sections, glass, height, totalCanate }} />
       <ConfigHeader title="Configurator Terase — Multitrack" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
@@ -288,7 +288,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
       {showSaveModal && (
         <SaveProjectModal productType="terrace-multitrack"
-          config={{ sections, glass, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
+          config={{ sections, glass, height, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>
