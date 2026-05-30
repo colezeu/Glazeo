@@ -166,19 +166,47 @@ export default function HomePage() {
 
         {/* Hero */}
         <section style={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "140px 32px 100px" }}>
-            <div className="anim-fade-up" style={{ marginBottom: 24 }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "120px 32px 80px" }}>
+            {/* Glazeo Logo */}
+            <div className="anim-fade-up" style={{ textAlign: "center", marginBottom: 40 }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 12,
+                padding: "12px 32px",
+                border: "1px solid rgba(200,169,110,0.3)",
+                borderRadius: 16,
+                background: "rgba(200,169,110,0.06)",
+                backdropFilter: "blur(12px)",
+              }}>
+                <svg width="32" height="32" viewBox="0 0 32 32" style={{ flexShrink: 0 }}>
+                  <rect x="2" y="2" width="28" height="28" rx="6" fill="none" stroke="#c8a96e" strokeWidth="1.5" opacity="0.8" />
+                  <line x1="8" y1="16" x2="24" y2="16" stroke="#c8a96e" strokeWidth="1.5" opacity="0.6" />
+                  <line x1="8" y1="12" x2="20" y2="12" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
+                  <line x1="8" y1="20" x2="22" y2="20" stroke="#c8a96e" strokeWidth="1.5" opacity="0.4" />
+                </svg>
+                <span className="serif" style={{
+                  fontSize: "1.6rem", fontWeight: 400,
+                  background: "linear-gradient(135deg, #c8a96e, #e8c98e)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  letterSpacing: "0.15em",
+                }}>GLAZEO</span>
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.25)", marginTop: 8, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                Configurator de produse din sticlă
+              </div>
+            </div>
+
+            <div className="anim-fade-up-2" style={{ marginBottom: 24, textAlign: "center" }}>
               <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "#c8a96e", border: "1px solid rgba(200,169,110,0.3)", borderRadius: 20, padding: "6px 16px", display: "inline-block" }}>
                 Soluții din sticlă structurală
               </span>
             </div>
-            <h1 className="serif anim-fade-up-2" style={{ fontSize: "clamp(2.8rem, 7vw, 5.2rem)", lineHeight: 1.08, marginBottom: 24, fontWeight: 400, maxWidth: 600 }}>
+            <h1 className="serif anim-fade-up-3" style={{ fontSize: "clamp(2.8rem, 7vw, 5.2rem)", lineHeight: 1.08, marginBottom: 24, fontWeight: 400, maxWidth: 600, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
               Transparența<br /><span className="shimmer-text">devenită artă.</span>
             </h1>
-            <p className="anim-fade-up-3" style={{ maxWidth: 480, fontSize: "1.05rem", lineHeight: 1.75, color: "rgba(240,237,232,0.6)", marginBottom: 40 }}>
+            <p className="anim-fade-up-4" style={{ maxWidth: 480, fontSize: "1.05rem", lineHeight: 1.75, color: "rgba(240,237,232,0.6)", marginBottom: 40, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
               Configurați produse din sticlă de înaltă siguranță — balustrade, cabine duș, terase, pergole etc.
             </p>
-            <div className="anim-fade-up-4" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <div className="anim-fade-up-5" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
               <a href="#products">
                 <button className="btn-primary" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   Configurează Acum <ArrowRight size={16} />
@@ -188,7 +216,7 @@ export default function HomePage() {
                 <button className="btn-ghost">Contact Direct</button>
               </a>
             </div>
-            <div className="stats-grid anim-fade-up-4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }}>
+            <div className="stats-grid anim-fade-up-6" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", marginTop: 80, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)" }}>
               {STATS.map((s, i) => (
                 <div key={i} style={{ padding: "24px 20px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", textAlign: "center" }}>
                   <div style={{ fontSize: "1.8rem", fontWeight: 700, color: "#c8a96e", fontFamily: "'DM Serif Display', serif" }}>{s.value}</div>
