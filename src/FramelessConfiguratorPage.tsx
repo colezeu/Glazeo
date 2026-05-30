@@ -8,8 +8,7 @@ export default function FramelessConfiguratorPage() {
   const [vatRate, setVatRate] = useState(0.21);
   const [dims, setDims] = useState({ width: "", height: "2.4" });
   const [glass, setGlass] = useState("clar");
-  const [manerScoica, setManerScoica] = useState(false);
-  const [manerRectangular, setManerRectangular] = useState(false);
+  const [incuietoare, setIncuietoare] = useState(false);
   const [vopsireRAL, setVopsireRAL] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
@@ -36,7 +35,7 @@ export default function FramelessConfiguratorPage() {
   const st = p.systemTypes?.frameless || {};
   const w = parseFloat(dims.width) || 0;
   const h = parseFloat(dims.height) || 0;
-  const isValid = w >= (p.minLungimeMM || 1200) / 1000 && h > 0;
+  const isValid = w >= (p.minLungimeMM || 1200) / 1000 && h > 0 && h <= 3;
   const lungimeM = Math.ceil(w);
   const mpTotal = w * h;
 
@@ -48,8 +47,7 @@ export default function FramelessConfiguratorPage() {
     const pretSticlaMp = p.glassTypes[glass]?.pricePerSqm || 56;
     const costSticla = mpTotal * pretSticlaMp;
     let costSistem = Math.round(lungimeM * (st.systemPricePerMeter || 350));
-    costSistem += (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
-                + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
+    costSistem += incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
     costSistem += vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
 
     const pretFinal = Math.round(costSticla + costSistem);
@@ -75,6 +73,11 @@ export default function FramelessConfiguratorPage() {
                 Lungimea minimă este {(p.minLungimeMM || 1200) / 1000}m
               </div>
             )}
+            {h > 3 && (
+              <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+                Înălțimea maximă este 3m (actual: {h.toFixed(1)}m)
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard num="02" label="Tip Sticlă">
@@ -84,8 +87,7 @@ export default function FramelessConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="03" label="Accesorii">
-            <ToggleOption checked={manerScoica} onChange={(v) => { setManerScoica(v); if (v) setManerRectangular(false); }} label={p.accessories?.manerScoica?.name || "Mâner Scoică"} desc={p.accessories?.manerScoica?.desc} price={`${p.accessories?.manerScoica?.price || 40}€`} />
-            <ToggleOption checked={manerRectangular} onChange={(v) => { setManerRectangular(v); if (v) setManerScoica(false); }} label={p.accessories?.manerRectangular?.name || "Mâner Rectangular"} desc={p.accessories?.manerRectangular?.desc} price={`${p.accessories?.manerRectangular?.price || 80}€`} />
+            <ToggleOption checked={incuietoare} onChange={setIncuietoare} label={p.accessories?.incuietoare?.name || "Încuietoare"} desc={p.accessories?.incuietoare?.desc} price={`${p.accessories?.incuietoare?.price || 207}€`} />
             <ToggleOption checked={vopsireRAL} onChange={setVopsireRAL} label="Vopsire Câmp Electrostatic RAL" desc={`Cost fix: ${lungimeM > 0 ? (lungimeM <= 3 ? '120€' : lungimeM <= 4 ? '150€' : '300€') : '120-300€'} + TVA`} price={lungimeM > 0 ? `${lungimeM <= 3 ? '120' : lungimeM <= 4 ? '150' : '300'}€` : '120-300€'} />
           </SectionCard>
         </div>
@@ -115,7 +117,7 @@ export default function FramelessConfiguratorPage() {
       </main>
 
       {showSaveModal && (
-        <SaveProjectModal productType="terrace-frameless" config={{ dims, glass, manerScoica, manerRectangular, vopsireRAL }}
+        <SaveProjectModal productType="terrace-frameless" config={{ dims, glass, incuietoare, vopsireRAL }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>
