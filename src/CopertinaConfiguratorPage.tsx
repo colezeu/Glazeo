@@ -87,7 +87,8 @@ export default function CopertinaConfiguratorPage() {
   const p = product;
   const w = parseFloat(dims.width)||0, d = parseFloat(dims.depth)||0;
   const isValid = dims.width && dims.depth && w > 0 && d > 0 &&
-    (type !== "copertina-tiranti" || (w <= 4 && d <= 2));
+    (type !== "copertina-tiranti" || (w <= 4 && d <= 2)) &&
+    (type !== "copertina-fara-1.2" || w <= 3);
 
   const calculate = async () => {
     if (!p) return;
@@ -98,7 +99,7 @@ export default function CopertinaConfiguratorPage() {
     // Structural price
     let structP = 0, structLabel = "";
     if (type === "copertina-tiranti") {
-      const kits = 2 + Math.ceil(Math.max(0, w - 1.3) / 1.3);
+      const kits = Math.ceil(w / 2) + 1;
       structP = kits * p.typeCategories[type].kitPrice;
       structLabel = `${kits} kit × ${p.typeCategories[type].kitPrice}€`;
     } else {
@@ -130,6 +131,11 @@ export default function CopertinaConfiguratorPage() {
             {type === "copertina-tiranti" && dims.width && dims.depth && (w > 4 || d > 2) && (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
                 Copertina cu tiranți: max 4m lățime × 2m consolă.
+              </div>
+            )}
+            {type === "copertina-fara-1.2" && dims.width && w > 3 && (
+              <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.8rem", color: "#ef4444" }}>
+                Copertină fără tiranți 1.2m: max 3m lățime.
               </div>
             )}
           </SectionCard>
