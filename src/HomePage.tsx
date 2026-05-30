@@ -11,7 +11,7 @@ const PRODUCTS = [
   { id: "usi-culisante",    name: "Uși Culisante",           tagline: "Full glass · Buzunar · Sincron",            price: "de la 220 €/m²", path: "/configurator/usi-culisante",    desc: "Prindere pe perete, tavan sau sincron fără șină jos. Cu sau fără panou fix, varianta buzunar.", active: false },
   { id: "pergola",          name: "Pergole",                  tagline: "Bioclimatică · Sticlă · Sandwich",          price: "de la 420 €/m²", path: "/configurator/pergola-copertina", desc: "Pergole bioclimatice cu lamele orientabile, acoperiș din sticlă culisant sau panou sandwich.", active: false },
   { id: "copertina",        name: "Copertine",                tagline: "Tiranți · Consolă · Spider",                price: "de la 350 €/m²", path: "/configurator/copertina",        desc: "Copertine din sticlă cu tiranți din inox, în consolă fără suport vizibil sau pe prinderi spider.", active: false },
-  { id: "oglinzi",          name: "Oglinzi",                  tagline: "Clară · Bronze · Gri · Antichizată",        price: "de la 80 €/m²",  path: "/configurator/oglinzi",         desc: "Oglinzi la comandă — clară, bronze, gri sau antichizată. Forme standard sau speciale, cu LED.", active: false },
+  { id: "oglinzi",          name: "Oglinzi",                  tagline: "Clară · Bronze · Gri · Antichizată",        price: "de la 80 €/m²",  path: "/configurator/oglinzi",         desc: "Oglinzi la comandă — clară, bronze, gri sau antichizată. Forme standard sau speciale, cu LED.", active: true },
 ];
 
 const STATS = [
