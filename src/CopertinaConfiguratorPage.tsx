@@ -6,9 +6,9 @@ import QuoteModal from "./QuoteModal.jsx";
 const FALLBACK = {
   name: "Copertină", basePrice: 300,
   typeCategories: {
-    "copertina-tiranti-1.2": { name: "Copertină cu Tiranți (max 1.2m)", pricePerSqm: 380, desc: "Structură cu tiranți inox, consolă până la 1.2m" },
-    "copertina-tiranti-1.5": { name: "Copertină cu Tiranți (max 1.5m)", pricePerSqm: 440, desc: "Structură ranforsată cu tiranți, consolă până la 1.5m" },
-    "copertina-fara":    { name: "Copertină fără Tiranți",    pricePerSqm: 350, desc: "Consolă, fără suport vizibil" },
+    "copertina-tiranti":   { name: "Copertină cu Tiranți",            pricePerSqm: 380, desc: "Structură susținută cu tiranți din inox" },
+    "copertina-fara-1.2": { name: "Copertină fără Tiranți (max 1.2m)", pricePerSqm: 350, desc: "Consolă fără suport vizibil, până la 1.2m" },
+    "copertina-fara-1.5": { name: "Copertină fără Tiranți (max 1.5m)", pricePerSqm: 440, desc: "Consolă ranforsată fără suport vizibil, până la 1.5m" },
   },
   glassTypes: {
     "882": { name: "Sticlă Laminată 882 Clar (17mm)", pricePerSqm: 131, desc: "Standard exterior, rezistență ridicată" },
@@ -28,7 +28,7 @@ function CopertinaPreview({ dims, type, glass, inclLed }) {
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
       <rect x={x0} y={y0} width={gW} height={gD} fill={glFill} stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" rx="2"/>
-      {type.startsWith("copertina-tiranti") && <>
+      {type==="copertina-tiranti" && <>
         <line x1={x0} y1={y0} x2={x0-20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
         <line x1={x0+gW} y1={y0} x2={x0+gW+20} y2={y0-20} stroke="rgba(200,169,110,0.5)" strokeWidth="1.5"/>
       </>}
@@ -44,7 +44,7 @@ export default function CopertinaConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.19);
   const [dims, setDims] = useState({ width:"", depth:"" });
-  const [type, setType] = useState("copertina-tiranti-1.2");
+  const [type, setType] = useState("copertina-tiranti");
   const [glass, setGlass] = useState("882");
   const [inclLed, setInclLed] = useState(false);
   const [inclDegivrare, setInclDegivrare] = useState(false);

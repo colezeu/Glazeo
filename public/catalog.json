@@ -255,20 +255,20 @@
           "pricePerSqm": 560,
           "desc": "Panou termoizolant opac"
         },
-        "copertina-tiranti-1.2": {
-          "name": "Copertină cu Tiranți (max 1.2m)",
+        "copertina-tiranti": {
+          "name": "Copertină cu Tiranți",
           "pricePerSqm": 507,
-          "desc": "Structură cu tiranți inox, consolă până la 1.2m"
+          "desc": "Structură susținută cu tiranți din inox"
         },
-        "copertina-tiranti-1.5": {
-          "name": "Copertină cu Tiranți (max 1.5m)",
-          "pricePerSqm": 587,
-          "desc": "Structură ranforsată cu tiranți, consolă până la 1.5m"
-        },
-        "copertina-fara": {
-          "name": "Copertină fără Tiranți",
+        "copertina-fara-1.2": {
+          "name": "Copertină fără Tiranți (max 1.2m)",
           "pricePerSqm": 467,
-          "desc": "Consolă, fără suport vizibil"
+          "desc": "Consolă fără suport vizibil, până la 1.2m"
+        },
+        "copertina-fara-1.5": {
+          "name": "Copertină fără Tiranți (max 1.5m)",
+          "pricePerSqm": 587,
+          "desc": "Consolă ranforsată fără suport vizibil, până la 1.5m"
         }
       },
       "glassTypes": {
