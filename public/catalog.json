@@ -274,7 +274,7 @@
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
-          "pricePerSqm": 867,
+          "pricePerSqm": 833,
           "desc": "Lamele orientabile, ventilație controlată"
         },
         "pergola-sticla": {
@@ -316,8 +316,8 @@
           "price": 333,
           "desc": "Bandă LED 3000K în profil"
         },
-        "degivrare": {
-          "name": "Degivrare",
+        "dezghetare": {
+          "name": "Degivrare Sticlă",
           "pricePerSqm": 590,
           "desc": "Rezistențe în sticlă, anti-îngheț"
         },
@@ -325,6 +325,11 @@
           "name": "Mobilier Pergolă",
           "price": 1600,
           "desc": "Set mobilier rezistent UV"
+        },
+        "panouri-lat": {
+          "name": "Panouri Laterale Vitrate",
+          "pricePerSqm": 280,
+          "desc": "Paravane sticlă securizată, per m²"
         }
       }
     },
