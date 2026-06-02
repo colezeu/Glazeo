@@ -8,7 +8,7 @@ import { getUserMultiplier } from "./lib/user";
 export default function PergolaConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.19);
-  const [dims, setDims] = useState({ width: "", depth: "" });
+  const [dims, setDims] = useState({ width: "", depth: "", height: "2.50" });
   const [type, setType] = useState("pergola-bioclimatica");
   const [glass, setGlass] = useState("662");
   const [inclLed, setInclLed] = useState(false);
@@ -75,8 +75,11 @@ export default function PergolaConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <SectionCard num="01" label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 4.0" />
-              <NumberInput label="Adâncime (m)" value={dims.depth} onChange={v => setDims(d => ({ ...d, depth: v }))} placeholder="Ex: 3.0" />
+              <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="3.0 – 7.0" step="0.1" min={3.0} max={7.0} />
+              <NumberInput label="Adâncime (m)" value={dims.depth} onChange={v => setDims(d => ({ ...d, depth: v }))} placeholder="3.0 – 6.0" step="0.1" min={3.0} max={6.0} />
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="2.50" step="0.05" min={2.20} max={3.00} />
             </div>
           </SectionCard>
 
@@ -104,7 +107,7 @@ export default function PergolaConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox title="Previzualizare">
             <div style={{ textAlign: "center", color: "rgba(240,237,232,0.5)", fontSize: "0.9rem" }}>
-              {dims.width && dims.depth ? `${dims.width} × ${dims.depth} m` : "Completează dimensiunile"}
+              {dims.width && dims.depth ? `${dims.width} × ${dims.depth} × ${dims.height || "2.50"} m` : "Completează dimensiunile"}
             </div>
           </PreviewBox>
 
