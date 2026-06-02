@@ -10,9 +10,8 @@ export default function PergolaConfiguratorPage() {
   const [vatRate, setVatRate] = useState(0.19);
   const [dims, setDims] = useState({ width: "", depth: "" });
   const [type, setType] = useState("pergola-bioclimatica");
-  const [glass, setGlass] = useState("clear");
+  const [glass, setGlass] = useState("662");
   const [inclLed, setInclLed] = useState(false);
-  const [inclDez, setInclDez] = useState(false);
   const [inclMob, setInclMob] = useState(false);
   const [inclPan, setInclPan] = useState(false);
   const [calculating, setCalculating] = useState(false);
@@ -41,7 +40,7 @@ export default function PergolaConfiguratorPage() {
           name: "Pergolă", basePrice: 300,
           typeCategories: { "pergola-bioclimatica": { name: "Pergolă Bioclimatică", pricePerSqm: 650 } },
           glassTypes: { clear: { name: "Sticlă Clară", pricePerSqm: 0 } },
-          options: { led: { pricePerMeter: 55 }, dezghetare: { pricePerSqm: 95 }, mobilier: { price: 1200 }, "panouri-lat": { pricePerSqm: 280 } }
+          options: { led: { pricePerMeter: 55 }, mobilier: { price: 1200 }, "panouri-lat": { pricePerSqm: 0 } }
         });
       });
   }, []);
@@ -60,11 +59,10 @@ export default function PergolaConfiguratorPage() {
     const typeP = area * (p.typeCategories[type]?.pricePerSqm || 0);
     const glP = showGlass ? area * (p.glassTypes[glass]?.pricePerSqm || 0) : 0;
     const ledP = inclLed ? perimeter * (p.options.led?.pricePerMeter || 0) : 0;
-    const dezP = inclDez ? area * (p.options.dezghetare?.pricePerSqm || 0) : 0;
     const mobP = inclMob ? (p.options.mobilier?.price || 0) : 0;
     const panP = inclPan ? area * (p.options["panouri-lat"]?.pricePerSqm || 0) : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice + typeP + glP + ledP + dezP + mobP + panP, vatRate);
-    setQuote({ area: area.toFixed(2), typeP: Math.round(typeP), glP: Math.round(glP), ledP: Math.round(ledP), dezP: Math.round(dezP), mobP, panP: Math.round(panP), subtotal, vat, total });
+    const { subtotal, vat, total } = calcQuote(p.basePrice + typeP + glP + ledP + mobP + panP, vatRate);
+    setQuote({ area: area.toFixed(2), typeP: Math.round(typeP), glP: Math.round(glP), ledP: Math.round(ledP), mobP, panP: Math.round(panP), subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -98,7 +96,6 @@ export default function PergolaConfiguratorPage() {
 
           <SectionCard num={showGlass ? "04" : "03"} label="Opțiuni & Accesorii">
             <ToggleOption checked={inclLed} onChange={setInclLed} label={p.options.led?.name} desc={p.options.led?.desc} price={`${p.options.led?.pricePerMeter}€/m`} />
-            <ToggleOption checked={inclDez} onChange={setInclDez} label={p.options.dezghetare?.name} desc={p.options.dezghetare?.desc} price={`${p.options.dezghetare?.pricePerSqm}€/m²`} />
             <ToggleOption checked={inclMob} onChange={setInclMob} label={p.options.mobilier?.name} desc={p.options.mobilier?.desc} price={`${p.options.mobilier?.price}€`} />
             <ToggleOption checked={inclPan} onChange={setInclPan} label={p.options["panouri-lat"]?.name} desc={p.options["panouri-lat"]?.desc} price={`${p.options["panouri-lat"]?.pricePerSqm}€/m²`} />
           </SectionCard>
@@ -118,7 +115,6 @@ export default function PergolaConfiguratorPage() {
               { label: "Structură", value: `${quote.typeP}€` },
               quote.glP > 0 && { label: "Sticlă", value: `+${quote.glP}€`, accent: true },
               quote.ledP > 0 && { label: "LED", value: `+${quote.ledP}€`, accent: true },
-              quote.dezP > 0 && { label: "Dezghețare", value: `+${quote.dezP}€`, accent: true },
               quote.mobP > 0 && { label: "Mobilier", value: `+${quote.mobP}€`, accent: true },
               quote.panP > 0 && { label: "Panouri lat.", value: `+${quote.panP}€`, accent: true },
             ] : []}

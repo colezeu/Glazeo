@@ -274,13 +274,13 @@
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
-          "pricePerSqm": 833,
+          "pricePerSqm": 867,
           "desc": "Lamele orientabile, ventilație controlată"
         },
         "pergola-sticla": {
           "name": "Pergolă Acoperiș Sticlă",
           "pricePerSqm": 773,
-          "desc": "Panouri de sticlă culisante sau fixe"
+          "desc": "Panouri de sticlă fixe, etanșare completă"
         },
         "pergola-sandwich": {
           "name": "Pergolă Panou Sandwich",
@@ -304,10 +304,15 @@
         }
       },
       "glassTypes": {
+        "662": {
+          "name": "Sticlă Laminată 66.2 ESG/VSG (13mm)",
+          "pricePerSqm": 112,
+          "desc": "2 foi 6mm securizate, folie PVB, standard"
+        },
         "882": {
-          "name": "Sticlă Laminată 882 Clar (17mm)",
+          "name": "Sticlă Laminată 88.2 ESG/VSG (17mm)",
           "pricePerSqm": 131,
-          "desc": "Standard exterior, rezistență ridicată"
+          "desc": "2 foi 8mm securizate, rezistență sporită"
         }
       },
       "options": {
@@ -316,20 +321,15 @@
           "price": 333,
           "desc": "Bandă LED 3000K în profil"
         },
-        "dezghetare": {
-          "name": "Degivrare Sticlă",
-          "pricePerSqm": 590,
-          "desc": "Rezistențe în sticlă, anti-îngheț"
-        },
         "mobilier": {
           "name": "Mobilier Pergolă",
           "price": 1600,
           "desc": "Set mobilier rezistent UV"
         },
         "panouri-lat": {
-          "name": "Panouri Laterale Vitrate",
-          "pricePerSqm": 280,
-          "desc": "Paravane sticlă securizată, per m²"
+          "name": "Închideri Laterale (Multitrack)",
+          "pricePerSqm": 0,
+          "desc": "Configurați separat → secțiunea Închideri Terase"
         }
       }
     },
