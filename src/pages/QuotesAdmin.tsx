@@ -3,6 +3,8 @@ import { fetchQuotes, updateQuoteStatus, type QuoteData } from '../lib/quotes'
 import { formatPrice } from '../ConfiguratorShared'
 import { format } from 'date-fns'
 import { ro } from 'date-fns/locale'
+import { FileText } from 'lucide-react'
+import { generateQuotePDF } from '../quotePdf'
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   pending:  { label: 'În așteptare', color: '#f59e0b' },
@@ -95,6 +97,7 @@ export default function QuotesAdmin() {
                     <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: 400 }}>Metodă</th>
                     <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: 400 }}>Status</th>
                     <th style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 400 }}>Dată</th>
+                    <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: 400 }}>PDF</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -149,6 +152,42 @@ export default function QuotesAdmin() {
                         </td>
                         <td style={{ padding: '14px 16px', textAlign: 'right', fontSize: '0.78rem', color: 'rgba(240,237,232,0.35)' }}>
                           {q.created_at ? format(new Date(q.created_at), 'dd MMM yyyy', { locale: ro }) : '—'}
+                        </td>
+                        <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                          <button
+                            onClick={() => {
+                              generateQuotePDF({
+                                productName: q.product_name,
+                                quote: {
+                                  subtotal: q.quote_subtotal || 0,
+                                  vat: q.quote_vat || 0,
+                                  total: q.quote_total || 0,
+                                },
+                                config: q.config || {},
+                                clientInfo: {
+                                  name: q.client_name,
+                                  email: q.client_email,
+                                  phone: q.client_phone,
+                                  message: q.client_message,
+                                },
+                              });
+                            }}
+                            style={{
+                              background: 'rgba(200,169,110,0.12)',
+                              border: '1px solid rgba(200,169,110,0.25)',
+                              borderRadius: 8,
+                              padding: '6px 12px',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 6,
+                              color: '#c8a96e',
+                              fontSize: '0.78rem',
+                            }}
+                            title="Descarcă PDF"
+                          >
+                            <FileText size={14} /> PDF
+                          </button>
                         </td>
                       </tr>
                     )

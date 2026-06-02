@@ -103,7 +103,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
       }
 
       const msg = encodeURIComponent(lines.join("\n"));
-      window.open(`https://wa.me/40721726789?text=${msg}`, "_blank");
+      window.open(`https://wa.me/40734712187?text=${msg}`, "_blank");
       setSent(true);
     }
   };

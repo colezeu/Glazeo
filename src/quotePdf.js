@@ -35,7 +35,7 @@ function createQuoteEmail({ productName, quote, config, clientInfo }) {
 
 function openMailFallback(payload) {
   const { subject, body } = createQuoteEmail(payload);
-  const params = new URLSearchParams({ subject, body });
+  const params = new URLSearchParams({ subject, body, cc: 'srldigima@gmail.com' });
   window.location.href = `mailto:office@glass.associates?${params.toString()}`;
   return { ok: true, fallback: "mailto" };
 }

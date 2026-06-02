@@ -101,6 +101,9 @@ export default function PergolaConfiguratorPage() {
             <ToggleOption checked={inclLed} onChange={setInclLed} label={p.options.led?.name} desc={p.options.led?.desc} price={`${p.options.led?.pricePerMeter}€/m`} />
             <ToggleOption checked={inclMob} onChange={setInclMob} label={p.options.mobilier?.name} desc={p.options.mobilier?.desc} price={`${p.options.mobilier?.price}€`} />
             <ToggleOption checked={inclPan} onChange={setInclPan} label={p.options["panouri-lat"]?.name} desc={p.options["panouri-lat"]?.desc} price={`${p.options["panouri-lat"]?.pricePerSqm}€/m²`} />
+            <a href="/configurator/inchidere-terasa/multitrack" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 8, padding: "8px 16px", background: "rgba(200,169,110,0.15)", border: "1px solid rgba(200,169,110,0.4)", borderRadius: 8, color: "#c8a96e", fontSize: "0.85rem", fontWeight: 500, textDecoration: "none", cursor: "pointer", transition: "background 0.2s" }}>
+              🔗 Configurează închiderile laterale →
+            </a>
           </SectionCard>
         </div>
 

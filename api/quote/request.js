@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     console.log("Produs:", productName);
     console.log("Total:", quote?.total, "EUR");
     console.log("Config:", JSON.stringify(config));
+    console.log("CC: srldigima@gmail.com");
     console.log("=====================");
 
     return sendJson(res, 200, { ok: true, message: "Cerere inregistrata" });
