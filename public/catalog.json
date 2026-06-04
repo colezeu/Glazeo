@@ -274,17 +274,17 @@
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
-          "pricePerSqm": 867,
+          "pricePerSqm": 1156,
           "desc": "Lamele orientabile, ventilație controlată"
         },
         "pergola-sticla": {
           "name": "Pergolă Acoperiș Sticlă",
-          "pricePerSqm": 773,
+          "pricePerSqm": 1031,
           "desc": "Panouri de sticlă fixe, etanșare completă"
         },
         "pergola-sandwich": {
           "name": "Pergolă Panou Sandwich",
-          "pricePerSqm": 560,
+          "pricePerSqm": 747,
           "desc": "Panou termoizolant opac"
         },
         "copertina-tiranti": {
@@ -306,24 +306,24 @@
       "glassTypes": {
         "662": {
           "name": "Sticlă Laminată 66.2 ESG/VSG (13mm)",
-          "pricePerSqm": 112,
+          "pricePerSqm": 149,
           "desc": "2 foi 6mm securizate, folie PVB, standard"
         },
         "882": {
           "name": "Sticlă Laminată 88.2 ESG/VSG (17mm)",
-          "pricePerSqm": 131,
+          "pricePerSqm": 175,
           "desc": "2 foi 8mm securizate, rezistență sporită"
         }
       },
       "options": {
         "led": {
           "name": "Iluminare LED",
-          "price": 333,
+          "price": 444,
           "desc": "Bandă LED 3000K în profil"
         },
         "mobilier": {
           "name": "Mobilier Pergolă",
-          "price": 1600,
+          "price": 2133,
           "desc": "Set mobilier rezistent UV, de la 1600€"
         },
         "panouri-lat": {
