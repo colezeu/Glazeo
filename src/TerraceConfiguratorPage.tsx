@@ -165,8 +165,9 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
 
     const costProfileLaterale = profileLaterale ? inaltimeM * (p.systemPrices?.profilLateral?.pricePerMeter || 39) : 0;
     const costIncuietoareVal = incuietoare ? (p.accessories?.incuietoare?.price || 207) : 0;
-    const costManere = (manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
-                     + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0);
+    const nrManere = deschidereMijloc ? 2 : 1;
+    const costManere = ((manerScoica ? (p.accessories?.manerScoica?.price || 40) : 0)
+                     + (manerRectangular ? (p.accessories?.manerRectangular?.price || 80) : 0)) * nrManere;
     const costRAL = vopsireRAL ? (lungimeM <= 3 ? 120 : lungimeM <= 4 ? 150 : 300) : 0;
     const costBlocator = blocator ? (p.accessories?.blocator?.price || 49) : 0;
     const costFeronerie = costSistemBaza + costSineExtra + costProfileLaterale + costIncuietoareVal + costManere + costRAL + costBlocator;
