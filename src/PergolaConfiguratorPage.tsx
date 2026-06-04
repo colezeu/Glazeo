@@ -21,6 +21,7 @@ export default function PergolaConfiguratorPage() {
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
+    getUserMultiplier().then(m => setPriceMultiplier(m));
     fetch("/catalog.json")
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(d => {
@@ -61,8 +62,10 @@ export default function PergolaConfiguratorPage() {
     const ledP = inclLed ? perimeter * (p.options.led?.pricePerMeter || 0) : 0;
     const mobP = inclMob ? (p.options.mobilier?.price || 0) : 0;
     const panP = inclPan ? area * (p.options["panouri-lat"]?.pricePerSqm || 0) : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice + typeP + glP + ledP + mobP + panP, vatRate);
-    setQuote({ area: area.toFixed(2), typeP: Math.round(typeP), glP: Math.round(glP), ledP: Math.round(ledP), mobP, panP: Math.round(panP), subtotal, vat, total });
+    const subtotalRaw = p.basePrice + typeP + glP + ledP + mobP + panP;
+    const pretFinal = Math.round(subtotalRaw * priceMultiplier);
+    const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
+    setQuote({ area: area.toFixed(2), typeP: Math.round(typeP * priceMultiplier), glP: Math.round(glP * priceMultiplier), ledP: Math.round(ledP * priceMultiplier), mobP: Math.round(mobP * priceMultiplier), panP: Math.round(panP * priceMultiplier), subtotal, vat, total });
     setCalculating(false);
   };
 
