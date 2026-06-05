@@ -106,7 +106,7 @@ export default function ShowerPreview2D({
   return (
     <div style={{ width: "100%", background: "rgba(255,255,255,0.02)", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.07)" }}>
       <div style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.35)", padding: "10px 0 4px", textAlign: "center", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        Previzualizare 2D · Ele{"\u00e7"}aie Fa{"\u021b"}ă
+        Previzualizare 2D · Eleva{"\u021b"}ie Fa{"\u021b"}ă
       </div>
 
       <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: "100%", display: "block", background: "#0f1117" }}>
@@ -125,12 +125,14 @@ export default function ShowerPreview2D({
             {/* Glass panel */}
             <GlassPanel x={x0 + (isPerete ? 2 : 0)} y={topY} wd={panelW} ht={panelH} />
 
-            {/* Bar stabilizatoare */}
+            {/* Bară stabilizatoare — ca profil metalic */}
             {hasBar && (
-              <line
-                x1={x0 - 4} y1={barY} x2={x0 + panelW + 4} y2={barY}
-                stroke={gold} strokeWidth="3" strokeLinecap="round"
-              />
+              <g>
+                <rect x={x0 - 6} y={barY - 4} width={panelW + 12} height="8" rx="3"
+                  fill="rgba(200,169,110,0.18)" stroke={gold} strokeWidth="1.2" />
+                <line x1={x0 - 4} y1={barY} x2={x0 + panelW + 4} y2={barY}
+                  stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
+              </g>
             )}
 
             {/* Tavan: top line to indicate ceiling mount */}
