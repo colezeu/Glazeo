@@ -4,6 +4,7 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteS
 import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
+import ShowerPreview2D from "./ShowerPreview2D";
 const TYPE_THUMB = {
   "paravan": "/paravan cu bara.jpg",
   "fix-batant": null,
@@ -210,14 +211,18 @@ export default function ShowerConfiguratorPage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <PreviewBox title="Previzualizare">
-            <div style={{ textAlign: "center", color: "rgba(240,237,232,0.5)", fontSize: "0.9rem", lineHeight: 1.8 }}>
-              {w && h ? `${w} × ${hasLateral ? d : "—"} × ${h}m` : "Completează dimensiunile"}<br />
-              <span style={{ color: "#c8a96e" }}>{p.enclosureTypes[enclosure]?.name}</span><br />
-              {activeSubtype.name}<br />
-              {forced10mm ? "🔒 10mm (obligatoriu)" : `Sticlă ${effectiveGlassType}`} · {p.glassFinishes?.[finish]?.name}
-            </div>
-          </PreviewBox>
+          <ShowerPreview2D
+            width={width}
+            depth={depth}
+            height={height}
+            enclosure={enclosure}
+            subtype={subtype}
+            glassType={effectiveGlassType}
+            finish={finish}
+            treatment={inclEnduro ? "enduroshield" : undefined}
+            hasLateral={hasLateral}
+            lateralCount={activeSubtype.lateral}
+          />
 
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
