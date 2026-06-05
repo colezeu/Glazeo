@@ -5,6 +5,14 @@ import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 
+const TYPE_IMAGE = "/dus-structura.jpg";
+const TYPE_POSITION = {
+  "paravan": "0% 100%",
+  "fix-batant": "0% 0%",
+  "culisant-vedere": "100% 0%",
+  "culisant-sina": "100% 100%",
+};
+
 const FALLBACK = {
   name: "Cabine Duș", basePrice: 80,
   enclosureTypes: {
@@ -89,7 +97,14 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num="01" label="Tipologie">
             {Object.entries(p.enclosureTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={enclosure === k} onClick={() => setConfig(c => ({ ...c, enclosure: k }))} label={d.name} desc={d.desc} price={d.price > 0 ? `+${d.price}€` : "Inclus"} />
+              <div key={k} onClick={() => setConfig(c => ({ ...c, enclosure: k }))} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+                <div style={{ width: 64, height: 48, borderRadius: 6, overflow: "hidden", flexShrink: 0, border: enclosure === k ? "1px solid #c8a96e" : "1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={TYPE_IMAGE} alt="" style={{ width: "200%", height: "200%", objectFit: "cover", objectPosition: TYPE_POSITION[k] || "0% 0%" }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <OptionBtn key={k} selected={enclosure === k} onClick={() => setConfig(c => ({ ...c, enclosure: k }))} label={d.name} desc={d.desc} price={d.price > 0 ? `+${d.price}€` : "Inclus"} />
+                </div>
+              </div>
             ))}
           </SectionCard>
 
