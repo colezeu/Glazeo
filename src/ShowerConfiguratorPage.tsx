@@ -4,6 +4,13 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteS
 import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
+const TYPE_THUMB = {
+  "paravan": "/paravan cu bara.jpg",
+  "fix-batant": null,
+  "culisant-vedere": "/culisant caruciare la vedere.jpg",
+  "culisant-sina": "/culisant cu o latura carucioare in sina.jpg",
+};
+
 
 // Subtype images per typology
 const SUBTYPE_IMG = {
@@ -119,7 +126,18 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num="01" label="Tipologie">
             {Object.entries(p.enclosureTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={enclosure === k} onClick={() => setConfig(c => ({ ...c, enclosure: k, subtype: SUBTYPES[k]?.[0]?.key || "standard" }))} label={d.name} desc={d.desc} price={d.price > 0 ? `+${d.price}€` : "Inclus"} />
+              <div key={k} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => setConfig(c => ({ ...c, enclosure: k, subtype: SUBTYPES[k]?.[0]?.key || "standard" }))}>
+                <div style={{ width: 80, height: 56, borderRadius: 8, overflow: "hidden", flexShrink: 0, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {TYPE_THUMB[k] ? (
+                    <img src={TYPE_THUMB[k]} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                  ) : (
+                    <span style={{ fontSize: "1.5rem", opacity: 0.3 }}>🚿</span>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <OptionBtn key={k} selected={enclosure === k} onClick={() => {}} label={d.name} desc={d.desc} price={d.price > 0 ? `+${d.price}€` : "Inclus"} />
+                </div>
+              </div>
             ))}
           </SectionCard>
 
