@@ -137,8 +137,7 @@ export default function ShowerConfiguratorPage() {
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
                       {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
                     </div>
-                  );
-                })}
+                  ))}
               </div>
             </SectionCard>
           )}
