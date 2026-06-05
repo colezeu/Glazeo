@@ -96,82 +96,92 @@
       "name": "Cabine Duș",
       "basePrice": 107,
       "enclosureTypes": {
-        "paravan-fix-profil": {
-          "name": "Paravan Fix cu Profil",
+        "paravan": {
+          "name": "Paravan Fix",
           "price": 0,
-          "desc": "Fix, cu profil perete/jos"
+          "desc": "Panou fix, prindere perete, cu bară stabilizatoare",
+          "icon": "paravan"
         },
-        "paravan-fix-punctual": {
-          "name": "Paravan Fix cu Prinderi Fixe",
-          "price": 67,
-          "desc": "Fix, prinderi punctuale"
-        },
-        "paravan-mobil": {
-          "name": "Paravan Mobil (evantai)",
-          "price": 240,
-          "desc": "Se pliază în evantai"
-        },
-        "usa-batanta": {
-          "name": "Ușă Batantă",
+        "fix-batant": {
+          "name": "Fix + Ușă Batantă",
           "price": 267,
-          "desc": "Deschidere 180°, balamale prinse pe perete"
+          "desc": "Panou fix + ușă batantă 90°, balamale perete",
+          "icon": "fix-batant"
         },
-        "usa-culisanta-vedere": {
-          "name": "Ușă Culisantă cu Glisori la Vedere",
+        "culisant-vedere": {
+          "name": "Culisant — Cărucioare la Vedere",
           "price": 400,
-          "desc": "Sistem clasic vizibil"
+          "desc": "Fix + mobil, glisare pe șină, cărucioare vizibile",
+          "icon": "culisant-vedere"
         },
-        "usa-culisanta-sina": {
-          "name": "Ușă Culisantă cu Glisori în Șină",
+        "culisant-sina": {
+          "name": "Culisant — Cărucioare în Șină",
           "price": 507,
-          "desc": "Cărucioare ascunse, soft-close"
+          "desc": "Fix + mobil, cărucioare ascunse, soft-close",
+          "icon": "culisant-sina"
         }
       },
       "glassTypes": {
         "8mm": {
           "name": "Sticlă Securizată 8mm",
           "pricePerSqm": 173,
-          "desc": "Rezistentă la șocuri termice"
+          "desc": "Standard, rezistentă la șocuri termice"
         },
         "10mm": {
           "name": "Sticlă Securizată 10mm",
           "pricePerSqm": 227,
-          "desc": "Robustețe sporită"
+          "desc": "Obligatoriu peste 2.2m înălțime sau 0.9m lățime"
         }
       },
-      "treatments": {
-        "clear": {
-          "name": "Transparentă",
+      "glassFinishes": {
+        "clara": {
+          "name": "Clară",
           "pricePerSqm": 0,
-          "desc": "Sticlă clară standard"
+          "desc": "Sticlă transparentă standard"
         },
-        "frosted": {
+        "parsol-gri": {
+          "name": "Parsol Gri",
+          "pricePerSqm": 35,
+          "desc": "Nuanță gri, protecție solară"
+        },
+        "parsol-bronze": {
+          "name": "Parsol Bronze",
+          "pricePerSqm": 35,
+          "desc": "Nuanță bronze, aspect cald"
+        },
+        "satin": {
           "name": "Satinată (Opacă)",
           "pricePerSqm": 33,
           "desc": "Intimitate totală, aspect mat"
-        },
-        "nano": {
-          "name": "Tratament Nano Anti-Calcar",
+        }
+      },
+      "treatments": {
+        "enduroshield": {
+          "name": "ENDURO-Shield",
           "pricePerSqm": 47,
-          "desc": "Respinge mizeria și calcarul"
+          "desc": "Protecție nano anti-calcar și anti-mizerie"
         }
       },
       "options": {
         "towelBar": {
-          "name": "Port Prosop Integrat",
+          "name": "Port Prosop",
           "price": 60,
           "desc": "Inox satinat, capacitate 5kg"
         },
-        "seat": {
-          "name": "Scaun Rabatabil",
-          "price": 113,
-          "desc": "Teak tratat, 120kg capacitate"
+        "manerScoica": {
+          "name": "Mâner Scoică",
+          "price": 40,
+          "desc": "Mâner clasic tip scoică"
         },
-        "led": {
-          "name": "Iluminare LED",
-          "price": 160,
-          "desc": "Profil luminos impermeabil IP67"
+        "manerRectangular": {
+          "name": "Mâner Rectangular",
+          "price": 80,
+          "desc": "Mâner dreptunghiular modern"
         }
+      },
+      "auto10mm": {
+        "heightThreshold": 2.2,
+        "widthThreshold": 0.9
       }
     },
     "inchidere-terasa": {
