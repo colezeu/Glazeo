@@ -19,9 +19,8 @@ const SUBTYPE_IMG = {
 
 const SUBTYPES = {
   "paravan": [
-    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
-    { key: "walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
-    { key: "tavan", name: "Până în tavan", lateral: 0, img: null },
+    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"], img2: SUBTYPE_IMG["paravan-walkin"] },
+    { key: "tavan", name: "Până în tavan", lateral: 0, img: null, img2: null },
   ],
   "fix-batant": [
     { key: "standard", name: "Standard", lateral: 0, img: null },
@@ -128,12 +127,13 @@ export default function ShowerConfiguratorPage() {
           {subtypes.length > 1 && (
             <SectionCard num="02" label="Configurație">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {subtypes.map(st => {
-                  const img = st.img;
-                  return (
+                {subtypes.map(st => (
                     <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                       style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)", transition: "all 0.2s" }}>
-                      {img && <div style={{ width: "100%", height: 80, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={img} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
+                      {(st.img || st.img2) && <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                        {st.img && <div style={{ flex: 1, height: 70, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
+                        {st.img2 && <div style={{ flex: 1, height: 70, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img2} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
+                      </div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
                       {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
                     </div>
