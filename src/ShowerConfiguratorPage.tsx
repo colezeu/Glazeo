@@ -47,6 +47,7 @@ const SUBTYPES = {
   "culisant-sina": [
     { key: "1l", name: "1 latură", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
     { key: "2l", name: "2 laturi", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
+    { key: "colt", name: "Pe colț", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-colt"] },
   ],
 };
 
