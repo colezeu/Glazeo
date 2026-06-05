@@ -5,23 +5,23 @@ import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 const TYPE_THUMB = {
-  "paravan": "/paravan cu bara.jpg",
+  "paravan": "/dark-paravan cu bara.jpg",
   "fix-batant": null,
-  "culisant-vedere": "/culisant caruciare la vedere.jpg",
-  "culisant-sina": "/culisant cu o latura carucioare in sina.jpg",
+  "culisant-vedere": "/dark-culisant caruciare la vedere.jpg",
+  "culisant-sina": "/dark-culisant cu o latura carucioare in sina.jpg",
 };
 
 
 // Subtype images per typology
 const SUBTYPE_IMG = {
-  "paravan-bara": "/paravan cu bara.jpg",
-  "paravan-walkin": "/walk in cu bara.jpg",
+  "paravan-bara": "/dark-paravan cu bara.jpg",
+  "paravan-walkin": "/dark-walk in cu bara.jpg",
   "paravan-tavan": null,
-  "culisant-vedere-1l": "/culisant cu o latura caruciare la vedere.jpg",
-  "culisant-vedere-2l": "/culisant 2 laturi caruciare la vedere.jpg",
-  "culisant-vedere-colt": "/culisant pe colt caruciare la vedere.jpg",
-  "culisant-sina-1l": "/culisant cu o latura carucioare in sina.jpg",
-  "culisant-sina-2l": "/culisant cu 2 laturi carucioare in sina.jpg.jpg",
+  "culisant-vedere-1l": "/dark-culisant cu o latura caruciare la vedere.jpg",
+  "culisant-vedere-2l": "/dark-culisant 2 laturi caruciare la vedere.jpg",
+  "culisant-vedere-colt": "/dark-culisant pe colt caruciare la vedere.jpg",
+  "culisant-sina-1l": "/dark-culisant cu o latura carucioare in sina.jpg",
+  "culisant-sina-2l": "/dark-culisant cu 2 laturi carucioare in sina.jpg.jpg",
 };
 
 const SUBTYPES = {
