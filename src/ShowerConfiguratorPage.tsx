@@ -7,12 +7,10 @@ import QuoteModal from "./QuoteModal.js";
 import ShowerPreview2D from "./ShowerPreview2D";
 const TYPE_THUMB = {
   "paravan": "/paravan cu bara.jpg",
-  "fix-batant": "/fix cu usa batanta.png",
+  "fix-batant": "/fix-usa-batanta.png",
   "culisant-vedere": "/culisant caruciare la vedere.jpg",
   "culisant-sina": "/culisant carucioare in sina.jpg",
 };
-
-const imgFilter = (src) => src && src.endsWith('.png') ? {} : { filter: "invert(0.92)" };
 
 
 // Subtype images per typology
@@ -22,8 +20,8 @@ const SUBTYPE_IMG = {
   "tavan-perete": "/tavan-perete.jpg",
   "tavan-walkin": "/tavan-walkin.jpg",
   "paravan-tavan": null,
-  "fix-batant-standard": "/fix cu usa batanta.png",
-  "fix-batant-1l": "/fix + usa batanta cu o latura.png",
+  "fix-batant-standard": "/fix-usa-batanta.png",
+  "fix-batant-1l": "/fix-usa-batanta-1l.png",
   "culisant-vedere-0l": "/culisant caruciare la vedere.jpg",
   "culisant-vedere-1l": "/culisant cu o latura caruciare la vedere.jpg",
   "culisant-vedere-2l": "/culisant 2 laturi caruciare la vedere.jpg",
@@ -149,7 +147,7 @@ export default function ShowerConfiguratorPage() {
               <div key={k} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => setConfig(c => ({ ...c, enclosure: k, subtype: SUBTYPES[k]?.[0]?.key || "standard" }))}>
                 <div style={{ width: 120, height: 80, borderRadius: 8, overflow: "hidden", flexShrink: 0, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {TYPE_THUMB[k] ? (
-                    <img src={TYPE_THUMB[k]} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", ...imgFilter(TYPE_THUMB[k]) }} />
+                    <img src={TYPE_THUMB[k]} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} />
                   ) : (
                     <span style={{ fontSize: "1.5rem", opacity: 0.3 }}>🚿</span>
                   )}
@@ -172,7 +170,7 @@ export default function ShowerConfiguratorPage() {
                         {subtypes.slice(gi*2, gi*2+2).map(st => (
                           <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                             style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
-                            {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", ...imgFilter(st.img) }} /></div>}
+                            {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                             <div style={{ fontWeight: 600, fontSize: "0.9rem", textAlign: "center" }}>{st.name}</div>
                           </div>
                         ))}
@@ -185,7 +183,7 @@ export default function ShowerConfiguratorPage() {
                   {subtypes.map(st => (
                     <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                       style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
-                      {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", ...imgFilter(st.img) }} /></div>}
+                      {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
                       {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
                     </div>
