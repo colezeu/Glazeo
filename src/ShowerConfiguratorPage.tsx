@@ -44,14 +44,14 @@ const SUBTYPES = {
   ],
   "culisant-vedere": [
     { key: "0l", name: "Fără laturi", lateral: 0, img: SUBTYPE_IMG["culisant-vedere-0l"] },
-    { key: "1l", name: "1 latură", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-1l"] },
-    { key: "2l", name: "2 laturi", lateral: 2, img: SUBTYPE_IMG["culisant-vedere-2l"] },
+    { key: "1l", name: "1 latură sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-1l"] },
+    { key: "2l", name: "2 laturi sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-vedere-2l"] },
     { key: "colt", name: "Pe colț", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-colt"] },
   ],
   "culisant-sina": [
     { key: "0l", name: "Fără laturi", lateral: 0, img: SUBTYPE_IMG["culisant-sina-0l"] },
-    { key: "1l", name: "1 latură", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
-    { key: "2l", name: "2 laturi", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
+    { key: "1l", name: "1 latură sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
+    { key: "2l", name: "2 laturi sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
     { key: "colt", name: "Pe colț", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
     { key: "cada", name: "Pe cadă", lateral: 0, img: SUBTYPE_IMG["culisant-sina-cada"] },
   ],
