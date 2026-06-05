@@ -125,14 +125,14 @@ export default function ShowerPreview2D({
             {/* Glass panel */}
             <GlassPanel x={x0 + (isPerete ? 2 : 0)} y={topY} wd={panelW} ht={panelH} />
 
-            {/* Bară stabilizatoare — diagonală 45° sus, lângă colț */}
+            {/* Bară stabilizatoare — diagonală 45° în colțul liber (dreapta) */}
             {hasBar && (
               <g>
-                <line x1={isPerete ? x0 + 6 : x0 + 2} y1={topY + panelH * 0.25}
-                      x2={isPerete ? x0 + 6 : x0 + 2} y2={topY + 12}
+                <line x1={x0 + panelW - 6} y1={topY + panelH * 0.25}
+                      x2={x0 + panelW - 6} y2={topY + 12}
                       stroke={gold} strokeWidth="4" strokeLinecap="round" />
-                <line x1={isPerete ? x0 + 6 : x0 + 2} y1={topY + panelH * 0.25}
-                      x2={isPerete ? x0 + 6 - panelW * 0.12 : x0 + 2 + panelW * 0.12} y2={topY + 14}
+                <line x1={x0 + panelW - 6} y1={topY + panelH * 0.25}
+                      x2={x0 + panelW + panelW * 0.12} y2={topY + 12}
                       stroke={gold} strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
               </g>
             )}
