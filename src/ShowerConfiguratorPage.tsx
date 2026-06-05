@@ -5,23 +5,23 @@ import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 const TYPE_THUMB = {
-  "paravan": "/dark-paravan cu bara.jpg",
+  "paravan": "/paravan cu bara.jpg",
   "fix-batant": null,
-  "culisant-vedere": "/dark-culisant caruciare la vedere.jpg",
-  "culisant-sina": "/dark-culisant cu o latura carucioare in sina.jpg",
+  "culisant-vedere": "/culisant caruciare la vedere.jpg",
+  "culisant-sina": "/culisant cu o latura carucioare in sina.jpg",
 };
 
 
 // Subtype images per typology
 const SUBTYPE_IMG = {
-  "paravan-bara": "/dark-paravan cu bara.jpg",
-  "paravan-walkin": "/dark-walk in cu bara.jpg",
+  "paravan-bara": "/paravan cu bara.jpg",
+  "paravan-walkin": "/walk in cu bara.jpg",
   "paravan-tavan": null,
-  "culisant-vedere-1l": "/dark-culisant cu o latura caruciare la vedere.jpg",
-  "culisant-vedere-2l": "/dark-culisant 2 laturi caruciare la vedere.jpg",
-  "culisant-vedere-colt": "/dark-culisant pe colt caruciare la vedere.jpg",
-  "culisant-sina-1l": "/dark-culisant cu o latura carucioare in sina.jpg",
-  "culisant-sina-2l": "/dark-culisant cu 2 laturi carucioare in sina.jpg.jpg",
+  "culisant-vedere-1l": "/culisant cu o latura caruciare la vedere.jpg",
+  "culisant-vedere-2l": "/culisant 2 laturi caruciare la vedere.jpg",
+  "culisant-vedere-colt": "/culisant pe colt caruciare la vedere.jpg",
+  "culisant-sina-1l": "/culisant cu o latura carucioare in sina.jpg",
+  "culisant-sina-2l": "/culisant cu 2 laturi carucioare in sina.jpg.jpg",
 };
 
 const SUBTYPES = {
@@ -128,9 +128,9 @@ export default function ShowerConfiguratorPage() {
           <SectionCard num="01" label="Tipologie">
             {Object.entries(p.enclosureTypes).map(([k, d]) => (
               <div key={k} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => setConfig(c => ({ ...c, enclosure: k, subtype: SUBTYPES[k]?.[0]?.key || "standard" }))}>
-                <div style={{ width: 80, height: 56, borderRadius: 8, overflow: "hidden", flexShrink: 0, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 120, height: 80, borderRadius: 8, overflow: "hidden", flexShrink: 0, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {TYPE_THUMB[k] ? (
-                    <img src={TYPE_THUMB[k]} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                    <img src={TYPE_THUMB[k]} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} />
                   ) : (
                     <span style={{ fontSize: "1.5rem", opacity: 0.3 }}>🚿</span>
                   )}
@@ -149,8 +149,8 @@ export default function ShowerConfiguratorPage() {
                     <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                       style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)", transition: "all 0.2s" }}>
                       {(st.img || st.img2) && <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                        {st.img && <div style={{ flex: 1, height: 70, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
-                        {st.img2 && <div style={{ flex: 1, height: 70, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img2} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
+                        {st.img && <div style={{ flex: 1, height: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
+                        {st.img2 && <div style={{ flex: 1, height: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img2} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                       </div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
                       {st.note && <div style={{ fontSize: "0.75rem", color: "rgba(200,169,110,0.6)", marginTop: 2 }}>{st.note}</div>}
