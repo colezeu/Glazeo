@@ -25,6 +25,7 @@ const SUBTYPE_IMG = {
   "culisant-vedere-colt": "/culisant pe colt caruciare la vedere.jpg",
   "culisant-sina-1l": "/culisant cu o latura carucioare in sina.jpg",
   "culisant-sina-2l": "/culisant cu 2 laturi carucioare in sina.jpg.jpg",
+  "culisant-sina-colt": "/culisant pe colt carucioare in sina.jpg",
 };
 
 const SUBTYPES = {
@@ -47,7 +48,7 @@ const SUBTYPES = {
   "culisant-sina": [
     { key: "1l", name: "1 latură", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
     { key: "2l", name: "2 laturi", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
-    { key: "colt", name: "Pe colț", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-colt"] },
+    { key: "colt", name: "Pe colț", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
   ],
 };
 
