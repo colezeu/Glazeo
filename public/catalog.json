@@ -162,6 +162,33 @@
           "desc": "Protecție nano anti-calcar și anti-mizerie"
         }
       },
+      "hardwareFinishes": {
+        "inox-lucios": {
+          "name": "Inox Lucios",
+          "priceFactor": 1.0,
+          "desc": "Standard, finisaj bright"
+        },
+        "inox-satinat": {
+          "name": "Inox Satinat",
+          "priceFactor": 0.95,
+          "desc": "Finisaj mat, amprentele nu se văd"
+        },
+        "negru-mat": {
+          "name": "Negru Mat",
+          "priceFactor": 1.10,
+          "desc": "Modern, contrast elegant cu sticla"
+        },
+        "cromat": {
+          "name": "Cromat Lucios",
+          "priceFactor": 1.05,
+          "desc": "Strălucire premium, ușor de întreținut"
+        },
+        "auriu": {
+          "name": "Auriu / Champagne",
+          "priceFactor": 1.15,
+          "desc": "Finisaj premium, aspect cald"
+        }
+      },
       "options": {
         "towelBar": {
           "name": "Port Prosop",

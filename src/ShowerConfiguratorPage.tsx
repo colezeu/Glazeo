@@ -63,11 +63,12 @@ const FALLBACK = {
   glassTypes: { "8mm": { name: "Securit 8mm", pricePerSqm: 130 }, "10mm": { name: "Securit 10mm", pricePerSqm: 170 } },
   glassFinishes: { "clara": { name: "Clară", pricePerSqm: 0 }, "parsol-gri": { name: "Parsol Gri", pricePerSqm: 25 }, "parsol-bronze": { name: "Parsol Bronze", pricePerSqm: 25 }, "satin": { name: "Satinată", pricePerSqm: 25 } },
   treatments: { "enduroshield": { name: "ENDURO-Shield", pricePerSqm: 35 } },
+  hardwareFinishes: { "inox-lucios": { name: "Inox Lucios", priceFactor: 1.0 }, "inox-satinat": { name: "Inox Satinat", priceFactor: 0.95 }, "negru-mat": { name: "Negru Mat", priceFactor: 1.10 }, "cromat": { name: "Cromat Lucios", priceFactor: 1.05 }, "auriu": { name: "Auriu", priceFactor: 1.15 } },
   options: { towelBar: { name: "Port Prosop", price: 45 }, manerScoica: { name: "Mâner Scoică", price: 40 }, manerRectangular: { name: "Mâner Rectangular", price: 80 } },
   auto10mm: { heightThreshold: 2.2, widthThreshold: 0.9 }
 };
 
-const DEFAULT_CONFIG = { width: "", depth: "", height: "2.0", enclosure: "fix-batant", subtype: "standard", glassType: "8mm", finish: "clara", inclEnduro: false, inclTowel: false, inclManerScoica: false, inclManerRect: false };
+const DEFAULT_CONFIG = { width: "", depth: "", height: "2.0", enclosure: "fix-batant", subtype: "standard", glassType: "8mm", finish: "clara", hardwareFinish: "inox-lucios", inclEnduro: false, inclTowel: false, inclManerScoica: false, inclManerRect: false };
 
 export default function ShowerConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -79,7 +80,7 @@ export default function ShowerConfiguratorPage() {
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-  const { width, depth, height, enclosure, subtype, glassType, finish, inclEnduro, inclTowel, inclManerScoica, inclManerRect } = config;
+  const { width, depth, height, enclosure, subtype, glassType, finish, hardwareFinish, inclEnduro, inclTowel, inclManerScoica, inclManerRect } = config;
   const subtypes = SUBTYPES[enclosure] || [];
   const activeSubtype = subtypes.find(s => s.key === subtype) || subtypes[0] || { key: "standard", lateral: 0 };
   const hasLateral = activeSubtype.lateral > 0;
@@ -118,7 +119,9 @@ export default function ShowerConfiguratorPage() {
     const glassCost = glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm);
     const towelCost = inclTowel ? (p.options?.towelBar?.price || 45) : 0;
     const manerCost = (inclManerScoica ? (p.options?.manerScoica?.price || 40) : 0) + (inclManerRect ? (p.options?.manerRectangular?.price || 80) : 0);
-    const subtotalRaw = p.basePrice + enclosurePrice + glassCost + towelCost + manerCost;
+    const hardwareFactor = p.hardwareFinishes?.[hardwareFinish]?.priceFactor || 1.0;
+    const hardwareCost = (enclosurePrice + manerCost) * hardwareFactor;
+    const subtotalRaw = p.basePrice + hardwareCost + glassCost + towelCost;
     const pretFinal = Math.round(subtotalRaw * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
     setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round(enclosurePrice * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
@@ -204,7 +207,15 @@ export default function ShowerConfiguratorPage() {
             </div>
           </SectionCard>
 
-          <SectionCard num={subtypes.length > 1 ? "05" : "04"} label="Opțiuni & Accesorii">
+          <SectionCard num={subtypes.length > 1 ? "05" : "04"} label="Finisaj Feronerie">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {Object.entries(p.hardwareFinishes || {}).map(([k, d]) => (
+                <OptionBtn key={k} selected={hardwareFinish === k} onClick={() => setConfig(c => ({ ...c, hardwareFinish: k }))} label={d.name} desc={d.desc} price={d.priceFactor !== 1.0 ? `${d.priceFactor > 1 ? '+' : ''}${Math.round(Math.abs(d.priceFactor - 1) * 100)}%` : "Standard"} />
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard num={subtypes.length > 1 ? "06" : "05"} label="Opțiuni & Accesorii">
             <ToggleOption checked={inclEnduro} onChange={v => setConfig(c => ({ ...c, inclEnduro: v }))} label="ENDURO-Shield" desc="Protecție nano anti-calcar și anti-mizerie" price={`${p.treatments?.enduroshield?.pricePerSqm || 47}€/m²`} />
             <ToggleOption checked={inclTowel} onChange={v => setConfig(c => ({ ...c, inclTowel: v }))} label={p.options?.towelBar?.name || "Port Prosop"} desc={p.options?.towelBar?.desc} price={`${p.options?.towelBar?.price || 60}€`} />
             <ToggleOption checked={inclManerScoica} onChange={v => setConfig(c => ({ ...c, inclManerScoica: v, inclManerRect: false }))} label={p.options?.manerScoica?.name || "Mâner Scoică"} desc={p.options?.manerScoica?.desc} price={`${p.options?.manerScoica?.price || 40}€`} />
@@ -222,6 +233,7 @@ export default function ShowerConfiguratorPage() {
             glassType={effectiveGlassType}
             finish={finish}
             treatment={inclEnduro ? "enduroshield" : undefined}
+            hardwareFinish={hardwareFinish}
             hasLateral={hasLateral}
             lateralCount={activeSubtype.lateral}
           />

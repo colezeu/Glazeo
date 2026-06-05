@@ -7,6 +7,7 @@ export default function ShowerPreview2D({
   glassType,
   finish,
   treatment,
+  hardwareFinish,
   hasLateral,
   lateralCount = 0,
 }) {
@@ -51,6 +52,18 @@ export default function ShowerPreview2D({
   const gold = "rgba(200,169,110,0.85)";
   const goldFaint = "rgba(200,169,110,0.35)";
 
+  // Hardware finish colors
+  const finishColors = {
+    "inox-lucios": { main: "rgba(200,210,220,0.85)", faint: "rgba(200,210,220,0.35)" },
+    "inox-satinat": { main: "rgba(180,190,200,0.80)", faint: "rgba(180,190,200,0.32)" },
+    "negru-mat": { main: "rgba(60,60,65,0.90)", faint: "rgba(60,60,65,0.35)" },
+    "cromat": { main: "rgba(210,220,230,0.88)", faint: "rgba(210,220,230,0.38)" },
+    "auriu": { main: "rgba(200,169,110,0.85)", faint: "rgba(200,169,110,0.35)" },
+  };
+  const hwColor = finishColors[hardwareFinish] || finishColors["inox-lucios"];
+  const hwGold = hwColor.main;
+  const hwGoldFaint = hwColor.faint;
+
   // Bar height (waist level, ~1m from floor)
   const barY = floorY - 1.0 * scale;
 
@@ -71,17 +84,17 @@ export default function ShowerPreview2D({
     const offset = 14;
     return (
       <g>
-        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={goldFaint} strokeWidth="0.5" />
-        <line x1={x1} y1={vert ? y1 - 4 : y1} x2={x1} y2={vert ? y1 + 4 : y1} stroke={goldFaint} strokeWidth="0.5" />
-        <line x1={x2} y1={vert ? y2 - 4 : y2} x2={x2} y2={vert ? y2 + 4 : y2} stroke={goldFaint} strokeWidth="0.5" />
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={hwGoldFaint} strokeWidth="0.5" />
+        <line x1={x1} y1={vert ? y1 - 4 : y1} x2={x1} y2={vert ? y1 + 4 : y1} stroke={hwGoldFaint} strokeWidth="0.5" />
+        <line x1={x2} y1={vert ? y2 - 4 : y2} x2={x2} y2={vert ? y2 + 4 : y2} stroke={hwGoldFaint} strokeWidth="0.5" />
         {vert ? (
           <>
-            <line x1={x1 - offset} y1={y1} x2={x1 - offset} y2={y2} stroke={goldFaint} strokeWidth="0.5" />
+            <line x1={x1 - offset} y1={y1} x2={x1 - offset} y2={y2} stroke={hwGoldFaint} strokeWidth="0.5" />
             <Label x={x1 - offset - 4} y={my + 3} text={label} anchor="end" />
           </>
         ) : (
           <>
-            <line x1={x1} y1={y1 + offset} x2={x2} y2={y2 + offset} stroke={goldFaint} strokeWidth="0.5" />
+            <line x1={x1} y1={y1 + offset} x2={x2} y2={y2 + offset} stroke={hwGoldFaint} strokeWidth="0.5" />
             <Label x={mx} y={y1 + offset + 11} text={label} />
           </>
         )}
@@ -130,10 +143,10 @@ export default function ShowerPreview2D({
               <g>
                 <line x1={x0 + panelW - 6} y1={topY + panelH * 0.25}
                       x2={x0 + panelW - 6} y2={topY + 12}
-                      stroke={gold} strokeWidth="4" strokeLinecap="round" />
+                      stroke={hwGold} strokeWidth="4" strokeLinecap="round" />
                 <line x1={x0 + panelW - 6} y1={topY + panelH * 0.25}
                       x2={x0 + panelW + panelW * 0.12} y2={topY + 12}
-                      stroke={gold} strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
+                      stroke={hwGold} strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
               </g>
             )}
 
@@ -171,10 +184,10 @@ export default function ShowerPreview2D({
 
             {/* Hinge indicator */}
             <line x1={x0 + panelW * 0.4 + 4} y1={topY + 8} x2={x0 + panelW * 0.4 + 4} y2={floorY - 8}
-              stroke={gold} strokeWidth="1.5" strokeDasharray="2,2" />
+              stroke={hwGold} strokeWidth="1.5" strokeDasharray="2,2" />
 
             {/* Door handle */}
-            <rect x={x0 + panelW * 0.85} y={barY - 4} width="3" height="20" rx="1.5" fill={gold} />
+            <rect x={x0 + panelW * 0.85} y={barY - 4} width="3" height="20" rx="1.5" fill={hwGold} />
 
             {/* Ceiling */}
             <line x1={x0 - 4} y1={topY} x2={x0 + totalW + 4} y2={topY}
@@ -200,20 +213,20 @@ export default function ShowerPreview2D({
 
             {/* Sliding arrow */}
             <line x1={x0 + panelW * 0.3} y1={topY - 10} x2={x0 + panelW * 0.78} y2={topY - 10}
-              stroke={goldFaint} strokeWidth="1" markerEnd="url(#arrowGold)" />
+              stroke={hwGoldFaint} strokeWidth="1" markerEnd="url(#arrowGold)" />
             <polygon points={`${x0 + panelW * 0.78},${topY - 10} ${x0 + panelW * 0.78 - 5},${topY - 13} ${x0 + panelW * 0.78 - 5},${topY - 7}`}
-              fill={goldFaint} />
+              fill={hwGoldFaint} />
 
             {/* Rollers at top */}
             {!enclosure?.includes("sina") && (
               <>
-                <circle cx={x0 + panelW * 0.1} cy={topY + 3} r="2.5" fill={gold} />
-                <circle cx={x0 + panelW * 0.65} cy={topY + 3} r="2.5" fill={gold} />
+                <circle cx={x0 + panelW * 0.1} cy={topY + 3} r="2.5" fill={hwGold} />
+                <circle cx={x0 + panelW * 0.65} cy={topY + 3} r="2.5" fill={hwGold} />
               </>
             )}
 
             {/* Handle on sliding panel */}
-            <rect x={x0 + panelW * 0.5} y={barY - 4} width="3" height="18" rx="1.5" fill={gold} />
+            <rect x={x0 + panelW * 0.5} y={barY - 4} width="3" height="18" rx="1.5" fill={hwGold} />
 
             {/* Ceiling */}
             <line x1={x0 - 4} y1={topY} x2={x0 + totalW + 4} y2={topY}
@@ -227,7 +240,7 @@ export default function ShowerPreview2D({
         {/* Arrow marker def */}
         <defs>
           <marker id="arrowGold" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <polygon points="0,0 10,5 0,10" fill={goldFaint} />
+            <polygon points="0,0 10,5 0,10" fill={hwGoldFaint} />
           </marker>
         </defs>
       </svg>
@@ -235,12 +248,12 @@ export default function ShowerPreview2D({
       <div style={{ display: "flex", gap: 12, justifyContent: "center", padding: "8px 12px 12px", flexWrap: "wrap" }}>
         {[
           { color: glassFill, label: isFrosted ? "Sablat" : glassType === "10mm" ? "Sticlă 10mm" : "Sticlă 8mm" },
-          isParavan && hasBar && { color: gold, label: "Bară stabilizatoare" },
+          isParavan && hasBar && { color: hwGold, label: "Bară stabilizatoare" },
           isParavan && isTavan && { color: "rgba(255,255,255,0.2)", label: "Până în tavan" },
           isParavan && isWalkin && { color: "rgba(200,169,110,0.2)", label: "Walk-in" },
           isParavan && isPerete && { color: "rgba(255,255,255,0.15)", label: "Montare perete" },
-          isFixBatant && { color: gold, label: "Fix + Ușă Batantă" },
-          isCulisant && { color: gold, label: enclosure?.includes("sina") ? "Culisant în Șină" : "Culisant la Vedere" },
+          isFixBatant && { color: hwGold, label: "Fix + Ușă Batantă" },
+          isCulisant && { color: hwGold, label: enclosure?.includes("sina") ? "Culisant în Șină" : "Culisant la Vedere" },
           hasLateral && { color: "rgba(180,220,255,0.25)", label: `${lateralCount} latură${lateralCount > 1 ? "i" : ""} sticlă` },
           treatment === "enduroshield" && { color: "rgba(180,220,255,0.15)", label: "ENDURO-Shield" },
         ].filter(Boolean).map((item, i) => (
