@@ -16,6 +16,8 @@ const TYPE_THUMB = {
 const SUBTYPE_IMG = {
   "paravan-bara": "/paravan cu bara.jpg",
   "paravan-walkin": "/walk in cu bara.jpg",
+  "tavan-perete": "/tavan-perete.jpg",
+  "tavan-walkin": "/tavan-walkin.jpg",
   "paravan-tavan": null,
   "culisant-vedere-1l": "/culisant cu o latura caruciare la vedere.jpg",
   "culisant-vedere-2l": "/culisant 2 laturi caruciare la vedere.jpg",
@@ -26,10 +28,10 @@ const SUBTYPE_IMG = {
 
 const SUBTYPES = {
   "paravan": [
-    { key: "bara", name: "Cu bară", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
-    { key: "walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
-    { key: "bara-tavan", name: "Cu bară — până în tavan", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
-    { key: "walkin-tavan", name: "Walk-in — până în tavan", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
+    { key: "bara-perete", name: "La perete", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
+    { key: "bara-walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
+    { key: "tavan-perete", name: "La perete", lateral: 0, img: SUBTYPE_IMG["tavan-perete"] },
+    { key: "tavan-walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["tavan-walkin"] },
   ],
   "fix-batant": [
     { key: "standard", name: "Standard", lateral: 0, img: null },
