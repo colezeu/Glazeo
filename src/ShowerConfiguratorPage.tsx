@@ -148,20 +148,35 @@ export default function ShowerConfiguratorPage() {
 
           {subtypes.length > 1 && (
             <SectionCard num="02" label="Configurație">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {subtypes.map(st => (
+              {enclosure === "paravan" ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {["Cu bară stabilizatoare", "Până în tavan"].map((label, gi) => (
+                    <div key={gi}>
+                      <div style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.4)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                        {subtypes.slice(gi*2, gi*2+2).map(st => (
+                          <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
+                            style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
+                            {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
+                            <div style={{ fontWeight: 600, fontSize: "0.9rem", textAlign: "center" }}>{st.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  {subtypes.map(st => (
                     <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
-                      style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)", transition: "all 0.2s" }}>
-                      {(st.img || st.img2) && <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                        {st.img && <div style={{ flex: 1, height: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
-                        {st.img2 && <div style={{ flex: 1, height: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img2} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
-                      </div>}
+                      style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
+                      {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
-                      {st.note && <div style={{ fontSize: "0.75rem", color: "rgba(200,169,110,0.6)", marginTop: 2 }}>{st.note}</div>}
                       {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
                     </div>
                   ))}
-              </div>
+                </div>
+              )}
             </SectionCard>
           )}
 
