@@ -20,6 +20,8 @@ const SUBTYPE_IMG = {
   "tavan-perete": "/tavan-perete.jpg",
   "tavan-walkin": "/tavan-walkin.jpg",
   "paravan-tavan": null,
+  "fix-batant-standard": "/fix cu usa batanta.png",
+  "fix-batant-1l": "/fix + usa batanta cu o latura.png",
   "culisant-vedere-0l": "/culisant caruciare la vedere.jpg",
   "culisant-vedere-1l": "/culisant cu o latura caruciare la vedere.jpg",
   "culisant-vedere-2l": "/culisant 2 laturi caruciare la vedere.jpg",
@@ -39,8 +41,8 @@ const SUBTYPES = {
     { key: "tavan-walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["tavan-walkin"] },
   ],
   "fix-batant": [
-    { key: "standard", name: "Standard", lateral: 0, img: null },
-    { key: "1l", name: "Cu 1 latură sticlă", lateral: 1 },
+    { key: "standard", name: "Standard", lateral: 0, img: SUBTYPE_IMG["fix-batant-standard"] },
+    { key: "1l", name: "Cu 1 latură sticlă", lateral: 1, img: SUBTYPE_IMG["fix-batant-1l"] },
   ],
   "culisant-vedere": [
     { key: "0l", name: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-vedere-0l"] },
