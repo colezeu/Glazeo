@@ -26,7 +26,8 @@ const SUBTYPE_IMG = {
 
 const SUBTYPES = {
   "paravan": [
-    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"], img2: SUBTYPE_IMG["paravan-walkin"], img3: null, note: "Disponibil și până în tavan" },
+    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"], img2: SUBTYPE_IMG["paravan-walkin"] },
+    { key: "tavan", name: "Până în tavan", lateral: 0, img: null },
   ],
   "fix-batant": [
     { key: "standard", name: "Standard", lateral: 0, img: null },
