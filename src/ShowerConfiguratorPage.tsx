@@ -38,7 +38,6 @@ const SUBTYPES = {
   "fix-batant": [
     { key: "standard", name: "Standard", lateral: 0, img: null },
     { key: "1l", name: "Cu 1 latură sticlă", lateral: 1 },
-    { key: "2l", name: "Cu 2 laturi sticlă", lateral: 2 },
   ],
   "culisant-vedere": [
     { key: "1l", name: "1 latură", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-1l"] },
