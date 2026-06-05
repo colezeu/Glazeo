@@ -183,6 +183,7 @@ export default function ShowerConfiguratorPage() {
               { label: "Suprafață sticlă", value: `${quote.area} m²` },
               { label: "Tipologie", value: `${quote.enclosureP}€` },
               { label: "Sticlă + finisaj", value: `+${quote.glassP}€`, accent: true },
+              priceMultiplier < 1.0 && { label: `Tier (×${priceMultiplier})`, value: `-${Math.round((1-priceMultiplier)*100)}%`, accent: true },
             ] : []}
           />
 
