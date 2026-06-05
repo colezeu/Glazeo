@@ -6,3 +6,4 @@ backend/.env
 .bun-cache
 dist
 .DS_Store
+bun.lock
