@@ -36,28 +36,28 @@ const SUBTYPE_IMG = {
 
 const SUBTYPES = {
   "paravan": [
-    { key: "bara-perete", name: "La perete", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
-    { key: "bara-walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
-    { key: "tavan-perete", name: "La perete", lateral: 0, img: SUBTYPE_IMG["tavan-perete"] },
-    { key: "tavan-walkin", name: "Walk-in", lateral: 0, img: SUBTYPE_IMG["tavan-walkin"] },
+    { key: "bara-perete", name: "Paravan la perete", subtitle: "1 bucată sticlă", lateral: 0, img: SUBTYPE_IMG["paravan-bara"] },
+    { key: "bara-walkin", name: "Paravan walk-in", subtitle: "1 bucată sticlă", lateral: 0, img: SUBTYPE_IMG["paravan-walkin"] },
+    { key: "tavan-perete", name: "Până în tavan la perete", subtitle: "1 bucată sticlă", lateral: 0, img: SUBTYPE_IMG["tavan-perete"] },
+    { key: "tavan-walkin", name: "Până în tavan walk-in", subtitle: "1 bucată sticlă", lateral: 0, img: SUBTYPE_IMG["tavan-walkin"] },
   ],
   "fix-batant": [
-    { key: "standard", name: "Standard", lateral: 0, img: SUBTYPE_IMG["fix-batant-standard"] },
-    { key: "simpla", name: "Ușă simplă", lateral: 0, img: SUBTYPE_IMG["fix-batant-simpla"] },
-    { key: "1l", name: "Cu 1 latură sticlă", lateral: 1, img: SUBTYPE_IMG["fix-batant-1l"] },
+    { key: "standard", name: "Fix + Batant", subtitle: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["fix-batant-standard"] },
+    { key: "simpla", name: "Ușă simplă", subtitle: "1 bucată sticlă", lateral: 0, img: SUBTYPE_IMG["fix-batant-simpla"] },
+    { key: "1l", name: "Fix + Batant + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["fix-batant-1l"] },
   ],
   "culisant-vedere": [
-    { key: "0l", name: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-vedere-0l"] },
-    { key: "1l", name: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-1l"] },
-    { key: "2l", name: "4 bucăți sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-vedere-2l"] },
-    { key: "colt", name: "Pe colț (4 bucăți)", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-colt"] },
+    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-vedere-0l"] },
+    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-1l"] },
+    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-vedere-2l"] },
+    { key: "colt", name: "Fix + Mobil pe colț", subtitle: "4 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-vedere-colt"] },
   ],
   "culisant-sina": [
-    { key: "0l", name: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-sina-0l"] },
-    { key: "1l", name: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
-    { key: "2l", name: "4 bucăți sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
-    { key: "colt", name: "Pe colț (4 bucăți)", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
-    { key: "cada", name: "Pe cadă (2 bucăți)", lateral: 0, img: SUBTYPE_IMG["culisant-sina-cada"] },
+    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-sina-0l"] },
+    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
+    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
+    { key: "colt", name: "Fix + Mobil pe colț", subtitle: "4 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
+    { key: "cada", name: "Fix + Mobil pe cadă", subtitle: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-sina-cada"] },
   ],
 };
 
@@ -174,6 +174,7 @@ export default function ShowerConfiguratorPage() {
                             style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
                             {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                             <div style={{ fontWeight: 600, fontSize: "0.9rem", textAlign: "center" }}>{st.name}</div>
+                            {st.subtitle && <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.4)", textAlign: "center", marginTop: 2 }}>{st.subtitle}</div>}
                           </div>
                         ))}
                       </div>
@@ -187,7 +188,7 @@ export default function ShowerConfiguratorPage() {
                       style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
                       {st.img && <div style={{ height: 100, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "invert(0.92)" }} /></div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
-                      {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
+                      {st.subtitle && <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.4)", marginTop: 2 }}>{st.subtitle}</div>}
                     </div>
                   ))}
                 </div>
