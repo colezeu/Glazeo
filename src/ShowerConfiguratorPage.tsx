@@ -19,8 +19,7 @@ const SUBTYPE_IMG = {
 
 const SUBTYPES = {
   "paravan": [
-    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"], img2: SUBTYPE_IMG["paravan-walkin"] },
-    { key: "tavan", name: "Până în tavan", lateral: 0, img: null, img2: null },
+    { key: "bara", name: "Cu bară stabilizatoare", lateral: 0, img: SUBTYPE_IMG["paravan-bara"], img2: SUBTYPE_IMG["paravan-walkin"], img3: null, note: "Disponibil și până în tavan" },
   ],
   "fix-batant": [
     { key: "standard", name: "Standard", lateral: 0, img: null },
@@ -135,6 +134,7 @@ export default function ShowerConfiguratorPage() {
                         {st.img2 && <div style={{ flex: 1, height: 70, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.02)", borderRadius: 6 }}><img src={st.img2} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /></div>}
                       </div>}
                       <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{st.name}</div>
+                      {st.note && <div style={{ fontSize: "0.75rem", color: "rgba(200,169,110,0.6)", marginTop: 2 }}>{st.note}</div>}
                       {st.lateral > 0 && <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.45)", marginTop: 2 }}>{st.lateral} laturi sticlă</div>}
                     </div>
                   ))}
