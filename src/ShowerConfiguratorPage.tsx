@@ -4,6 +4,22 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteS
 import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
+import ShowerPreview2D from "./ShowerPreview2D.jsx";
+
+// Map enclosure types to icons and door types for preview
+const TYPE_ICONS = {
+  "paravan": "/dus-paravan.jpg",
+  "fix-batant": "/dus-fix-batant.jpg",
+  "culisant-vedere": "/dus-culisant-vedere.jpg",
+  "culisant-sina": "/dus-culisant-sina.jpg",
+};
+
+const PREVIEW_DOOR = {
+  "paravan": "fixed",
+  "fix-batant": "swing",
+  "culisant-vedere": "sliding",
+  "culisant-sina": "sliding",
+};
 
 const FALLBACK = {
   name: "Cabine Duș", basePrice: 80,
@@ -33,6 +49,7 @@ export default function ShowerConfiguratorPage() {
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   const { width, depth, height, enclosure, glassType, finish, inclEnduro, inclTowel, inclManerScoica, inclManerRect } = config;
+  const isParavan = enclosure === "paravan";
 
   useEffect(() => {
     getUserMultiplier().then(m => setPriceMultiplier(m));
@@ -49,14 +66,14 @@ export default function ShowerConfiguratorPage() {
   if (!product) return <PageLoader />;
   const p = product;
 
-  // Auto 10mm logic
   const auto10mm = p.auto10mm || { heightThreshold: 2.2, widthThreshold: 0.9 };
-  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = parseFloat(depth) || 0;
+  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = isParavan ? 0 : (parseFloat(depth) || 0);
   const forced10mm = h > auto10mm.heightThreshold || w > auto10mm.widthThreshold;
   const effectiveGlassType = forced10mm ? "10mm" : glassType;
+  const isValid = w > 0 && h > 0 && (isParavan || d > 0);
 
-  const isValid = w > 0 && d > 0 && h > 0;
-  const glassArea = (w + d) * h; // approx: width + depth × height
+  // Glass area: paravan = width × height, rest = (width + depth) × height
+  const glassArea = isParavan ? w * h : (w + d) * h;
 
   const calculate = async () => {
     if (!p || !isValid) return;
@@ -80,14 +97,6 @@ export default function ShowerConfiguratorPage() {
     setCalculating(false);
   };
 
-  // Build preview description
-  const previewDesc = [];
-  if (w && d) previewDesc.push(`${w} × ${d}m`);
-  if (h) previewDesc.push(`${h}m`);
-  if (forced10mm) previewDesc.push("10mm (auto)");
-  else previewDesc.push(effectiveGlassType);
-  previewDesc.push(p.glassFinishes?.[finish]?.name || finish);
-
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Cabina Duș" config={config} />
@@ -96,25 +105,31 @@ export default function ShowerConfiguratorPage() {
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
-          {/* Step 1: Typology — Visual Selector */}
+          {/* Step 1: Typology with images */}
           <SectionCard num="01" label="Tipologie">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              {Object.entries(p.enclosureTypes).map(([k, d]) => (
-                <div key={k} onClick={() => setConfig(c => ({ ...c, enclosure: k }))}
-                  style={{ cursor: "pointer", padding: "16px", borderRadius: 12, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: enclosure === k ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)", transition: "all 0.2s" }}>
-                  <div style={{ fontWeight: 600, fontSize: "0.95rem", marginBottom: 4 }}>{d.name}</div>
-                  <div style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.5)" }}>{d.desc}</div>
-                  <div style={{ fontSize: "0.85rem", color: "#c8a96e", marginTop: 6 }}>{d.price > 0 ? `+${d.price}€` : "Inclus"}</div>
-                </div>
-              ))}
+              {Object.entries(p.enclosureTypes).map(([k, d]) => {
+                const imgSrc = TYPE_ICONS[k];
+                return (
+                  <div key={k} onClick={() => setConfig(c => ({ ...c, enclosure: k }))}
+                    style={{ cursor: "pointer", padding: "10px", borderRadius: 12, border: enclosure === k ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: enclosure === k ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)", transition: "all 0.2s", overflow: "hidden" }}>
+                    <div style={{ width: "100%", height: 100, background: "rgba(255,255,255,0.03)", borderRadius: 8, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <img src={imgSrc} alt={d.name} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "brightness(0.9)" }} />
+                    </div>
+                    <div style={{ fontWeight: 600, fontSize: "0.9rem", marginBottom: 2 }}>{d.name}</div>
+                    <div style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.5)" }}>{d.desc}</div>
+                    <div style={{ fontSize: "0.85rem", color: "#c8a96e", marginTop: 4 }}>{d.price > 0 ? `+${d.price}€` : "Inclus"}</div>
+                  </div>
+                );
+              })}
             </div>
           </SectionCard>
 
           {/* Step 2: Dimensions */}
           <SectionCard num="02" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isParavan ? "1fr 1fr" : "1fr 1fr 1fr", gap: 12 }}>
               <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />
-              <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />
+              {!isParavan && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />}
               <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: v }))} placeholder="2.0" step="0.05" min={1.8} max={2.5} />
             </div>
             {forced10mm && (
@@ -133,7 +148,7 @@ export default function ShowerConfiguratorPage() {
             </div>
           </SectionCard>
 
-          {/* Step 4: Options & Accessories */}
+          {/* Step 4: Options */}
           <SectionCard num="04" label="Opțiuni & Accesorii">
             <ToggleOption checked={inclEnduro} onChange={v => setConfig(c => ({ ...c, inclEnduro: v }))} label="ENDURO-Shield" desc="Protecție nano anti-calcar și anti-mizerie" price={`${p.treatments?.enduroshield?.pricePerSqm || 47}€/m²`} />
             <ToggleOption checked={inclTowel} onChange={v => setConfig(c => ({ ...c, inclTowel: v }))} label={p.options?.towelBar?.name || "Port Prosop"} desc={p.options?.towelBar?.desc} price={`${p.options?.towelBar?.price || 60}€`} />
@@ -143,9 +158,20 @@ export default function ShowerConfiguratorPage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <PreviewBox title="Previzualizare">
+          {/* Preview with 2D drawing */}
+          {w > 0 && h > 0 && (
+            <ShowerPreview2D
+              dimensions={{ width: w, depth: isParavan ? w * 0.05 : d, height: h }}
+              glassType={effectiveGlassType}
+              doorType={PREVIEW_DOOR[enclosure] || "fixed"}
+              treatment={finish === "satin" ? "frosted" : finish === "parsol-gri" || finish === "parsol-bronze" ? "nano" : "clear"}
+              includeLed={false}
+            />
+          )}
+
+          <PreviewBox title="Detalii">
             <div style={{ textAlign: "center", color: "rgba(240,237,232,0.5)", fontSize: "0.9rem", lineHeight: 1.8 }}>
-              {w && d ? `${w} × ${d} × ${h}m` : "Completează dimensiunile"}<br />
+              {w && h ? `${w} × ${isParavan ? "—" : d} × ${h}m` : "Completează dimensiunile"}<br />
               <span style={{ color: "#c8a96e" }}>{p.enclosureTypes[enclosure]?.name}</span><br />
               {forced10mm ? "🔒 10mm (obligatoriu)" : `Sticlă ${effectiveGlassType}`} · {p.glassFinishes?.[finish]?.name}
             </div>
