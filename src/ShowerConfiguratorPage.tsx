@@ -20,7 +20,7 @@ const FALLBACK = {
   auto10mm: { heightThreshold: 2.2, widthThreshold: 0.9 }
 };
 
-const DEFAULT_CONFIG = { width: "", depth: "", height: "2.0", enclosure: "fix-batant", glassType: "8mm", finish: "clara", inclEnduro: false, inclTowel: false, inclManerScoica: false, inclManerRect: false };
+const DEFAULT_CONFIG = { width: "", depth: "", height: "2.0", enclosure: "fix-batant", glassType: "8mm", finish: "clara", inclLateral: false, inclEnduro: false, inclTowel: false, inclManerScoica: false, inclManerRect: false };
 
 export default function ShowerConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -32,8 +32,7 @@ export default function ShowerConfiguratorPage() {
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-  const { width, depth, height, enclosure, glassType, finish, inclEnduro, inclTowel, inclManerScoica, inclManerRect } = config;
-  const isParavan = enclosure === "paravan";
+  const { width, depth, height, enclosure, glassType, finish, inclLateral, inclEnduro, inclTowel, inclManerScoica, inclManerRect } = config;
 
   useEffect(() => {
     getUserMultiplier().then(m => setPriceMultiplier(m));
@@ -51,11 +50,12 @@ export default function ShowerConfiguratorPage() {
   const p = product;
 
   const auto10mm = p.auto10mm || { heightThreshold: 2.2, widthThreshold: 0.9 };
-  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = isParavan ? 0 : (parseFloat(depth) || 0);
+  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = inclLateral ? (parseFloat(depth) || 0) : 0;
   const forced10mm = h > auto10mm.heightThreshold || w > auto10mm.widthThreshold;
   const effectiveGlassType = forced10mm ? "10mm" : glassType;
-  const isValid = w > 0 && h > 0 && (isParavan || d > 0);
-  const glassArea = isParavan ? w * h : (w + d) * h;
+  const isValid = w > 0 && h > 0;
+  // Glass area: fara lateral = W×H, cu lateral = (W+D)×H
+  const glassArea = inclLateral ? (w + d) * h : w * h;
 
   const calculate = async () => {
     if (!p || !isValid) return;
@@ -94,9 +94,9 @@ export default function ShowerConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="02" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: isParavan ? "1fr 1fr" : "1fr 1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: inclLateral ? "1fr 1fr 1fr" : "1fr 1fr", gap: 12 }}>
               <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />
-              {!isParavan && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />}
+              {inclLateral && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={2.5} />}
               <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: v }))} placeholder="2.0" step="0.05" min={1.8} max={2.5} />
             </div>
             {forced10mm && (
@@ -115,6 +115,7 @@ export default function ShowerConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="04" label="Opțiuni & Accesorii">
+            <ToggleOption checked={inclLateral} onChange={v => setConfig(c => ({ ...c, inclLateral: v }))} label="Cu lateral sticlă" desc="Adaugă panou lateral — necesită adâncime" />
             <ToggleOption checked={inclEnduro} onChange={v => setConfig(c => ({ ...c, inclEnduro: v }))} label="ENDURO-Shield" desc="Protecție nano anti-calcar și anti-mizerie" price={`${p.treatments?.enduroshield?.pricePerSqm || 47}€/m²`} />
             <ToggleOption checked={inclTowel} onChange={v => setConfig(c => ({ ...c, inclTowel: v }))} label={p.options?.towelBar?.name || "Port Prosop"} desc={p.options?.towelBar?.desc} price={`${p.options?.towelBar?.price || 60}€`} />
             <ToggleOption checked={inclManerScoica} onChange={v => { setConfig(c => ({ ...c, inclManerScoica: v, inclManerRect: v ? false : c.inclManerRect })) }} label={p.options?.manerScoica?.name || "Mâner Scoică"} desc={p.options?.manerScoica?.desc} price={`${p.options?.manerScoica?.price || 40}€`} />
@@ -125,7 +126,7 @@ export default function ShowerConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox title="Previzualizare">
             <div style={{ textAlign: "center", color: "rgba(240,237,232,0.5)", fontSize: "0.9rem", lineHeight: 1.8 }}>
-              {w && h ? `${w} × ${isParavan ? "—" : d} × ${h}m` : "Completează dimensiunile"}<br />
+              {w && h ? `${w} × ${inclLateral ? d : "—"} × ${h}m` : "Completează dimensiunile"}<br />
               <span style={{ color: "#c8a96e" }}>{p.enclosureTypes[enclosure]?.name}</span><br />
               {forced10mm ? "🔒 10mm (obligatoriu)" : `Sticlă ${effectiveGlassType}`} · {p.glassFinishes?.[finish]?.name}
             </div>
