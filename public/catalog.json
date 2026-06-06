@@ -358,6 +358,11 @@
           "price": 444,
           "desc": "Bandă LED 3000K în profil"
         },
+        "degivrare": {
+          "name": "Degivrare",
+          "pricePerSqm": 590,
+          "desc": "Rezistențe în sticlă, anti-îngheț"
+        },
         "mobilier": {
           "name": "Mobilier Pergolă",
           "price": 2133,

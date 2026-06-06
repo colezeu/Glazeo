@@ -16,6 +16,7 @@ const FALLBACK = {
   },
   options: {
     led:      { name: "Iluminare LED", price: 333, desc: "Bandă LED 3000K în profil" },
+    degivrare:{ name: "Degivrare",     pricePerSqm: 590, desc: "Rezistențe în sticlă, anti-îngheț" },
   }
 };
 
@@ -63,6 +64,7 @@ export default function CopertinaConfiguratorPage() {
   const [type, setType] = useState("copertina-tiranti");
   const [glass, setGlass] = useState("882");
   const [inclLed, setInclLed] = useState(false);
+  const [inclDegivrare, setInclDegivrare] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -96,6 +98,7 @@ export default function CopertinaConfiguratorPage() {
           if (cfg.type) setType(cfg.type);
           if (cfg.glass) setGlass(cfg.glass);
           if (cfg.inclLed) setInclLed(cfg.inclLed);
+          if (cfg.inclDegivrare) setInclDegivrare(cfg.inclDegivrare);
         }
       } catch (e) {}
       localStorage.removeItem('loadProject');
@@ -133,8 +136,9 @@ export default function CopertinaConfiguratorPage() {
 
     const glP   = area * (p.glassTypes[glass]?.pricePerSqm||0);
     const ledP  = inclLed ? (p.options.led.price || 0) : 0;
-    const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice+structP+glP+ledP) * priceMultiplier), vatRate);
-    setQuote({ area:area.toFixed(2), structP:Math.round(structP * priceMultiplier), structLabel, glP:Math.round(glP * priceMultiplier), ledP:Math.round(ledP * priceMultiplier), subtotal, vat, total });
+    const degP  = inclDegivrare ? area * p.options.degivrare.pricePerSqm : 0;
+    const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice+structP+glP+ledP+degP) * priceMultiplier), vatRate);
+    setQuote({ area:area.toFixed(2), structP:Math.round(structP * priceMultiplier), structLabel, glP:Math.round(glP * priceMultiplier), ledP:Math.round(ledP * priceMultiplier), degP:Math.round(degP * priceMultiplier), subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -142,7 +146,7 @@ export default function CopertinaConfiguratorPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Copertină" config={{ dims, type, glass, inclLed }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Copertină" config={{ dims, type, glass, inclLed, inclDegivrare }} />
       <ConfigHeader title="Configurator Copertine" quote={quote}/>
       <main className="configurator-grid" style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
@@ -182,6 +186,7 @@ export default function CopertinaConfiguratorPage() {
           </SectionCard>
           <SectionCard num="04" label="Opțiuni & Accesorii">
             <ToggleOption checked={inclLed} onChange={setInclLed} label={p.options.led.name} desc={p.options.led.desc} price={`${p.options.led.price}€`}/>
+            <ToggleOption checked={inclDegivrare} onChange={setInclDegivrare} label={p.options.degivrare.name} desc={p.options.degivrare.desc} price={`${p.options.degivrare.pricePerSqm}€/m²`}/>
           </SectionCard>
         </div>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
@@ -193,6 +198,7 @@ export default function CopertinaConfiguratorPage() {
               {label:"Structură",value:`${quote.structP}€`, hint: quote.structLabel},
               quote.glP>0&&{label:"Sticlă",value:`+${quote.glP}€`,accent:true},
               quote.ledP>0&&{label:"LED",value:`+${quote.ledP}€`,accent:true},
+              quote.degP>0&&{label:"Degivrare",value:`+${quote.degP}€`,accent:true},
             ]:[]}/>
        
           <button
@@ -208,7 +214,7 @@ export default function CopertinaConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="copertina"
-          config={{ dims, type, glass, inclLed }}
+          config={{ dims, type, glass, inclLed, inclDegivrare }}
           onClose={() => setShowSaveModal(false)}
         />
       )}
