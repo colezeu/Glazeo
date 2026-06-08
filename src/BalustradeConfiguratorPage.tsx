@@ -208,7 +208,7 @@ export default function BalustradeConfiguratorPage() {
             {/* Handrail preview images */}
             <div className="option-preview-grid">
               {[
-                { key: "none", label: "Fara", img: null },
+                ...(isHandrailMandatory ? [] : [{ key: "none", label: "Fara", img: null }]),
                 { key: "handrail-structurala", label: "Structurala", img: "/mc-structurala.png" },
                 { key: "handrail-rotunda", label: "Rotunda", img: "/mc-rotunda.png" },
                 { key: "handrail-patrata", label: "Patrata", img: "/mc-patrata.png" },
