@@ -69,10 +69,20 @@ export default function BalustradeConfiguratorPage() {
   const normalizedIncludeLed = includeLed === true || includeLed === "true";
   const showProfileShape = hardware === "profil-pardoseala";
 
+  // Mână curentă obligatorie doar la profil pardoseală cu cale — reglaj mecanic e opțional
+  const isHandrailMandatory = hardware === "profil-pardoseala";
+
   const validation = validateForm({ width: length, height });
   const isValid = validation.valid;
 
-  const update = (key, value) => setConfig(c => ({ ...c, [key]: value }));
+  const update = (key, value) => setConfig(c => {
+    const next = { ...c, [key]: value };
+    // Dacă se alege profil-pardoseala (cu cale), mâna curentă e obligatorie — auto-select slim
+    if (key === "hardware" && value === "profil-pardoseala" && c.handrail === "none") {
+      next.handrail = "handrail-slim";
+    }
+    return next;
+  });
 
   const handleShare = async () => {
     const url = getShareableUrl({ length, height, glassShape, hardware, profileShape, glassType, handrail, includeLed });
@@ -187,9 +197,9 @@ export default function BalustradeConfiguratorPage() {
             ))}
           </SectionCard>
 
-          <SectionCard num="05" label="Mână Curentă (opțional)">
+          <SectionCard num="05" label={isHandrailMandatory ? "Mână Curentă (obligatorie)" : "Mână Curentă (opțional)"}>
             {[
-              { key: "none", label: "Fără mână curentă", desc: "", price: "—" },
+              ...(isHandrailMandatory ? [] : [{ key: "none", label: "Fără mână curentă", desc: "", price: "—" }]),
               ...Object.entries(p.options).filter(([k]) => k.startsWith("handrail")).map(([k, d]) => ({ key: k, label: d.name, desc: d.desc, price: `${d.pricePerMeter}€/m` }))
             ].map(o => (
               <OptionBtn key={o.key} selected={handrail === o.key} onClick={() => update("handrail", o.key)} label={o.label} desc={o.desc} price={o.price} />
