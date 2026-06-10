@@ -48,40 +48,28 @@ export default function PartnerManagement() {
   }
 
   const fetchPartners = async () => {
-    // Get unique users from projects table (RLS-safe)
-    const { data, error } = await supabase
-      .from('projects')
-      .select('user_id')
+    // Get users from profiles (direct) AND from projects (legacy)
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('user_id, price_multiplier, email, name')
 
-    if (error) {
-      console.error(error)
+    if (!profiles) {
       setLoading(false)
       return
     }
 
-    // Get unique user IDs
-    const userIds = [...new Set((data || []).map(p => p.user_id))]
-
-    // Get their profiles
     const enriched: PartnerRow[] = []
-    for (const uid of userIds) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('price_multiplier, email, name')
-        .eq('user_id', uid)
-        .single()
-
-      // Count their projects
+    for (const profile of profiles) {
       const { count } = await supabase
         .from('projects')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', uid)
+        .eq('user_id', profile.user_id)
 
       enriched.push({
-        user_id: uid,
-        price_multiplier: profile?.price_multiplier ?? 1.0,
-        email: profile?.email || uid.substring(0, 12) + '...',
-        name: profile?.name || '',
+        user_id: profile.user_id,
+        price_multiplier: profile.price_multiplier ?? 1.0,
+        email: profile.email || profile.user_id.substring(0, 12) + '...',
+        name: profile.name || '',
         projectCount: count || 0,
       })
     }
