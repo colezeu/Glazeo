@@ -124,41 +124,53 @@
       "glassTypes": {
         "8mm": {
           "name": "Sticlă Securizată 8mm",
-          "pricePerSqm": 173,
+          "pricePerSqm": 47.33,
           "desc": "Standard, rezistentă la șocuri termice"
         },
         "10mm": {
           "name": "Sticlă Securizată 10mm",
-          "pricePerSqm": 227,
+          "pricePerSqm": 69.33,
           "desc": "Obligatoriu peste 2.2m înălțime sau 0.9m lățime"
         }
       },
       "glassFinishes": {
         "clara": {
           "name": "Clară",
-          "pricePerSqm": 0,
+          "pricePerSqm": {
+            "8mm": 0.0,
+            "10mm": 0.0
+          },
           "desc": "Sticlă transparentă standard"
         },
         "parsol-gri": {
           "name": "Parsol Gri",
-          "pricePerSqm": 35,
+          "pricePerSqm": {
+            "8mm": 40.67,
+            "10mm": 38.67
+          },
           "desc": "Nuanță gri, protecție solară"
         },
         "parsol-bronze": {
           "name": "Parsol Bronze",
-          "pricePerSqm": 35,
+          "pricePerSqm": {
+            "8mm": 40.67,
+            "10mm": 38.67
+          },
           "desc": "Nuanță bronze, aspect cald"
         },
         "satin": {
           "name": "Satinată (Opacă)",
-          "pricePerSqm": 33,
+          "pricePerSqm": {
+            "8mm": 30.0,
+            "10mm": 42.67
+          },
           "desc": "Intimitate totală, aspect mat"
         }
       },
       "treatments": {
         "enduroshield": {
           "name": "ENDURO-Shield",
-          "pricePerSqm": 47,
+          "pricePerSqm": 64.0,
           "desc": "Protecție nano anti-calcar și anti-mizerie"
         }
       },
