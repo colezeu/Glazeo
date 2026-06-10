@@ -834,34 +834,40 @@
         },
         "sh01": {
           "cromat lucios": {
-            "net": 29.97,
-            "tier3": 35.96,
-            "tier2": 40.46,
-            "tier1": 44.95
+            "net": 18.26,
+            "tier3": 21.9,
+            "tier2": 24.66,
+            "tier1": 27.4
           },
           "cromat satinat": {
-            "net": 28.52,
-            "tier3": 34.23,
-            "tier2": 38.51,
-            "tier1": 42.79
+            "net": 18.82,
+            "tier3": 22.58,
+            "tier2": 25.41,
+            "tier1": 28.23
           },
           "negru mat": {
-            "net": 34.41,
-            "tier3": 41.29,
-            "tier2": 46.46,
-            "tier1": 51.62
+            "net": 18.39,
+            "tier3": 22.07,
+            "tier2": 24.83,
+            "tier1": 27.59
           },
           "auriu lucios": {
-            "net": 35.14,
-            "tier3": 42.17,
-            "tier2": 47.44,
-            "tier1": 52.71
+            "net": 22.04,
+            "tier3": 26.45,
+            "tier2": 29.75,
+            "tier1": 33.06
           },
           "auriu satinat": {
-            "net": 33.63,
-            "tier3": 40.36,
-            "tier2": 45.41,
-            "tier1": 50.45
+            "net": 22.3,
+            "tier3": 26.76,
+            "tier2": 30.11,
+            "tier1": 33.45
+          },
+          "rose gold": {
+            "net": 21.52,
+            "tier3": 25.83,
+            "tier2": 29.05,
+            "tier1": 32.29
           }
         },
         "sh06": {
