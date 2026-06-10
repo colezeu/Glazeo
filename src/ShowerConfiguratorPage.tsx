@@ -70,7 +70,7 @@ const FALLBACK = {
   glassTypes: { "8mm": { name: "Securit 8mm", pricePerSqm: 130 }, "10mm": { name: "Securit 10mm", pricePerSqm: 170 } },
   glassFinishes: { "clara": { name: "Clară", pricePerSqm: 0 }, "parsol-gri": { name: "Parsol Gri", pricePerSqm: 25 }, "parsol-bronze": { name: "Parsol Bronze", pricePerSqm: 25 }, "satin": { name: "Satinată", pricePerSqm: 25 } },
   treatments: { "enduroshield": { name: "ENDURO-Shield", pricePerSqm: 35 } },
-  hardwareFinishes: { "inox-lucios": { name: "Inox Lucios", priceFactor: 1.0 }, "inox-satinat": { name: "Inox Satinat", priceFactor: 0.95 }, "negru-mat": { name: "Negru Mat", priceFactor: 1.10 }, "cromat": { name: "Cromat Lucios", priceFactor: 1.05 }, "auriu": { name: "Auriu", priceFactor: 1.15 } },
+  hardwareFinishes: { "inox-lucios": { name: "Cromat", priceFactor: 1.0 }, "inox-satinat": { name: "Satinat", priceFactor: 0.95 }, "negru-mat": { name: "Negru", priceFactor: 1.10 }, "auriu-lucios": { name: "Auriu Lucios", priceFactor: 1.15 }, "auriu-satinat": { name: "Auriu Satinat", priceFactor: 1.15 } },
   options: { towelBar: { name: "Port Prosop", price: 45 } },
   auto10mm: { heightThreshold: 2.2, widthThreshold: 0.9 }
 };
