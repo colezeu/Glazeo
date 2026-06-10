@@ -175,6 +175,7 @@ export default function ShowerConfiguratorPage() {
         const prices = p.hardwarePrices[code];
         if (!prices || prices._fixed !== undefined) continue; // skip fixed-price items
         const partFinishes = Object.keys(prices);
+        if (partFinishes.length <= 1) continue; // single-finish parts are universal
         const hasMatch = qFinishes.some(qf => partFinishes.includes(qf));
         if (!hasMatch) { allAvailable = false; break; }
       }
