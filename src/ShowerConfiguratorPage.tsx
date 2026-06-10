@@ -46,15 +46,15 @@ const SUBTYPES = {
     { key: "1l", name: "Fix + Batant + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["fix-batant-1l"] },
   ],
   "culisant-vedere": [
-    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, maxW: 1.9, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-0l"] },
-    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, maxW: 1.9, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-1l"] },
-    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, maxW: 1.8, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-2l"] },
+    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, minW: 1.1, maxW: 1.9, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-0l"] },
+    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, minW: 1.1, maxW: 1.9, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-1l"] },
+    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, minW: 1.1, maxW: 1.8, maxH: 2.3, img: SUBTYPE_IMG["culisant-vedere-2l"] },
     { key: "colt", name: "Fix + Mobil pe colț", subtitle: "4 bucăți sticlă", lateral: 1, maxW: 0.9, maxD: 0.9, maxH: 1.95, img: SUBTYPE_IMG["culisant-vedere-colt"] },
   ],
   "culisant-sina": [
-    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-0l"] },
-    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-1l"] },
-    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-2l"] },
+    { key: "0l", name: "Fix + Mobil", subtitle: "2 bucăți sticlă", lateral: 0, minW: 1.1, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-0l"] },
+    { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, minW: 1.1, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-1l"] },
+    { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, minW: 1.1, maxW: 1.5, img: SUBTYPE_IMG["culisant-sina-2l"] },
     { key: "colt", name: "Fix + Mobil pe colț", subtitle: "4 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
   ],
 };
@@ -263,13 +263,13 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num={subtypes.length > 1 ? "03" : "02"} label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: hasLateral ? "1fr 1fr 1fr" : "1fr 1fr", gap: 12 }}>
-              <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: activeSubtype.maxW && Number(v) > activeSubtype.maxW ? String(activeSubtype.maxW) : v }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxW || 2.5} />
+              <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: activeSubtype.maxW && Number(v) > activeSubtype.maxW ? String(activeSubtype.maxW) : v }))} placeholder="0.9" step="0.05" min={activeSubtype.minW || 0.5} max={activeSubtype.maxW || 2.5} />
               {hasLateral && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: activeSubtype.maxD && Number(v) > activeSubtype.maxD ? String(activeSubtype.maxD) : (activeSubtype.maxW && Number(v) > activeSubtype.maxW ? String(activeSubtype.maxW) : v) }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxD || activeSubtype.maxW || 2.5} />}
               <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: activeSubtype.maxH && Number(v) > activeSubtype.maxH ? String(activeSubtype.maxH) : v }))} placeholder="2.0" step="0.05" min={1.8} max={activeSubtype.maxH || 2.5} />
             </div>
             {(activeSubtype.maxW || activeSubtype.maxH || activeSubtype.maxD) && (
               <div style={{ marginTop: 8, padding: "6px 10px", background: "rgba(200,169,110,0.06)", borderRadius: 6, fontSize: "0.78rem", color: "rgba(240,237,232,0.5)" }}>
-                ⚙️ Limite: {activeSubtype.maxW ? `Lățime max ${activeSubtype.maxW}m` : ""}{activeSubtype.maxD ? `, Adâncime max ${activeSubtype.maxD}m` : ""}{activeSubtype.maxH ? `, Înălțime max ${activeSubtype.maxH}m` : ""}
+                ⚙️ Limite: {activeSubtype.minW ? `Lățime min ${activeSubtype.minW}m` : ""}{activeSubtype.minW && activeSubtype.maxW ? " — " : ""}{activeSubtype.maxW ? `Lățime max ${activeSubtype.maxW}m` : ""}{activeSubtype.maxD ? `, Adâncime max ${activeSubtype.maxD}m` : ""}{activeSubtype.maxH ? `, Înălțime max ${activeSubtype.maxH}m` : ""}
               </div>
             )}
             {forced10mm && (
