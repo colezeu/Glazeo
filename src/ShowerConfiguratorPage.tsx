@@ -263,9 +263,9 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num={subtypes.length > 1 ? "03" : "02"} label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: hasLateral ? "1fr 1fr 1fr" : "1fr 1fr", gap: 12 }}>
-              <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: v }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxW || 2.5} />
-              {hasLateral && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxD || activeSubtype.maxW || 2.5} />}
-              <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: v }))} placeholder="2.0" step="0.05" min={1.8} max={activeSubtype.maxH || 2.5} />
+              <NumberInput label="Lățime (m)" value={width} onChange={v => setConfig(c => ({ ...c, width: activeSubtype.maxW && Number(v) > activeSubtype.maxW ? String(activeSubtype.maxW) : v }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxW || 2.5} />
+              {hasLateral && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: activeSubtype.maxD && Number(v) > activeSubtype.maxD ? String(activeSubtype.maxD) : (activeSubtype.maxW && Number(v) > activeSubtype.maxW ? String(activeSubtype.maxW) : v) }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxD || activeSubtype.maxW || 2.5} />}
+              <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: activeSubtype.maxH && Number(v) > activeSubtype.maxH ? String(activeSubtype.maxH) : v }))} placeholder="2.0" step="0.05" min={1.8} max={activeSubtype.maxH || 2.5} />
             </div>
             {(activeSubtype.maxW || activeSubtype.maxH || activeSubtype.maxD) && (
               <div style={{ marginTop: 8, padding: "6px 10px", background: "rgba(200,169,110,0.06)", borderRadius: 6, fontSize: "0.78rem", color: "rgba(240,237,232,0.5)" }}>
