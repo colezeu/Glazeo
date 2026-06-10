@@ -164,29 +164,50 @@
       },
       "hardwareFinishes": {
         "inox-lucios": {
-          "name": "Inox Lucios",
+          "name": "Inox / Cromat / Argintiu",
           "priceFactor": 1.0,
-          "desc": "Standard, finisaj bright"
-        },
-        "inox-satinat": {
-          "name": "Inox Satinat",
-          "priceFactor": 0.95,
-          "desc": "Finisaj mat, amprentele nu se văd"
+          "desc": "Finisaj lucios standard",
+          "qualmontFinishes": [
+            "inox lucios",
+            "cromat lucios",
+            "al. argintiu lucios"
+          ]
         },
         "negru-mat": {
           "name": "Negru Mat",
-          "priceFactor": 1.10,
-          "desc": "Modern, contrast elegant cu sticla"
+          "priceFactor": 1.1,
+          "desc": "Modern, contrast elegant",
+          "qualmontFinishes": [
+            "negru mat",
+            "magnet negru",
+            "pvc negru"
+          ]
         },
-        "cromat": {
-          "name": "Cromat Lucios",
-          "priceFactor": 1.05,
-          "desc": "Strălucire premium, ușor de întreținut"
+        "inox-satinat": {
+          "name": "Inox / Cromat Satinat",
+          "priceFactor": 0.95,
+          "desc": "Finisaj mat, amprentele nu se vad",
+          "qualmontFinishes": [
+            "inox satinat",
+            "cromat satinat",
+            "al. argintiu mat"
+          ]
         },
-        "auriu": {
-          "name": "Auriu / Champagne",
+        "auriu-lucios": {
+          "name": "Auriu Lucios / Champagne",
           "priceFactor": 1.15,
-          "desc": "Finisaj premium, aspect cald"
+          "desc": "Finisaj premium, aspect cald",
+          "qualmontFinishes": [
+            "auriu lucios"
+          ]
+        },
+        "auriu-satinat": {
+          "name": "Auriu Satinat",
+          "priceFactor": 1.15,
+          "desc": "Premium mat, eleganță subtilă",
+          "qualmontFinishes": [
+            "auriu satinat"
+          ]
         }
       },
       "options": {
@@ -209,6 +230,479 @@
       "auto10mm": {
         "heightThreshold": 2.2,
         "widthThreshold": 0.9
+      },
+      "hardwareKits": {
+        "paravan": {
+          "bara-perete": [
+            [
+              "Pral20",
+              1
+            ],
+            [
+              "Pral20tp",
+              1
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "HL38",
+              1
+            ],
+            [
+              "HL34",
+              1
+            ]
+          ],
+          "bara-walkin": [
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "HL38",
+              1
+            ],
+            [
+              "HL34",
+              1
+            ],
+            [
+              "Pral20",
+              1
+            ],
+            [
+              "Pral20tp",
+              2
+            ]
+          ],
+          "tavan-perete": [
+            [
+              "profixL",
+              1
+            ],
+            [
+              "profixTP",
+              2
+            ]
+          ],
+          "tavan-walkin": [
+            [
+              "profixL",
+              1
+            ],
+            [
+              "profixTP",
+              4
+            ]
+          ]
+        },
+        "fix-batant": {
+          "standard": [
+            [
+              "Pral20",
+              1
+            ],
+            [
+              "sh01",
+              2
+            ],
+            [
+              "a22",
+              1
+            ],
+            [
+              "gmg300",
+              1
+            ],
+            [
+              "gy",
+              1
+            ],
+            [
+              "gsu",
+              1
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "HL37",
+              1
+            ],
+            [
+              "HL34",
+              2
+            ]
+          ],
+          "simpla": [
+            [
+              "sh01",
+              2
+            ],
+            [
+              "a22",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ]
+          ],
+          "1l": [
+            [
+              "sh06",
+              2
+            ],
+            [
+              "a22",
+              1
+            ],
+            [
+              "gmg",
+              1
+            ],
+            [
+              "Pral20",
+              2
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "HL37",
+              1
+            ],
+            [
+              "HL34",
+              1
+            ],
+            [
+              "HL38",
+              1
+            ]
+          ]
+        },
+        "culisant-vedere": {
+          "0l": [
+            [
+              "Pral20",
+              1
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "dk08",
+              1
+            ],
+            [
+              "glistip1",
+              1
+            ],
+            [
+              "gy",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ]
+          ],
+          "1l": [
+            [
+              "Pral20",
+              2
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "dk08",
+              1
+            ],
+            [
+              "glistip1",
+              1
+            ],
+            [
+              "gy",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ],
+            [
+              "HL34A",
+              1
+            ]
+          ],
+          "2l": [
+            [
+              "Pral20",
+              3
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "dk08",
+              1
+            ],
+            [
+              "glistip1",
+              1
+            ],
+            [
+              "gy",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ],
+            [
+              "HL34A",
+              2
+            ]
+          ],
+          "colt": [
+            [
+              "Pral20",
+              2
+            ],
+            [
+              "Gt02",
+              1
+            ],
+            [
+              "dk08",
+              2
+            ],
+            [
+              "glistip1",
+              1
+            ],
+            [
+              "gmg",
+              1
+            ],
+            [
+              "gy",
+              2
+            ],
+            [
+              "HL35",
+              1
+            ]
+          ]
+        },
+        "culisant-sina": {
+          "0l": [
+            [
+              "g35p",
+              1
+            ],
+            [
+              "Pral20",
+              1
+            ],
+            [
+              "hand13040",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ],
+            [
+              "gy",
+              1
+            ]
+          ],
+          "1l": [
+            [
+              "g35ps",
+              1
+            ],
+            [
+              "Pral20",
+              2
+            ],
+            [
+              "hand13040",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ],
+            [
+              "gy",
+              1
+            ]
+          ],
+          "2l": [
+            [
+              "Pral20",
+              3
+            ],
+            [
+              "hand13040",
+              1
+            ],
+            [
+              "g35ps",
+              1
+            ],
+            [
+              "gbl",
+              1
+            ],
+            [
+              "gy",
+              1
+            ],
+            [
+              "g3535",
+              1
+            ]
+          ],
+          "colt": [
+            [
+              "g3590",
+              1
+            ],
+            [
+              "Pral20",
+              2
+            ],
+            [
+              "hand13040",
+              2
+            ],
+            [
+              "gmg",
+              1
+            ]
+          ]
+        }
+      },
+      "hardwarePrices": {
+        "Pral20": {
+          "al. argintiu lucios": 12.39
+        },
+        "Pral20tp": {
+          "cromat lucios": 0.55
+        },
+        "Gt02": {
+          "inox lucios": 18.43
+        },
+        "HL38": {
+          "cromat lucios": 8.98,
+          "negru mat": 15.13
+        },
+        "HL34": {
+          "cromat lucios": 5.94,
+          "negru mat": 9.01
+        },
+        "HL37": {
+          "cromat lucios": 10.56,
+          "cromat satinat": 10.38,
+          "negru mat": 12.11,
+          "auriu lucios": 12.44
+        },
+        "profixL": {
+          "al. argintiu lucios": 11.74,
+          "auriu lucios": 14.91
+        },
+        "profixTP": {
+          "inox lucios": 0.66
+        },
+        "Txp": {
+          "pvc transparent": 4.22,
+          "pvc negru": 4.43
+        },
+        "sh01": {
+          "cromat lucios": 29.97,
+          "cromat satinat": 28.52,
+          "negru mat": 34.41,
+          "auriu lucios": 35.14,
+          "auriu satinat": 33.63
+        },
+        "sh06": {
+          "cromat lucios": 30.94,
+          "cromat satinat": 29.87,
+          "negru mat": 34.86,
+          "auriu lucios": 36.37
+        },
+        "a22": {
+          "cromat lucios": 7.48,
+          "cromat satinat": 7.88,
+          "negru mat": 7.97,
+          "auriu lucios": 8.54,
+          "auriu satinat": 8.27,
+          "rose gold": 8.27
+        },
+        "gmg": {
+          "magnet alb": 9.92
+        },
+        "gmg300": {
+          "magnet negru": 15.56
+        },
+        "gy": {
+          "pvc transparent": 5.1
+        },
+        "gbl": {
+          "pvc transparent": 4.22,
+          "pvc negru": 4.43
+        },
+        "gsu": {
+          "pvc transparent": 4.14,
+          "pvc negru": 4.34
+        },
+        "dk08": {
+          "cromat lucios": 7.48,
+          "cromat satinat": 7.88,
+          "negru mat": 7.97,
+          "auriu lucios": 8.54,
+          "auriu satinat": 8.27,
+          "rose gold": 8.27
+        },
+        "glistip1": {
+          "al. argintiu mat": 16.09,
+          "negru mat": 22.28
+        },
+        "HL34A": {
+          "inox lucios": 7.07,
+          "inox satinat": 6.23
+        },
+        "HL35": {
+          "inox lucios": 7.65,
+          "inox satinat": 5.9,
+          "negru mat": 7.05
+        },
+        "g35p": {
+          "al. argintiu mat": 22.89
+        },
+        "g35ps": {},
+        "g3535": {
+          "al. argintiu mat": 71.18,
+          "negru mat": 78.86
+        },
+        "g3590": {
+          "argintiu": 44.1
+        },
+        "hand13040": {
+          "_fixed": 80
+        }
       }
     },
     "inchidere-terasa": {

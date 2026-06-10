@@ -119,6 +119,7 @@ export default function ShowerConfiguratorPage() {
     if (!p || !isValid) return;
     setCalculating(true);
     await new Promise(r => setTimeout(r, 400));
+    
     const enclosurePrice = p.enclosureTypes[enclosure]?.price || 0;
     const glassPricePerSqm = p.glassTypes[effectiveGlassType]?.pricePerSqm || 130;
     const finishPricePerSqm = p.glassFinishes?.[finish]?.pricePerSqm || 0;
@@ -126,14 +127,64 @@ export default function ShowerConfiguratorPage() {
     const glassCost = glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm);
     const towelCost = inclTowel ? (p.options?.towelBar?.price || 45) : 0;
     const manerCost = (inclManerScoica ? (p.options?.manerScoica?.price || 40) : 0) + (inclManerRect ? (p.options?.manerRectangular?.price || 80) : 0);
-    const hardwareFactor = p.hardwareFinishes?.[hardwareFinish]?.priceFactor || 1.0;
-    const hardwareCost = (enclosurePrice + manerCost) * hardwareFactor;
-    const subtotalRaw = p.basePrice + hardwareCost + glassCost + towelCost;
+    
+    // Hardware pricing from Qualmont kits
+    let hardwareCost = 0;
+    const kit = p.hardwareKits?.[enclosure]?.[subtype];
+    const hwPrices = p.hardwarePrices || {};
+    const hwFinishMap = p.hardwareFinishes?.[hardwareFinish]?.qualmontFinishes || [];
+    if (kit) {
+      for (const [code, qty] of kit) {
+        const prices = hwPrices[code];
+        if (!prices) continue;
+        if (prices._fixed !== undefined) {
+          hardwareCost += prices._fixed * qty;
+        } else {
+          // Find best matching finish price
+          let bestPrice = 0;
+          for (const qf of hwFinishMap) {
+            if (prices[qf] !== undefined) { bestPrice = prices[qf]; break; }
+          }
+          if (bestPrice === 0) {
+            // Fallback to first available
+            const vals = Object.values(prices);
+            if (vals.length > 0) bestPrice = vals[0];
+          }
+          hardwareCost += bestPrice * qty;
+        }
+      }
+    }
+    
+    const subtotalRaw = p.basePrice + enclosurePrice + hardwareCost + glassCost + towelCost + manerCost;
     const pretFinal = Math.round(subtotalRaw * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
-    setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round(enclosurePrice * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
+    setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round((enclosurePrice + hardwareCost) * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
     setCalculating(false);
   };
+
+  // Compute available hardware finishes for current config
+  const getAvailableFinishes = () => {
+    if (!p?.hardwareKits || !p?.hardwareFinishes || !p?.hardwarePrices) return Object.keys(p?.hardwareFinishes || {});
+    const kit = p.hardwareKits[enclosure]?.[subtype];
+    if (!kit) return Object.keys(p.hardwareFinishes);
+    
+    const available = [];
+    for (const [finKey, finData] of Object.entries(p.hardwareFinishes)) {
+      const qFinishes = finData.qualmontFinishes || [];
+      let allAvailable = true;
+      for (const [code, qty] of kit) {
+        const prices = p.hardwarePrices[code];
+        if (!prices || prices._fixed !== undefined) continue; // skip fixed-price items
+        const partFinishes = Object.keys(prices);
+        const hasMatch = qFinishes.some(qf => partFinishes.includes(qf));
+        if (!hasMatch) { allAvailable = false; break; }
+      }
+      if (allAvailable) available.push(finKey);
+    }
+    return available.length > 0 ? available : Object.keys(p.hardwareFinishes);
+  };
+  
+  const availableFinishes = getAvailableFinishes();
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
@@ -217,9 +268,17 @@ export default function ShowerConfiguratorPage() {
 
           <SectionCard num={subtypes.length > 1 ? "05" : "04"} label="Finisaj Feronerie">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              {Object.entries(p.hardwareFinishes || {}).map(([k, d]) => (
-                <OptionBtn key={k} selected={hardwareFinish === k} onClick={() => setConfig(c => ({ ...c, hardwareFinish: k }))} label={d.name} desc={d.desc} price={d.priceFactor !== 1.0 ? `${d.priceFactor > 1 ? '+' : ''}${Math.round(Math.abs(d.priceFactor - 1) * 100)}%` : "Standard"} />
-              ))}
+              {Object.entries(p.hardwareFinishes || {}).map(([k, d]) => {
+                const isAvailable = availableFinishes.includes(k);
+                return (
+                  <OptionBtn key={k} selected={hardwareFinish === k} 
+                    onClick={() => isAvailable && setConfig(c => ({ ...c, hardwareFinish: k }))} 
+                    label={d.name} 
+                    desc={isAvailable ? d.desc : "⚠️ Indisponibil pentru această configurație"} 
+                    price={isAvailable ? (d.priceFactor !== 1.0 ? `${d.priceFactor > 1 ? '+' : ''}${Math.round(Math.abs(d.priceFactor - 1) * 100)}%` : "Standard") : "—"} 
+                  />
+                );
+              })}
             </div>
           </SectionCard>
 
