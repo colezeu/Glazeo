@@ -180,9 +180,13 @@
           "priceFactor": 1.0,
           "desc": "Finisaj lucios standard",
           "qualmontFinishes": [
-            "inox lucios",
+            "al. argintiu lucios",
             "cromat lucios",
-            "al. argintiu lucios"
+            "inox lucios",
+            "magnet alb",
+            "magnet negru",
+            "pvc negru",
+            "pvc transparent"
           ]
         },
         "negru-mat": {
@@ -190,9 +194,11 @@
           "priceFactor": 1.1,
           "desc": "Modern, contrast elegant",
           "qualmontFinishes": [
-            "negru mat",
+            "magnet alb",
             "magnet negru",
-            "pvc negru"
+            "negru mat",
+            "pvc negru",
+            "pvc transparent"
           ]
         },
         "inox-satinat": {
@@ -200,9 +206,13 @@
           "priceFactor": 0.95,
           "desc": "Finisaj mat, amprentele nu se vad",
           "qualmontFinishes": [
-            "inox satinat",
+            "al. argintiu mat",
             "cromat satinat",
-            "al. argintiu mat"
+            "inox satinat",
+            "magnet alb",
+            "magnet negru",
+            "pvc negru",
+            "pvc transparent"
           ]
         },
         "auriu-lucios": {
@@ -210,7 +220,11 @@
           "priceFactor": 1.15,
           "desc": "Finisaj premium, aspect cald",
           "qualmontFinishes": [
-            "auriu lucios"
+            "auriu lucios",
+            "magnet alb",
+            "magnet negru",
+            "pvc negru",
+            "pvc transparent"
           ]
         },
         "auriu-satinat": {
@@ -218,7 +232,11 @@
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
           "qualmontFinishes": [
-            "auriu satinat"
+            "auriu satinat",
+            "magnet alb",
+            "magnet negru",
+            "pvc negru",
+            "pvc transparent"
           ]
         }
       },
