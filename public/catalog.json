@@ -181,6 +181,9 @@
           "desc": "Finisaj lucios standard",
           "qualmontFinishes": [
             "al. argintiu lucios",
+            "al. argintiu mat",
+            "al. efect inox mat",
+            "argintiu",
             "cromat lucios",
             "inox lucios",
             "magnet alb",
@@ -194,6 +197,10 @@
           "priceFactor": 1.1,
           "desc": "Modern, contrast elegant",
           "qualmontFinishes": [
+            "al. argintiu lucios",
+            "al. argintiu mat",
+            "al. efect inox mat",
+            "argintiu",
             "magnet alb",
             "magnet negru",
             "negru mat",
@@ -206,7 +213,10 @@
           "priceFactor": 0.95,
           "desc": "Finisaj mat, amprentele nu se vad",
           "qualmontFinishes": [
+            "al. argintiu lucios",
             "al. argintiu mat",
+            "al. efect inox mat",
+            "argintiu",
             "cromat satinat",
             "inox satinat",
             "magnet alb",
@@ -220,6 +230,10 @@
           "priceFactor": 1.15,
           "desc": "Finisaj premium, aspect cald",
           "qualmontFinishes": [
+            "al. argintiu lucios",
+            "al. argintiu mat",
+            "al. efect inox mat",
+            "argintiu",
             "auriu lucios",
             "magnet alb",
             "magnet negru",
@@ -232,6 +246,10 @@
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
           "qualmontFinishes": [
+            "al. argintiu lucios",
+            "al. argintiu mat",
+            "al. efect inox mat",
+            "argintiu",
             "auriu satinat",
             "magnet alb",
             "magnet negru",
