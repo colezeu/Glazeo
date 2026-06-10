@@ -99,6 +99,17 @@ export default function ShowerConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  if (!product) return <PageLoader />;
+  const p = product;
+
+  const auto10mm = p.auto10mm || { heightThreshold: 2.2, widthThreshold: 0.9 };
+  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = hasLateral ? (parseFloat(depth) || 0) : 0;
+  const forced10mm = h > auto10mm.heightThreshold || w > auto10mm.widthThreshold;
+  const effectiveGlassType = forced10mm ? "10mm" : glassType;
+  const isValid = w > 0 && h > 0 && (!hasLateral || d > 0);
+  const sides = activeSubtype.lateral;
+  const glassArea = sides === 0 ? w * h : sides === 1 ? (w + d) * h : (w + d * 2) * h;
+
   // Enforce subtype dimension limits on switch
   useEffect(() => {
     const st = activeSubtype;
@@ -111,17 +122,6 @@ export default function ShowerConfiguratorPage() {
     const saved = localStorage.getItem('loadProject');
     if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config?.config) setConfig(p.config.config); } catch (e) {} localStorage.removeItem('loadProject'); }
   }, []);
-
-  if (!product) return <PageLoader />;
-  const p = product;
-
-  const auto10mm = p.auto10mm || { heightThreshold: 2.2, widthThreshold: 0.9 };
-  const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = hasLateral ? (parseFloat(depth) || 0) : 0;
-  const forced10mm = h > auto10mm.heightThreshold || w > auto10mm.widthThreshold;
-  const effectiveGlassType = forced10mm ? "10mm" : glassType;
-  const isValid = w > 0 && h > 0 && (!hasLateral || d > 0);
-  const sides = activeSubtype.lateral;
-  const glassArea = sides === 0 ? w * h : sides === 1 ? (w + d) * h : (w + d * 2) * h;
 
   const calculate = async () => {
     if (!p || !isValid) return;
