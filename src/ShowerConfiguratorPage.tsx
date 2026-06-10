@@ -94,7 +94,7 @@ export default function ShowerConfiguratorPage() {
 
   useEffect(() => {
     getUserMultiplier().then(m => setPriceMultiplier(m));
-    fetch("/catalog.json").then(r => r.json())
+    fetch(`/catalog.json?v=${Date.now()}`).then(r => r.json())
       .then(d => { setProduct(d.products["cabine-dus"]); setVatRate(d.vatRate); })
       .catch(() => setProduct(FALLBACK));
   }, []);
