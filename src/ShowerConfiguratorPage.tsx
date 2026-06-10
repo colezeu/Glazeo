@@ -99,6 +99,14 @@ export default function ShowerConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  // Enforce subtype dimension limits on switch
+  useEffect(() => {
+    const st = activeSubtype;
+    if (st.maxW && w > st.maxW) setConfig(c => ({ ...c, width: String(st.maxW) }));
+    if (st.maxD && d > st.maxD) setConfig(c => ({ ...c, depth: String(st.maxD) }));
+    if (st.maxH && h > st.maxH) setConfig(c => ({ ...c, height: String(st.maxH) }));
+  }, [subtype, enclosure]);
+
   useEffect(() => {
     const saved = localStorage.getItem('loadProject');
     if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config?.config) setConfig(p.config.config); } catch (e) {} localStorage.removeItem('loadProject'); }
@@ -256,6 +264,11 @@ export default function ShowerConfiguratorPage() {
               {hasLateral && <NumberInput label="Adâncime (m)" value={depth} onChange={v => setConfig(c => ({ ...c, depth: v }))} placeholder="0.9" step="0.05" min={0.5} max={activeSubtype.maxD || activeSubtype.maxW || 2.5} />}
               <NumberInput label="Înălțime (m)" value={height} onChange={v => setConfig(c => ({ ...c, height: v }))} placeholder="2.0" step="0.05" min={1.8} max={activeSubtype.maxH || 2.5} />
             </div>
+            {(activeSubtype.maxW || activeSubtype.maxH || activeSubtype.maxD) && (
+              <div style={{ marginTop: 8, padding: "6px 10px", background: "rgba(200,169,110,0.06)", borderRadius: 6, fontSize: "0.78rem", color: "rgba(240,237,232,0.5)" }}>
+                ⚙️ Limite: {activeSubtype.maxW ? `Lățime max ${activeSubtype.maxW}m` : ""}{activeSubtype.maxD ? `, Adâncime max ${activeSubtype.maxD}m` : ""}{activeSubtype.maxH ? `, Înălțime max ${activeSubtype.maxH}m` : ""}
+              </div>
+            )}
             {forced10mm && (
               <div style={{ marginTop: 8, padding: "8px 12px", background: "rgba(200,169,110,0.1)", borderRadius: 6, fontSize: "0.85rem", color: "#c8a96e" }}>
                 ⚠️ Dimensiunile impun sticlă securizată de <strong>10mm</strong> (H &gt; {auto10mm.heightThreshold}m sau L &gt; {auto10mm.widthThreshold}m)
