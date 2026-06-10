@@ -79,6 +79,12 @@ function App() {
   {user ? (
     <>
       <Link 
+        to="/home" 
+        className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
+      >
+        🏠 <span className="hidden md:inline">Home</span>
+      </Link>
+      <Link 
         to="/dashboard" 
         className="bg-[#1a1c24] hover:bg-[#252830] text-[#c8a96e] px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 shadow-lg border border-[#c8a96e]/30"
       >
