@@ -159,7 +159,7 @@ export default function ShowerConfiguratorPage() {
       }
     }
     
-    const subtotalRaw = Number(p.basePrice || 0) + enclosurePrice + hardwareCost + glassCost + towelCost;
+    const subtotalRaw = enclosurePrice + hardwareCost + glassCost + towelCost;
     const pretFinal = Math.round(subtotalRaw * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
     setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round(enclosurePrice * priceMultiplier), hwP: Math.round(hardwareCost * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subtotal, vat, total });
