@@ -120,12 +120,12 @@ export default function ShowerConfiguratorPage() {
     setCalculating(true);
     await new Promise(r => setTimeout(r, 400));
     
-    const enclosurePrice = p.enclosureTypes[enclosure]?.price || 0;
-    const glassPricePerSqm = p.glassTypes[effectiveGlassType]?.pricePerSqm || 130;
-    const finishPricePerSqm = p.glassFinishes?.[finish]?.pricePerSqm || 0;
-    const enduroPricePerSqm = inclEnduro ? (p.treatments?.enduroshield?.pricePerSqm || 0) : 0;
-    const glassCost = glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm);
-    const towelCost = inclTowel ? (p.options?.towelBar?.price || 45) : 0;
+    const enclosurePrice = Number(p.enclosureTypes[enclosure]?.price) || 0;
+    const glassPricePerSqm = Number(p.glassTypes[effectiveGlassType]?.pricePerSqm) || 130;
+    const finishPricePerSqm = Number(p.glassFinishes?.[finish]?.pricePerSqm) || 0;
+    const enduroPricePerSqm = inclEnduro ? (Number(p.treatments?.enduroshield?.pricePerSqm) || 0) : 0;
+    const glassCost = Number((glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm)).toFixed(2));
+    const towelCost = inclTowel ? (Number(p.options?.towelBar?.price) || 45) : 0;
     
     // Hardware pricing from Qualmont kits
     let hardwareCost = 0;
@@ -154,7 +154,7 @@ export default function ShowerConfiguratorPage() {
       }
     }
     
-    const subtotalRaw = p.basePrice + enclosurePrice + hardwareCost + glassCost + towelCost;
+    const subtotalRaw = Number(p.basePrice || 0) + enclosurePrice + hardwareCost + glassCost + towelCost;
     const pretFinal = Math.round(subtotalRaw * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
     setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round(enclosurePrice * priceMultiplier), hwP: Math.round(hardwareCost * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
