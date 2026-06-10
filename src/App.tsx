@@ -118,7 +118,7 @@ function App() {
       <button 
         onClick={async () => {
           await supabase.auth.signOut();
-          window.location.href = '/auth';
+          window.location.href = '/';
         }}
         className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-2 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1 md:gap-2 border border-red-500/30"
       >
@@ -127,7 +127,7 @@ function App() {
     </>
   ) : (
     <Link 
-      to="/auth" 
+      to="/" 
       className="bg-[#c8a96e] hover:bg-[#d4b87a] text-black px-4 py-2 rounded-xl text-sm font-medium shadow-lg"
     >
       Autentificare
@@ -137,8 +137,8 @@ function App() {
 
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/" element={<AuthPage />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin/partners" element={<ProtectedRoute><PartnerManagement /></ProtectedRoute>} />
             <Route path="/admin/quotes" element={<ProtectedRoute><QuotesAdmin /></ProtectedRoute>} />

@@ -34,7 +34,7 @@ export default function Dashboard() {
     const fetchProjects = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
-        navigate('/auth')
+        navigate('/')
         return
       }
 

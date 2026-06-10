@@ -15,7 +15,7 @@ export default function AuthPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
-      window.location.href = '/dashboard'
+      window.location.href = '/home'
     } catch (error: unknown) {
       setMessage(error instanceof Error ? error.message : 'A apărut o eroare')
     } finally {
