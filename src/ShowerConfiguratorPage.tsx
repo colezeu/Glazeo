@@ -157,7 +157,7 @@ export default function ShowerConfiguratorPage() {
     const subtotalRaw = p.basePrice + enclosurePrice + hardwareCost + glassCost + towelCost;
     const pretFinal = Math.round(subtotalRaw * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(pretFinal, vatRate);
-    setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round((enclosurePrice + hardwareCost) * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
+    setQuote({ area: glassArea.toFixed(2), enclosureP: Math.round(enclosurePrice * priceMultiplier), hwP: Math.round(hardwareCost * priceMultiplier), glassP: Math.round(glassCost * priceMultiplier), subs: subtotal, vat, total });
     setCalculating(false);
   };
 
@@ -306,6 +306,7 @@ export default function ShowerConfiguratorPage() {
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
             lines={quote ? [
               { label: "Suprafață sticlă", value: `${quote.area} m²` },
+              { label: "Feronerie", value: `${quote.hwP}€` },
               { label: "Tipologie + sticlă", value: `${quote.glassP + quote.enclosureP}€` },
               priceMultiplier < 1.0 && { label: `Tier (×${priceMultiplier})`, value: `-${Math.round((1-priceMultiplier)*100)}%`, accent: true },
             ] : []}
