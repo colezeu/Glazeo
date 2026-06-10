@@ -104,19 +104,19 @@
         },
         "fix-batant": {
           "name": "Fix + Ușă Batantă",
-          "price": 267,
+          "price": 0,
           "desc": "Panou fix + ușă batantă 90°, balamale perete",
           "icon": "fix-batant"
         },
         "culisant-vedere": {
           "name": "Culisant — Cărucioare la Vedere",
-          "price": 400,
+          "price": 0,
           "desc": "Fix + mobil, glisare pe șină, cărucioare vizibile",
           "icon": "culisant-vedere"
         },
         "culisant-sina": {
           "name": "Culisant — Cărucioare în Șină",
-          "price": 507,
+          "price": 0,
           "desc": "Fix + mobil, cărucioare ascunse, soft-close",
           "icon": "culisant-sina"
         }

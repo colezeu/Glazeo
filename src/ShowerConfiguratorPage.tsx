@@ -63,9 +63,9 @@ const FALLBACK = {
   name: "Cabine Duș", basePrice: 80,
   enclosureTypes: {
     "paravan": { name: "Paravan Fix", price: 0, desc: "Panou fix, prindere perete" },
-    "fix-batant": { name: "Fix + Ușă Batantă", price: 200, desc: "Panou fix + ușă batantă 90°" },
-    "culisant-vedere": { name: "Culisant — Cărucioare la Vedere", price: 300, desc: "Fix + mobil, glisare pe șină" },
-    "culisant-sina": { name: "Culisant — Cărucioare în Șină", price: 380, desc: "Fix + mobil, cărucioare ascunse" }
+    "fix-batant": { name: "Fix + Ușă Batantă", price: 0, desc: "Panou fix + ușă batantă 90°" },
+    "culisant-vedere": { name: "Culisant — Cărucioare la Vedere", price: 0, desc: "Fix + mobil, glisare pe șină" },
+    "culisant-sina": { name: "Culisant — Cărucioare în Șină", price: 0, desc: "Fix + mobil, cărucioare ascunse" }
   },
   glassTypes: { "8mm": { name: "Securit 8mm", pricePerSqm: 47.33 }, "10mm": { name: "Securit 10mm", pricePerSqm: 69.33 } },
   glassFinishes: { "clara": { name: "Clară", pricePerSqm: {"8mm":0,"10mm":0} }, "parsol-gri": { name: "Parsol Gri", pricePerSqm: {"8mm":40.67,"10mm":38.67} }, "parsol-bronze": { name: "Parsol Bronze", pricePerSqm: {"8mm":40.67,"10mm":38.67} }, "satin": { name: "Satinată", pricePerSqm: {"8mm":30,"10mm":42.67} } },
