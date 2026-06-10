@@ -127,7 +127,7 @@ export default function ShowerConfiguratorPage() {
     const glassCost = Number((glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm)).toFixed(2));
     const towelCost = inclTowel ? (Number(p.options?.towelBar?.price) || 45) : 0;
     
-    // Hardware pricing from Qualmont kits
+    // Hardware pricing from Qualmont kits (use tier1 = standard, multiplier handles discount)
     let hardwareCost = 0;
     const kit = p.hardwareKits?.[enclosure]?.[subtype];
     const hwPrices = p.hardwarePrices || {};
@@ -139,15 +139,20 @@ export default function ShowerConfiguratorPage() {
         if (prices._fixed !== undefined) {
           hardwareCost += prices._fixed * qty;
         } else {
-          // Find best matching finish price
           let bestPrice = 0;
           for (const qf of hwFinishMap) {
-            if (prices[qf] !== undefined) { bestPrice = prices[qf]; break; }
+            const pdata = prices[qf];
+            if (pdata !== undefined) { 
+              bestPrice = typeof pdata === 'object' ? (pdata.tier1 || pdata.net || 0) : pdata; 
+              break; 
+            }
           }
           if (bestPrice === 0) {
-            // Fallback to first available
             const vals = Object.values(prices);
-            if (vals.length > 0) bestPrice = vals[0];
+            if (vals.length > 0) {
+              const first = vals[0];
+              bestPrice = typeof first === 'object' ? (first.tier1 || first.net || 0) : first;
+            }
           }
           hardwareCost += bestPrice * qty;
         }
@@ -173,8 +178,8 @@ export default function ShowerConfiguratorPage() {
       let allAvailable = true;
       for (const [code, qty] of kit) {
         const prices = p.hardwarePrices[code];
-        if (!prices || prices._fixed !== undefined) continue; // skip fixed-price items
-        const partFinishes = Object.keys(prices);
+        if (!prices || prices._fixed !== undefined) continue;
+        const partFinishes = Object.keys(prices).filter(k => k !== '_fixed');
         if (partFinishes.length <= 1) continue; // single-finish parts are universal
         const hasMatch = qFinishes.some(qf => partFinishes.includes(qf));
         if (!hasMatch) { allAvailable = false; break; }
