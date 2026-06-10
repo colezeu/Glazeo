@@ -31,7 +31,6 @@ const SUBTYPE_IMG = {
   "culisant-sina-1l": "/culisant cu o latura carucioare in sina.jpg",
   "culisant-sina-2l": "/culisant cu 2 laturi carucioare in sina.jpg.jpg",
   "culisant-sina-colt": "/culisant pe colt carucioare in sina.jpg",
-  "culisant-sina-cada": "/culisant pe cada carucioare in sina.jpg",
 };
 
 const SUBTYPES = {
@@ -57,7 +56,6 @@ const SUBTYPES = {
     { key: "1l", name: "Fix + Mobil + 1 latură", subtitle: "3 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-1l"] },
     { key: "2l", name: "Fix + Mobil + 2 laturi", subtitle: "4 bucăți sticlă", lateral: 2, img: SUBTYPE_IMG["culisant-sina-2l"] },
     { key: "colt", name: "Fix + Mobil pe colț", subtitle: "4 bucăți sticlă", lateral: 1, img: SUBTYPE_IMG["culisant-sina-colt"] },
-    { key: "cada", name: "Fix + Mobil pe cadă", subtitle: "2 bucăți sticlă", lateral: 0, img: SUBTYPE_IMG["culisant-sina-cada"] },
   ],
 };
 
