@@ -99,6 +99,22 @@ export default function ShowerConfiguratorPage() {
       .catch(() => setProduct(FALLBACK));
   }, []);
 
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config?.config) setConfig(p.config.config); } catch (e) {} localStorage.removeItem('loadProject'); }
+  }, []);
+
+  // Pre-compute dims from state (before product guard)
+  const _h = parseFloat(height) || 0, _w = parseFloat(width) || 0, _d = hasLateral ? (parseFloat(depth) || 0) : 0;
+
+  // Enforce subtype dimension limits on switch
+  useEffect(() => {
+    const st = activeSubtype;
+    if (st.maxW && _w > st.maxW) setConfig(c => ({ ...c, width: String(st.maxW) }));
+    if (st.maxD && _d > st.maxD) setConfig(c => ({ ...c, depth: String(st.maxD) }));
+    if (st.maxH && _h > st.maxH) setConfig(c => ({ ...c, height: String(st.maxH) }));
+  }, [subtype, enclosure]);
+
   if (!product) return <PageLoader />;
   const p = product;
 
@@ -109,19 +125,6 @@ export default function ShowerConfiguratorPage() {
   const isValid = w > 0 && h > 0 && (!hasLateral || d > 0);
   const sides = activeSubtype.lateral;
   const glassArea = sides === 0 ? w * h : sides === 1 ? (w + d) * h : (w + d * 2) * h;
-
-  // Enforce subtype dimension limits on switch
-  useEffect(() => {
-    const st = activeSubtype;
-    if (st.maxW && w > st.maxW) setConfig(c => ({ ...c, width: String(st.maxW) }));
-    if (st.maxD && d > st.maxD) setConfig(c => ({ ...c, depth: String(st.maxD) }));
-    if (st.maxH && h > st.maxH) setConfig(c => ({ ...c, height: String(st.maxH) }));
-  }, [subtype, enclosure]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('loadProject');
-    if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config?.config) setConfig(p.config.config); } catch (e) {} localStorage.removeItem('loadProject'); }
-  }, []);
 
   const calculate = async () => {
     if (!p || !isValid) return;
