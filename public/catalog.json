@@ -1143,6 +1143,38 @@
         },
         "hand13040": {
           "_fixed": 80
+        },
+        "sh03": {
+          "cromat lucios": {
+            "net": 18.26,
+            "tier3": 21.9,
+            "tier2": 24.66,
+            "tier1": 27.4
+          },
+          "cromat satinat": {
+            "net": 18.82,
+            "tier3": 22.58,
+            "tier2": 25.41,
+            "tier1": 28.23
+          },
+          "negru mat": {
+            "net": 19.62,
+            "tier3": 23.54,
+            "tier2": 26.49,
+            "tier1": 29.42
+          },
+          "auriu lucios": {
+            "net": 21.77,
+            "tier3": 26.12,
+            "tier2": 29.39,
+            "tier1": 32.66
+          },
+          "auriu satinat": {
+            "net": 20.91,
+            "tier3": 25.09,
+            "tier2": 28.23,
+            "tier1": 31.36
+          }
         }
       }
     },
