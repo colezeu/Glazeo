@@ -768,16 +768,46 @@
         },
         "profixL": {
           "al. argintiu lucios": {
-            "net": 11.74,
-            "tier3": 14.09,
-            "tier2": 15.86,
-            "tier1": 17.62
+            "net": 10.33,
+            "tier3": 12.39,
+            "tier2": 13.95,
+            "tier1": 15.49
+          },
+          "al. argintiu mat": {
+            "net": 8.97,
+            "tier3": 10.77,
+            "tier2": 12.09,
+            "tier1": 13.45
+          },
+          "al. efect inox mat": {
+            "net": 8.82,
+            "tier3": 10.59,
+            "tier2": 11.92,
+            "tier1": 13.25
+          },
+          "inox satinat": {
+            "net": 13.01,
+            "tier3": 15.63,
+            "tier2": 17.58,
+            "tier1": 19.53
+          },
+          "negru mat": {
+            "net": 11.12,
+            "tier3": 13.33,
+            "tier2": 15.02,
+            "tier1": 16.67
           },
           "auriu lucios": {
-            "net": 14.91,
-            "tier3": 17.89,
-            "tier2": 20.13,
-            "tier1": 22.37
+            "net": 10.8,
+            "tier3": 12.95,
+            "tier2": 14.57,
+            "tier1": 16.2
+          },
+          "auriu satinat": {
+            "net": 11.59,
+            "tier3": 13.92,
+            "tier2": 15.66,
+            "tier1": 17.41
           }
         },
         "profixTP": {
