@@ -180,10 +180,10 @@
           "priceFactor": 1.0,
           "desc": "Finisaj lucios standard",
           "qualmontFinishes": [
-            "al. argintiu lucios",
-            "al. argintiu mat",
+            "al. eloxat lucios",
+            "al. eloxat mat",
             "al. efect inox mat",
-            "argintiu",
+            "eloxat",
             "cromat lucios",
             "inox lucios",
             "magnet alb",
@@ -197,10 +197,10 @@
           "priceFactor": 1.1,
           "desc": "Modern, contrast elegant",
           "qualmontFinishes": [
-            "al. argintiu lucios",
-            "al. argintiu mat",
+            "al. eloxat lucios",
+            "al. eloxat mat",
             "al. efect inox mat",
-            "argintiu",
+            "eloxat",
             "magnet alb",
             "magnet negru",
             "negru mat",
@@ -213,10 +213,10 @@
           "priceFactor": 0.95,
           "desc": "Finisaj mat, amprentele nu se vad",
           "qualmontFinishes": [
-            "al. argintiu lucios",
-            "al. argintiu mat",
+            "al. eloxat lucios",
+            "al. eloxat mat",
             "al. efect inox mat",
-            "argintiu",
+            "eloxat",
             "cromat lucios",
             "cromat satinat",
             "inox lucios",
@@ -232,10 +232,10 @@
           "priceFactor": 1.15,
           "desc": "Finisaj premium, aspect cald",
           "qualmontFinishes": [
-            "al. argintiu lucios",
-            "al. argintiu mat",
+            "al. eloxat lucios",
+            "al. eloxat mat",
             "al. efect inox mat",
-            "argintiu",
+            "eloxat",
             "auriu lucios",
             "magnet alb",
             "magnet negru",
@@ -248,10 +248,10 @@
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
           "qualmontFinishes": [
-            "al. argintiu lucios",
-            "al. argintiu mat",
+            "al. eloxat lucios",
+            "al. eloxat mat",
             "al. efect inox mat",
-            "argintiu",
+            "eloxat",
             "auriu satinat",
             "cromat lucios",
             "inox lucios",
@@ -649,13 +649,13 @@
       },
       "hardwarePrices": {
         "Pral20": {
-          "al. argintiu lucios": {
+          "al. eloxat lucios": {
             "net": 10.33,
             "tier3": 12.39,
             "tier2": 13.95,
             "tier1": 15.49
           },
-          "al. argintiu mat": {
+          "al. eloxat mat": {
             "net": 8.97,
             "tier3": 10.77,
             "tier2": 12.09,
@@ -767,13 +767,13 @@
           }
         },
         "profixL": {
-          "al. argintiu lucios": {
+          "al. eloxat lucios": {
             "net": 10.33,
             "tier3": 12.39,
             "tier2": 13.95,
             "tier1": 15.49
           },
-          "al. argintiu mat": {
+          "al. eloxat mat": {
             "net": 8.97,
             "tier3": 10.77,
             "tier2": 12.09,
@@ -1109,36 +1109,59 @@
           }
         },
         "g35p": {
-          "al. argintiu mat": {
-            "net": 22.89,
-            "tier3": 27.47,
-            "tier2": 30.91,
-            "tier1": 34.34
+          "al. eloxat mat": {
+            "net": 212.26,
+            "tier3": 254.72,
+            "tier2": 286.55,
+            "tier1": 318.39
+          },
+          "negru mat": {
+            "net": 234.49,
+            "tier3": 281.39,
+            "tier2": 316.57,
+            "tier1": 351.74
           }
         },
         "g35ps": {
-          "_fixed": 147.15
-        },
-        "g3535": {
-          "al. argintiu mat": {
-            "net": 71.18,
-            "tier3": 85.41,
-            "tier2": 96.09,
-            "tier1": 106.77
+          "al. eloxat mat": {
+            "net": 265.92,
+            "tier3": 319.1,
+            "tier2": 358.99,
+            "tier1": 398.88
           },
           "negru mat": {
-            "net": 78.86,
-            "tier3": 94.63,
-            "tier2": 106.46,
-            "tier1": 118.29
+            "net": 300.2,
+            "tier3": 360.24,
+            "tier2": 405.27,
+            "tier1": 450.29
+          }
+        },
+        "g3535": {
+          "al. eloxat mat": {
+            "net": 53.66,
+            "tier3": 64.39,
+            "tier2": 72.44,
+            "tier1": 80.48
+          },
+          "negru mat": {
+            "net": 65.7,
+            "tier3": 78.84,
+            "tier2": 88.69,
+            "tier1": 98.55
           }
         },
         "g3590": {
-          "argintiu": {
-            "net": 44.1,
-            "tier3": 52.92,
-            "tier2": 59.53,
-            "tier1": 66.15
+          "al. eloxat mat": {
+            "net": 447.93,
+            "tier3": 537.51,
+            "tier2": 604.7,
+            "tier1": 671.89
+          },
+          "negru mat": {
+            "net": 493.63,
+            "tier3": 592.36,
+            "tier2": 666.4,
+            "tier1": 740.45
           }
         },
         "hand13040": {
