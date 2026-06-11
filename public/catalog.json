@@ -232,15 +232,16 @@
           "priceFactor": 1.15,
           "desc": "Finisaj premium, aspect cald",
           "qualmontFinishes": [
+            "al. efect inox mat",
             "al. eloxat lucios",
             "al. eloxat mat",
-            "al. efect inox mat",
-            "eloxat",
             "auriu lucios",
+            "eloxat",
             "magnet alb",
             "magnet negru",
             "pvc negru",
-            "pvc transparent"
+            "pvc transparent",
+            "sampanie periat"
           ]
         },
         "auriu-satinat": {
@@ -248,17 +249,18 @@
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
           "qualmontFinishes": [
+            "al. efect inox mat",
             "al. eloxat lucios",
             "al. eloxat mat",
-            "al. efect inox mat",
-            "eloxat",
             "auriu satinat",
             "cromat lucios",
+            "eloxat",
             "inox lucios",
             "magnet alb",
             "magnet negru",
             "pvc negru",
-            "pvc transparent"
+            "pvc transparent",
+            "sampanie periat"
           ]
         }
       },
@@ -1120,6 +1122,18 @@
             "tier3": 281.39,
             "tier2": 316.57,
             "tier1": 351.74
+          },
+          "sampanie periat": {
+            "net": 399,
+            "tier3": 399,
+            "tier2": 399,
+            "tier1": 399
+          },
+          "cromat lucios": {
+            "net": 379,
+            "tier3": 379,
+            "tier2": 379,
+            "tier1": 379
           }
         },
         "g35ps": {
@@ -1134,6 +1148,18 @@
             "tier3": 360.24,
             "tier2": 405.27,
             "tier1": 450.29
+          },
+          "sampanie periat": {
+            "net": 509,
+            "tier3": 509,
+            "tier2": 509,
+            "tier1": 509
+          },
+          "cromat lucios": {
+            "net": 480,
+            "tier3": 480,
+            "tier2": 480,
+            "tier1": 480
           }
         },
         "g3535": {
@@ -1162,6 +1188,18 @@
             "tier3": 592.36,
             "tier2": 666.4,
             "tier1": 740.45
+          },
+          "sampanie periat": {
+            "net": 809,
+            "tier3": 809,
+            "tier2": 809,
+            "tier1": 809
+          },
+          "cromat lucios": {
+            "net": 769,
+            "tier3": 769,
+            "tier2": 769,
+            "tier1": 769
           }
         },
         "hand13040": {
