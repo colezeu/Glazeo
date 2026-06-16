@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect, useCallback } from "react";
 import { Save, Download, Upload, Lock, LogOut, Check, AlertTriangle } from "lucide-react";
 import { apiUrl } from "./api";

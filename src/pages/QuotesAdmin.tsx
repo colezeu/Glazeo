@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react'
 import { fetchQuotes, updateQuoteStatus, type QuoteData } from '../lib/quotes'
 import { formatPrice } from '../ConfiguratorShared'

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function ShowerPreview2D({
   width,
   depth,

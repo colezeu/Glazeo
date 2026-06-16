@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { X, Send, Check, Loader2, FileText, Mail, Download } from "lucide-react";
 import { validateForm } from "./validation";

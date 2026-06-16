@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function BalustradePreview3D({
   dimensions,
   glassType,

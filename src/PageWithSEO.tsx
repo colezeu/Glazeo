@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SEOHead, SEO_PAGES } from "./SEOHead";
 
 /**

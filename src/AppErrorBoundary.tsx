@@ -1,17 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default class AppErrorBoundary extends React.Component {
-  constructor(props) {
+interface ErrorBoundaryState {
+  error: Error | null;
+}
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+export default class AppErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { error: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { error };
   }
 
-  componentDidCatch(error) {
+  componentDidCatch(error: Error) {
     console.error("UI render error:", error);
   }
 

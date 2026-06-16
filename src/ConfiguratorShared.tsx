@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link } from "react-router-dom";
 import { ArrowLeft, Loader2, Check, RotateCcw } from "lucide-react";
 

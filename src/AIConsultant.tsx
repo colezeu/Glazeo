@@ -1,11 +1,37 @@
 import { useState, useRef, useEffect } from "react";
-import { Bot, User, Send, Loader2, AlertTriangle, Wifi, WifiOff } from "lucide-react";
+import { Bot, Send, Loader2, AlertTriangle, Wifi, WifiOff } from "lucide-react";
 import { apiUrl } from "./api";
 
-const AI_TIMEOUT = 15000; // 15 secunde timeout
+const AI_TIMEOUT = 15000;
 
-export default function AIConsultant({ productType, currentConfig, onApplyPrefill }) {
-  const [messages, setMessages] = useState([
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  isError?: boolean;
+}
+
+interface PrefillData {
+  width?: number | null;
+  depth?: number | null;
+  height?: number | string | null;
+  enclosure?: string | null;
+  glassType?: string | null;
+  treatment?: string | null;
+  options?: {
+    towelBar?: boolean;
+    seat?: boolean;
+    led?: boolean;
+  };
+}
+
+interface AIConsultantProps {
+  productType: string;
+  currentConfig: Record<string, unknown>;
+  onApplyPrefill?: (prefill: PrefillData) => void;
+}
+
+export default function AIConsultant({ productType, currentConfig, onApplyPrefill }: AIConsultantProps) {
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content: "Salut! Sunt consultantul Glass Associates. Spune-mi ce anume cauți și ce dimensiuni ai nevoie, și te voi ajuta să configurezi produsul perfect. 🏠",
@@ -13,13 +39,11 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [lastPrefill, setLastPrefill] = useState(null);
-  const [aiAvailable, setAiAvailable] = useState(null); // null = checking, true/false
-  const messagesEndRef = useRef(null);
-  const abortRef = useRef(null);
+  const [lastPrefill, setLastPrefill] = useState<PrefillData | null>(null);
+  const [aiAvailable, setAiAvailable] = useState<boolean | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
-  // Verifică dacă AI-ul e disponibil
   useEffect(() => {
     const checkAI = async () => {
       try {
@@ -37,7 +61,6 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
     checkAI();
   }, [productType]);
 
-  // Auto-scroll la ultimul mesaj
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
@@ -46,20 +69,14 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
     const text = input.trim();
     if (!text || loading) return;
 
-    const nextMessages = [...messages, { role: "user", content: text }];
+    const nextMessages: Message[] = [...messages, { role: "user", content: text }];
     setMessages(nextMessages);
     setInput("");
     setLoading(true);
-    setError(null);
 
-    // Creez AbortController pentru timeout
     const controller = new AbortController();
     abortRef.current = controller;
-
-    // Timeout automat
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, AI_TIMEOUT);
+    const timeoutId = setTimeout(() => controller.abort(), AI_TIMEOUT);
 
     try {
       const res = await fetch(apiUrl("/ai-consultant"), {
@@ -76,34 +93,29 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
 
       clearTimeout(timeoutId);
 
-      if (!res.ok) {
-        throw new Error(`Server error: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
 
-      const data = await res.json();
+      const data = await res.json() as { reply?: string; prefill?: PrefillData };
 
       setMessages(prev => [...prev, {
         role: "assistant",
         content: data.reply || "Am analizat cererea ta. Pot să te ajut cu ceva anume?",
       }]);
 
-      if (data.prefill) {
-        setLastPrefill(data.prefill);
-      }
-    } catch (err) {
+      if (data.prefill) setLastPrefill(data.prefill);
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
 
-      let errorMsg;
-      if (err.name === "AbortError") {
+      let errorMsg: string;
+      if (err instanceof Error && err.name === "AbortError") {
         errorMsg = "Consultantul AI a durat prea mult să răspundă. Încearcă din nou cu un mesaj mai scurt.";
-      } else if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
-        errorMsg = "Nu mă pot conecta la serverul AI. Asigură-te că server-ul local (Ollama) rulează pe portul 3001.";
+      } else if (err instanceof Error && (err.message.includes("Failed to fetch") || err.message.includes("NetworkError"))) {
+        errorMsg = "Nu mă pot conecta la serverul AI. Serviciul este temporar indisponibil.";
         setAiAvailable(false);
       } else {
         errorMsg = "A apărut o problemă. Încearcă din nou.";
       }
 
-      setError(errorMsg);
       setMessages(prev => [...prev, {
         role: "assistant",
         content: errorMsg,
@@ -115,7 +127,7 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
     }
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -204,7 +216,6 @@ export default function AIConsultant({ productType, currentConfig, onApplyPrefil
             </div>
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
 

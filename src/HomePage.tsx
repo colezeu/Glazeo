@@ -25,13 +25,13 @@ const STATS = [
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   // Închide dropdown la click în afara lui
   useEffect(() => {
-    const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     };
@@ -158,7 +158,7 @@ export default function HomePage() {
   return (
     <div style={{ minHeight: "100vh", color: "#f0ede8", position: "relative" }}>
 
-      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/hero.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 30% 50%, rgba(15,17,23,0.82) 0%, rgba(15,17,23,0.6) 50%, rgba(15,17,23,0.4) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1 }}>
