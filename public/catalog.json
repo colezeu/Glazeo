@@ -58,10 +58,40 @@
           "pricePerSqm": 112,
           "desc": "Laminat 66.2, ideal interior rezidențial"
         },
+        "662mm-parsol-ambele": {
+          "name": "Sticlă Laminată 662 Parsol ambele foi (13mm)",
+          "pricePerSqm": 127,
+          "desc": "Laminat 66.2, ambele foi Parsol gri/bronze"
+        },
+        "662mm-parsol-o-foaie": {
+          "name": "Sticlă Laminată 662 Parsol o foaie + float clar (13mm)",
+          "pricePerSqm": 109,
+          "desc": "Laminat 66.2, o foaie Parsol gri/bronze + una float clar"
+        },
+        "662mm-folie-mata": {
+          "name": "Sticlă Laminată 662 folie mată (13mm)",
+          "pricePerSqm": 135,
+          "desc": "Laminat 66.2 cu folie mată/satinată (privacy)"
+        },
         "882mm": {
           "name": "Sticlă Securizată/Laminată 882 (17mm)",
           "pricePerSqm": 131,
           "desc": "Standard exterior, rezistență ridicată"
+        },
+        "882mm-parsol-ambele": {
+          "name": "Sticlă Laminată 882 Parsol ambele foi (17mm)",
+          "pricePerSqm": 159,
+          "desc": "Laminat 88.2, ambele foi Parsol gri/bronze"
+        },
+        "882mm-parsol-o-foaie": {
+          "name": "Sticlă Laminată 882 Parsol o foaie + float clar (17mm)",
+          "pricePerSqm": 132,
+          "desc": "Laminat 88.2, o foaie Parsol gri/bronze + una float clar"
+        },
+        "882mm-folie-mata": {
+          "name": "Sticlă Laminată 882 folie mată (17mm)",
+          "pricePerSqm": 167,
+          "desc": "Laminat 88.2 cu folie mată/satinată (privacy)"
         }
       },
       "options": {
@@ -176,7 +206,7 @@
       },
       "hardwareFinishes": {
         "inox-lucios": {
-          "name": "Cromat",
+          "name": "Lucios",
           "priceFactor": 1.0,
           "desc": "Finisaj lucios standard",
           "qualmontFinishes": [
@@ -245,7 +275,7 @@
           ]
         },
         "auriu-satinat": {
-          "name": "Auriu Satinat",
+          "name": "Periat",
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
           "qualmontFinishes": [
@@ -1339,7 +1369,7 @@
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
-          "pricePerSqm": 1156,
+          "pricePerSqm": 733.33,
           "desc": "Lamele orientabile, ventilație controlată"
         },
         "pergola-sticla": {
