@@ -1508,72 +1508,182 @@
     "usi-culisante": {
       "name": "Uși Culisante",
       "basePrice": 200,
-      "mountTypes": {
-        "perete": {
-          "name": "Prindere pe Perete",
-          "pricePerUnit": 0,
-          "desc": "Șină montată pe perete"
+      "typologies": {
+        "cu-sina": {
+          "name": "Cu șină",
+          "mountTypes": {
+            "perete": {
+              "name": "Prindere pe Perete",
+              "pricePerUnit": 0,
+              "desc": "Șină montată pe perete"
+            },
+            "tavan": {
+              "name": "Prindere pe Tavan",
+              "pricePerUnit": 107,
+              "desc": "Șină ascunsă în tavan"
+            }
+          },
+          "panelTypes": {
+            "panou-fix": {
+              "name": "Cu Panou Fix",
+              "pricePerUnit": 0,
+              "desc": "Panou lateral fix + ușă culisantă"
+            },
+            "fara-fix": {
+              "name": "Fără Panou Fix",
+              "pricePerUnit": 0,
+              "desc": "Doar ușă culisantă"
+            },
+            "buzunar": {
+              "name": "Cu Buzunar",
+              "pricePerUnit": 373,
+              "desc": "Ușa dispare în perete"
+            }
+          },
+          "glassTypes": {
+            "10mm-clara": {
+              "name": "Securit 10mm Clară",
+              "pricePerSqm": 69.33,
+              "desc": "Sticlă securizată transparentă"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol gri"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol bronze"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 99.33,
+              "desc": "Sticlă securizată satinată (privacy)"
+            }
+          },
+          "options": {
+            "manere": {
+              "name": "Mânere Inox",
+              "price": 127,
+              "desc": "Mâner îngropat sau aplicat"
+            },
+            "incuietoare": {
+              "name": "Încuietoare",
+              "price": 200,
+              "desc": "Cilindru sau magnetic"
+            },
+            "caroiaj": {
+              "name": "Profile Caroiaj",
+              "pricePerSqm": 47,
+              "desc": "Grilaj decorativ"
+            }
+          }
         },
-        "tavan": {
-          "name": "Prindere pe Tavan",
-          "pricePerUnit": 107,
-          "desc": "Șină ascunsă în tavan"
+        "industrial": {
+          "name": "Industrial",
+          "mountTypes": {
+            "perete": {
+              "name": "Prindere pe Perete",
+              "pricePerUnit": 0,
+              "desc": "Șină montată pe perete"
+            },
+            "tavan": {
+              "name": "Prindere pe Tavan",
+              "pricePerUnit": 107,
+              "desc": "Șină ascunsă în tavan"
+            }
+          },
+          "panelTypes": null,
+          "glassTypes": {
+            "10mm-clara": {
+              "name": "Securit 10mm Clară",
+              "pricePerSqm": 69.33,
+              "desc": "Sticlă securizată transparentă"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol gri"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol bronze"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 99.33,
+              "desc": "Sticlă securizată satinată (privacy)"
+            }
+          },
+          "options": {
+            "manere": {
+              "name": "Mânere Inox",
+              "price": 127,
+              "desc": "Mâner îngropat sau aplicat"
+            },
+            "incuietoare": {
+              "name": "Încuietoare",
+              "price": 200,
+              "desc": "Cilindru sau magnetic"
+            },
+            "caroiaj": {
+              "name": "Profile Caroiaj",
+              "pricePerSqm": 47,
+              "desc": "Grilaj decorativ"
+            }
+          }
         },
-        "sincron": {
-          "name": "Sincron (fără șină jos)",
-          "pricePerUnit": 293,
-          "desc": "Fără ghidaj la pardoseală"
-        }
-      },
-      "panelTypes": {
-        "panou-fix": {
-          "name": "Cu Panou Fix",
-          "pricePerUnit": 0,
-          "desc": "Panou lateral fix + ușă culisantă"
-        },
-        "fara-fix": {
-          "name": "Fără Panou Fix",
-          "pricePerUnit": 0,
-          "desc": "Doar ușă culisantă"
-        },
-        "buzunar": {
-          "name": "Cu Buzunar",
-          "pricePerUnit": 373,
-          "desc": "Ușa dispare în perete"
-        }
-      },
-      "glassTypes": {
-        "10mm": {
-          "name": "Securit 10mm Clar",
-          "pricePerSqm": 293,
-          "desc": "Standard rezidențial"
-        },
-        "12mm": {
-          "name": "Securit 12mm",
-          "pricePerSqm": 373,
-          "desc": "Ușă mare / grea"
-        },
-        "frosted": {
-          "name": "Securit Sablat",
-          "pricePerSqm": 413,
-          "desc": "Confidențialitate"
-        }
-      },
-      "options": {
-        "manere": {
-          "name": "Mânere Inox",
-          "price": 127,
-          "desc": "Mâner îngropat sau aplicat"
-        },
-        "incuietoare": {
-          "name": "Încuietoare",
-          "price": 200,
-          "desc": "Cilindru sau magnetic"
-        },
-        "caroiaj": {
-          "name": "Profile Caroiaj",
-          "pricePerSqm": 47,
-          "desc": "Grilaj decorativ"
+        "magica": {
+          "name": "Usă Magică (fără șină)",
+          "mountTypes": {
+            "perete": {
+              "name": "Prindere pe Perete",
+              "pricePerUnit": 0,
+              "desc": "Fără șină, prindere directă pe perete"
+            }
+          },
+          "panelTypes": null,
+          "glassTypes": {
+            "10mm-clara": {
+              "name": "Securit 10mm Clară",
+              "pricePerSqm": 69.33,
+              "desc": "Sticlă securizată transparentă"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol gri"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 109.33,
+              "desc": "Sticlă securizată cu folie Parsol bronze"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 99.33,
+              "desc": "Sticlă securizată satinată (privacy)"
+            }
+          },
+          "options": {
+            "manere": {
+              "name": "Mânere Inox",
+              "price": 127,
+              "desc": "Mâner îngropat sau aplicat"
+            },
+            "incuietoare": {
+              "name": "Încuietoare",
+              "price": 200,
+              "desc": "Cilindru sau magnetic"
+            },
+            "caroiaj": {
+              "name": "Profile Caroiaj",
+              "pricePerSqm": 47,
+              "desc": "Grilaj decorativ"
+            }
+          }
         }
       }
     },
