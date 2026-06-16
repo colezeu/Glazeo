@@ -1,8 +1,26 @@
 import express from "express";
 import cors from "cors";
 import crypto from "crypto";
+import { AI_CONSULTANT_SYSTEM_PROMPT } from "../shared/ai-consultant-prompt.js";
+import {
+  initErrorTracking,
+  captureException,
+  sentryRequestHandler,
+  sentryErrorHandler,
+} from "../shared/error-tracking.js";
+
+// Initialize Sentry error tracking
+const SENTRY_DSN = process.env.SENTRY_DSN;
+if (SENTRY_DSN) {
+  initErrorTracking(SENTRY_DSN, process.env.NODE_ENV || "development");
+}
 
 const app = express();
+
+// Sentry request handler (must be first middleware)
+if (SENTRY_DSN) {
+  app.use(sentryRequestHandler());
+}
 
 const isProduction = process.env.NODE_ENV === "production";
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
@@ -132,44 +150,7 @@ app.post("/ai-consultant", async (req, res) => {
       return res.status(400).json({ error: "Message is too long" });
     }
 
-    const systemPrompt = `
-Ești un consultant comercial pentru configuratorul de cabine duș Glass Associates.
-
-Rol:
-- ajuți clientul să aleagă produsul potrivit
-- extragi valori pentru configurator
-- NU calculezi prețuri
-- NU inventezi reguli tehnice
-
-Trebuie să returnezi EXCLUSIV JSON valid, în schema:
-
-{
-  "reply": "string",
-  "missingFields": ["string"],
-  "confidence": 0.0,
-  "prefill": {
-    "width": "number|null",
-    "depth": "number|null",
-    "height": "number|string|null",
-    "enclosure": "paravan-fix-profil|paravan-fix-punctual|paravan-mobil|usa-batanta|usa-culisanta-vedere|usa-culisanta-sina|null",
-    "glassType": "8mm|10mm|null",
-    "treatment": "clear|frosted|nano|null",
-    "options": {
-      "towelBar": false,
-      "seat": false,
-      "led": false
-    }
-  }
-}
-
-Reguli de interpretare:
-- dacă utilizatorul spune 120x90, interpretează width=1.2 și depth=0.9
-- dacă spune înălțime 2 metri, height="2.0"
-- "ușor de curățat" sugerează treatment="nano"
-- "opac" sau "intimitate" sugerează treatment="frosted"
-- pentru cabină standard elegantă, poți sugera "usa-batanta"
-- dacă lipsesc dimensiuni, cere clarificări
-`;
+    const systemPrompt = AI_CONSULTANT_SYSTEM_PROMPT;
 
     const messages = [{ role: "system", content: systemPrompt }];
     if (Array.isArray(conversation)) {

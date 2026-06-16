@@ -78,13 +78,21 @@ export default function AdminPage() {
     setPassword("");
   };
 
-  const loadCatalog = async () => {
-    try {
-      const res = await fetch("/catalog.json");
-      const data = await res.json();
-      setCatalog(data);
-    } catch {
-      setStatus({ type: "error", msg: "Nu s-a putut încărca catalogul" });
+  const loadCatalog = async (retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const res = await fetch("/catalog.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setCatalog(data);
+        return;
+      } catch (err) {
+        if (i === retries - 1) {
+          setStatus({ type: "error", msg: `Nu s-a putut încărca catalogul (${retries} încercări)` });
+        } else {
+          await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+        }
+      }
     }
   };
 
