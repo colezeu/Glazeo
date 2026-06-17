@@ -258,7 +258,7 @@ export default function SlidingDoorConfiguratorPage() {
                 {nrCanate < 5 && <div style={{ color: "rgba(200,169,110,0.5)", fontSize: "0.75rem", marginTop: 6 }}>−{(5 - nrCanate) * 110}€ reducere</div>}
               </SectionCard>
               <div style={{ padding: 12, borderRadius: 12, background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", color: "rgba(200,169,110,0.7)", fontSize: "0.85rem", textAlign: "center" }}>
-                Feronerie {2000 - (5 - nrCanate) * 110}€ + TVA — max 3.9m
+                ⚠️ Feronerie {2000 - (5 - nrCanate) * 110}€ + TVA — max 3.9m lățime, max 5 canate
               </div>
             </>
           )}
