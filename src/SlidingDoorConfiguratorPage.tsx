@@ -259,8 +259,8 @@ export default function SlidingDoorConfiguratorPage() {
                   </div>
                 </div>
               )}
-              {options.amortizor && <ToggleOption checked={inclAmortizor} onChange={setInclAmortizor} label={options.amortizor.name} desc="" price={`${options.amortizor.price}€`} />}
-              {options.sincron && <ToggleOption checked={inclSincron} onChange={setInclSincron} label={options.sincron.name} desc="" price={`${options.sincron.price}€`} />}
+              {options.amortizor && carucioare !== "la-vedere-inox" && <ToggleOption checked={inclAmortizor} onChange={setInclAmortizor} label={options.amortizor.name} desc="" price={`${options.amortizor.price}€`} />}
+              {options.sincron && carucioare !== "la-vedere-inox" && <ToggleOption checked={inclSincron} onChange={setInclSincron} label={options.sincron.name} desc="" price={`${options.sincron.price}€`} />}
               {options["profil-ornamental"] && hasRama && (
                 <ToggleOption checked={inclProfilOrnamental} onChange={setInclProfilOrnamental} label={options["profil-ornamental"].name} desc="" price={`${options["profil-ornamental"].pricePerMeter}€/m`} />
               )}
