@@ -5,288 +5,290 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteS
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 
-const FALLBACK = {
-  name: "Uși Culisante",
-  basePrice: 200,
-  typologies: {
-    "cu-sina": {
-      name: "Cu șină",
-      mountTypes: {
-        perete: { name: "Prindere pe Perete", pricePerUnit: 0, desc: "Șină montată pe perete" },
-        tavan:  { name: "Prindere pe Tavan",  pricePerUnit: 107, desc: "Șină ascunsă în tavan" }
-      },
-      panelTypes: {
-        "panou-fix": { name: "Cu Panou Fix",  pricePerUnit: 0,   desc: "Panou lateral fix + ușă culisantă" },
-        "fara-fix":  { name: "Fără Panou Fix", pricePerUnit: 0,   desc: "Doar ușă culisantă" },
-        "buzunar":   { name: "Cu Buzunar",      pricePerUnit: 373, desc: "Ușa dispare în perete" }
-      },
-      glassTypes: {
-        "10mm-clara":       { name: "Securit 10mm Clară",       pricePerSqm: 69.33,  desc: "Sticlă securizată transparentă" },
-        "10mm-parsol-gri":  { name: "Securit 10mm Parsol Gri",   pricePerSqm: 109.33, desc: "Cu folie Parsol gri" },
-        "10mm-parsol-bronze": { name: "Securit 10mm Parsol Bronze", pricePerSqm: 109.33, desc: "Cu folie Parsol bronze" },
-        "10mm-satin":       { name: "Securit 10mm Satinată",     pricePerSqm: 99.33,  desc: "Satinată (privacy)" }
-      },
-      options: {
-        manere:      { name: "Mânere Inox",    price: 127, desc: "Mâner îngropat sau aplicat" },
-        incuietoare: { name: "Încuietoare",     price: 200, desc: "Cilindru sau magnetic" },
-        caroiaj:     { name: "Profile Caroiaj", pricePerSqm: 47, desc: "Grilaj decorativ" }
-      }
-    },
-    "industrial": {
-      name: "Industrial",
-      mountTypes: {
-        perete: { name: "Prindere pe Perete", pricePerUnit: 0, desc: "Șină montată pe perete" },
-        tavan:  { name: "Prindere pe Tavan",  pricePerUnit: 107, desc: "Șină ascunsă în tavan" }
-      },
-      panelTypes: null,
-      glassTypes: {
-        "10mm-clara":       { name: "Securit 10mm Clară",       pricePerSqm: 69.33,  desc: "Sticlă securizată transparentă" },
-        "10mm-parsol-gri":  { name: "Securit 10mm Parsol Gri",   pricePerSqm: 109.33, desc: "Cu folie Parsol gri" },
-        "10mm-parsol-bronze": { name: "Securit 10mm Parsol Bronze", pricePerSqm: 109.33, desc: "Cu folie Parsol bronze" },
-        "10mm-satin":       { name: "Securit 10mm Satinată",     pricePerSqm: 99.33,  desc: "Satinată (privacy)" }
-      },
-      options: {
-        manere:      { name: "Mânere Inox",    price: 127, desc: "Mâner îngropat sau aplicat" },
-        incuietoare: { name: "Încuietoare",     price: 200, desc: "Cilindru sau magnetic" },
-        caroiaj:     { name: "Profile Caroiaj", pricePerSqm: 47, desc: "Grilaj decorativ" }
-      }
-    },
-    "magica": {
-      name: "Usă Magică (fără șină)",
-      mountTypes: {
-        perete: { name: "Prindere pe Perete", pricePerUnit: 0, desc: "Fără șină, prindere directă pe perete" }
-      },
-      panelTypes: null,
-      glassTypes: {
-        "10mm-clara":       { name: "Securit 10mm Clară",       pricePerSqm: 69.33,  desc: "Sticlă securizată transparentă" },
-        "10mm-parsol-gri":  { name: "Securit 10mm Parsol Gri",   pricePerSqm: 109.33, desc: "Cu folie Parsol gri" },
-        "10mm-parsol-bronze": { name: "Securit 10mm Parsol Bronze", pricePerSqm: 109.33, desc: "Cu folie Parsol bronze" },
-        "10mm-satin":       { name: "Securit 10mm Satinată",     pricePerSqm: 99.33,  desc: "Satinată (privacy)" }
-      },
-      options: {
-        manere:      { name: "Mânere Inox",    price: 127, desc: "Mâner îngropat sau aplicat" },
-        incuietoare: { name: "Încuietoare",     price: 200, desc: "Cilindru sau magnetic" },
-        caroiaj:     { name: "Profile Caroiaj", pricePerSqm: 47, desc: "Grilaj decorativ" }
-      }
-    }
-  }
-};
-
-/* ─── Preview SVG ─── */
-function SlidingDoorPreview({ dims, typology, mount, panel, glass }) {
+function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: string; height: string }; typology: string; carucioare: string }) {
   const w = parseFloat(dims.width) || 1.2, h = parseFloat(dims.height) || 2.1;
-  const isMagica = typology === "magica";
-  const isIndustrial = typology === "industrial";
-  const hasPanel = panel && panel !== "fara-fix";
-  const totalW = hasPanel ? w * 2 : panel === "buzunar" ? w * 1.1 : w;
+  const isInvizibila = typology === "feronerie-invizibila";
   const W = 308, H = 200, M = 16;
-  const sc = Math.min((W - M * 2) / totalW, (H - M * 2) / h);
-  const dW = w * sc, dH = h * sc, fW = hasPanel ? w * sc : 0;
-  const x0 = panel === "buzunar" ? W / 2 - dW / 2 : (W - (dW + fW + 8)) / 2;
-  const y0 = (H - dH) / 2;
-  const isSatin = glass === "10mm-satin";
-  const isParsol = glass === "10mm-parsol-gri" || glass === "10mm-parsol-bronze";
-  const glF = isSatin ? "rgba(200,200,220,0.28)" : isParsol ? "rgba(160,140,100,0.2)" : "rgba(180,220,255,0.1)";
-  const glS = isSatin ? "rgba(200,200,220,0.5)" : isParsol ? "rgba(160,140,100,0.5)" : "rgba(180,220,255,0.45)";
+  const sc = Math.min((W - M * 2) / w, (H - M * 2) / h);
+  const dW = w * sc, dH = h * sc;
+  const x0 = (W - dW) / 2, y0 = (H - dH) / 2;
+  const hasSina = carucioare === "in-sina-aluminiu";
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
-      {/* track / rail */}
-      {!isMagica && mount !== "tavan" && (
-        <rect x={x0 - 4} y={y0 - 5} width={dW + fW + 16} height={5} fill="rgba(200,169,110,0.4)" rx="2" />
+      {/* Sina / track */}
+      {!isInvizibila && (
+        <rect x={x0 - 6} y={y0 - (hasSina ? 7 : 4)} width={dW + 12} height={hasSina ? 6 : 3}
+          fill={hasSina ? "rgba(200,169,110,0.2)" : "rgba(200,169,110,0.35)"} rx="2" />
       )}
-      {!isMagica && mount === "tavan" && (
-        <rect x={x0 - 4} y={y0 - 8} width={dW + fW + 16} height={4} fill="rgba(200,169,110,0.2)" rx="2" strokeDasharray="3,2" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
+      {/* Podea */}
+      {!isInvizibila && (
+        <line x1={x0 - 12} y1={y0 + dH} x2={x0 + dW + 12} y2={y0 + dH} stroke="rgba(200,169,110,0.3)" strokeWidth="2" />
       )}
-      {/* floor line */}
-      {!isMagica && (
-        <line x1={x0 - 10} y1={y0 + dH} x2={x0 + dW + fW + 18} y2={y0 + dH} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
-      )}
-      {/* fixed panel */}
-      {hasPanel && panel === "panou-fix" && (
-        <rect x={x0} y={y0} width={fW} height={dH} fill={glF} stroke="rgba(200,169,110,0.3)" strokeWidth="1.5" />
-      )}
-      {/* sliding door */}
-      {panel === "buzunar" ? (
+      {/* Sticla */}
+      <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
+      {/* Cărucioare */}
+      {!isInvizibila && carucioare === "la-vedere-inox" && (
         <>
-          <rect x={x0} y={y0} width={dW * 0.3} height={dH} fill="rgba(200,169,110,0.05)" stroke="rgba(200,169,110,0.25)" strokeWidth="1.5" strokeDasharray="4,3" />
-          <rect x={x0 + dW * 0.3} y={y0} width={dW * 0.7} height={dH} fill={glF} stroke={glS} strokeWidth="1.5" />
-          <text x={x0 + dW * 0.15} y={y0 + dH / 2} textAnchor="middle" fill="rgba(200,169,110,0.35)" fontSize="7" fontFamily="DM Sans" transform={`rotate(-90,${x0 + dW * 0.15},${y0 + dH / 2})`}>în perete</text>
+          <circle cx={x0 + dW * 0.3} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
+          <circle cx={x0 + dW * 0.7} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
+          <line x1={x0 + dW * 0.3} y1={y0} x2={x0 + dW * 0.3} y2={y0 + 14} stroke="rgba(200,200,200,0.4)" strokeWidth="1.5" />
+          <line x1={x0 + dW * 0.7} y1={y0} x2={x0 + dW * 0.7} y2={y0 + 14} stroke="rgba(200,200,200,0.4)" strokeWidth="1.5" />
         </>
-      ) : (
-        <rect x={x0 + (hasPanel && panel === "panou-fix" ? fW + 8 : 0)} y={y0} width={dW} height={dH} fill={glF} stroke={glS} strokeWidth="1.5" />
       )}
-      {/* handle */}
-      <rect x={x0 + (hasPanel && panel === "panou-fix" ? fW + 14 : 6)} y={y0 + dH / 2 - 20} width={4} height={40} rx="2" fill="rgba(200,169,110,0.7)" />
-      {/* label */}
+      {/* Mâner */}
+      <rect x={x0 + dW * 0.15} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
       <text x={W / 2} y={H - 6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
-        {dims.width}m × {dims.height}m · {isMagica ? "Magică" : isIndustrial ? "Industrial" : "Cu șină"}
+        {dims.width}m × {dims.height}m
       </text>
     </svg>
   );
 }
 
-/* ─── Main Page ─── */
 export default function SlidingDoorConfiguratorPage() {
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [vatRate, setVatRate] = useState(0.19);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
 
-  // Step 1: Typology
-  const [typology, setTypology] = useState("cu-sina");
-  // Step 2: Mount
-  const [mount, setMount] = useState("perete");
-  // Step 3: Panel (only for cu-sina)
-  const [panel, setPanel] = useState("fara-fix");
-  // Step 4: Glass
-  const [glass, setGlass] = useState("10mm-clara");
-  // Step 5: Options
-  const [inclManere, setInclManere] = useState(false);
+  const [typology, setTypology] = useState("canat-cu-rama");
+  const [mount, setMount] = useState("tavan");
+  const [carucioare, setCarucioare] = useState("la-vedere-inox");
+  const [kit, setKit] = useState("perete-2m");
+  const [dims, setDims] = useState({ width: "1.0", height: "2.1" });
+  const [glass, setGlass] = useState("10mm-clar");
+
+  // Options
+  const [inclManer, setInclManer] = useState(false);
   const [inclInc, setInclInc] = useState(false);
-  const [inclCar, setInclCar] = useState(false);
-  // Dims
-  const [dims, setDims] = useState({ width: "1.2", height: "2.1" });
-  // Quote
+  const [inclAmortizor, setInclAmortizor] = useState(false);
+  const [inclSincron, setInclSincron] = useState(false);
+  const [inclProfilOrnamental, setInclProfilOrnamental] = useState(false);
+
   const [calculating, setCalculating] = useState(false);
-  const [quote, setQuote] = useState(null);
+  const [quote, setQuote] = useState<Record<string, number | string> | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   useEffect(() => {
-    fetch("/catalog.json")
+    fetch(`/catalog.json?v=${Date.now()}`)
       .then(r => r.json())
-      .then(d => { setProduct(d.products["usi-culisante"]); setVatRate(d.vatRate); })
-      .catch(() => setProduct(FALLBACK));
+      .then(d => {
+        setProduct(d.products["usi-culisante"]);
+        setVatRate(d.vatRate);
+      })
+      .catch(() => setProduct(null));
   }, []);
 
-  // Reset mount when typology changes (magica only has perete)
+  useEffect(() => { getUserMultiplier().then(m => setPriceMultiplier(m)); }, []);
+
+  // Reset sub-selections when typology changes
   useEffect(() => {
-    if (product) {
-      const ty = product.typologies[typology];
-      if (ty) {
-        const firstMount = Object.keys(ty.mountTypes)[0];
-        setMount(firstMount);
-        if (ty.panelTypes) {
-          setPanel(Object.keys(ty.panelTypes)[0]);
-        }
+    if (!product) return;
+    const p = product as Record<string, unknown>;
+    const typs = p.typologies as Record<string, Record<string, unknown>>;
+    const ty = typs?.[typology];
+    if (ty) {
+      const mounts = ty.mountTypes as Record<string, unknown>;
+      setMount(Object.keys(mounts)[0] || "tavan");
+      const carts = ty.carucioareTypes as Record<string, Record<string, unknown>>;
+      if (carts) {
+        const firstCart = Object.keys(carts)[0];
+        setCarucioare(firstCart);
+        const kits = carts[firstCart]?.kits as Record<string, unknown>;
+        setKit(Object.keys(kits || {})[0] || "");
       }
+      const glasses = ty.glassTypes as Record<string, unknown>;
+      setGlass(Object.keys(glasses || {})[0] || "10mm-clar");
     }
+    // Reset options
+    setInclManer(false); setInclInc(false); setInclAmortizor(false); setInclSincron(false); setInclProfilOrnamental(false);
   }, [typology, product]);
 
-  const p = product;
-  const ty = p?.typologies?.[typology];
-  const isValid = dims.width && dims.height;
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'sliding' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.typology) setTypology(cfg.typology);
+          if (cfg.mount) setMount(cfg.mount);
+          if (cfg.carucioare) setCarucioare(cfg.carucioare);
+          if (cfg.kit) setKit(cfg.kit);
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.inclManer !== undefined) setInclManer(cfg.inclManer);
+          if (cfg.inclInc !== undefined) setInclInc(cfg.inclInc);
+          if (cfg.inclAmortizor !== undefined) setInclAmortizor(cfg.inclAmortizor);
+          if (cfg.inclSincron !== undefined) setInclSincron(cfg.inclSincron);
+          if (cfg.inclProfilOrnamental !== undefined) setInclProfilOrnamental(cfg.inclProfilOrnamental);
+        }
+      } catch (e) { /* ignore */ }
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
+  const p = product as Record<string, unknown> | null;
+  const typs = p?.typologies as Record<string, Record<string, unknown>> | undefined;
+  const ty = typs?.[typology];
+  const isInvizibila = typology === "feronerie-invizibila";
+  const isValid = !!(dims.width && dims.height && ty);
 
   const calculate = async () => {
     if (!p || !ty) return;
     setCalculating(true);
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise(r => setTimeout(r, 200));
     const w = parseFloat(dims.width) || 0, h = parseFloat(dims.height) || 0;
-    const area = w * h * (panel === "panou-fix" ? 2 : 1);
-    const mountP = ty.mountTypes[mount].pricePerUnit;
-    const panelP = ty.panelTypes ? (ty.panelTypes[panel]?.pricePerUnit || 0) : 0;
-    const glP = area * ty.glassTypes[glass].pricePerSqm;
-    const manP = inclManere ? ty.options.manere.price : 0;
-    const incP = inclInc ? ty.options.incuietoare.price : 0;
-    const carP = inclCar ? area * ty.options.caroiaj.pricePerSqm : 0;
-    const { subtotal, vat, total } = calcQuote(p.basePrice + mountP + panelP + glP + manP + incP + carP, vatRate);
-    setQuote({ area: area.toFixed(2), mountP, panelP, glP: Math.round(glP), manP, incP, carP: Math.round(carP), subtotal, vat, total });
+    const area = w * h;
+
+    let kitP = 0;
+    if (isInvizibila) {
+      kitP = (ty.price as number) || 349;
+    } else {
+      const carts = ty.carucioareTypes as Record<string, Record<string, unknown>>;
+      const cart = carts?.[carucioare];
+      const kits = cart?.kits as Record<string, { price: number }>;
+      kitP = kits?.[kit]?.price || 0;
+    }
+
+    const glassTypes = ty.glassTypes as Record<string, { pricePerSqm: number }>;
+    const glP = area * (glassTypes?.[glass]?.pricePerSqm || 0);
+
+    const opts = ty.options as Record<string, { price?: number; pricePerMeter?: number }> | undefined;
+    const manP = inclManer && opts?.maner ? (opts.maner.price || 0) : 0;
+    const incP = inclInc && opts?.incuietoare ? (opts.incuietoare.price || 0) : 0;
+    const amortP = inclAmortizor && opts?.amortizor ? (opts.amortizor.price || 0) : 0;
+    const sincP = inclSincron && opts?.sincron ? (opts.sincron.price || 0) : 0;
+    const profilP = inclProfilOrnamental && opts?.["profil-ornamental"]
+      ? (opts["profil-ornamental"].pricePerMeter || 0) * h * 2 : 0; // ×2 fețe
+
+    const raw = (p.basePrice as number || 0) + kitP + glP + manP + incP + amortP + sincP + profilP;
+    const { subtotal, vat, total } = calcQuote(raw, vatRate);
+
+    setQuote({
+      area: area.toFixed(2),
+      kitP: Math.round(kitP * priceMultiplier),
+      glP: Math.round(glP * priceMultiplier),
+      manP: Math.round(manP * priceMultiplier),
+      incP: Math.round(incP * priceMultiplier),
+      amortP: Math.round(amortP * priceMultiplier),
+      sincP: Math.round(sincP * priceMultiplier),
+      profilP: Math.round(profilP * priceMultiplier),
+      subtotal: Math.round(subtotal * priceMultiplier),
+      vat: Math.round(vat * priceMultiplier),
+      total: Math.round(total * priceMultiplier),
+    });
     setCalculating(false);
   };
 
   if (!p) return <PageLoader />;
 
-  const glassLabel = (key) => {
-    const g = ty.glassTypes[key];
-    return g ? g.name.replace("Securit 10mm ", "") : key;
-  };
+  consttyp = typs || {};
+  const mounts = ty?.mountTypes as Record<string, { name: string; desc: string }> | undefined;
+  const carts = ty?.carucioareTypes as Record<string, { name: string; desc: string; kits: Record<string, { name: string; price: number }> }> | undefined;
+  const currentCart = carts?.[carucioare];
+  const currentKits = currentCart?.kits as Record<string, { name: string; price: number }> | undefined;
+  const glassTypes = ty?.glassTypes as Record<string, { name: string; pricePerSqm: number }> | undefined;
+  const options = ty?.options as Record<string, { name: string; price?: number; pricePerMeter?: number }> | undefined;
+  const hasRama = typology === "canat-cu-rama";
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă" config={{ dims, typology, mount, panel, glass, inclManere, inclInc, inclCar }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă"
+        config={{ dims, typology, mount, carucioare, kit, glass, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }} />
       <ConfigHeader title="Configurator Uși Culisante" quote={quote} />
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
-          {/* Step 1: Typology */}
           <SectionCard num="01" label="Tipologie">
-            {Object.entries(p.typologies).map(([k, t]) => (
-              <OptionBtn key={k} selected={typology === k} onClick={() => setTypology(k)} label={t.name} center />
+            {Object.entries(typs).map(([k, t]) => (
+              <OptionBtn key={k} selected={typology === k} onClick={() => setTypology(k)}
+                label={(t as { name: string }).name} desc={(t as { desc: string }).desc} center />
             ))}
           </SectionCard>
 
-          {/* Step 2: Mount */}
-          <SectionCard num="02" label="Sistem Prindere">
-            {Object.entries(ty.mountTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={mount === k} onClick={() => setMount(k)} label={d.name} desc={d.desc} price={d.pricePerUnit > 0 ? `+${d.pricePerUnit}€` : "Standard"} />
-            ))}
-          </SectionCard>
-
-          {/* Step 3: Panel (only for cu-sina) */}
-          {ty.panelTypes && (
-            <SectionCard num="03" label="Configurație Panouri">
-              {Object.entries(ty.panelTypes).map(([k, d]) => (
-                <OptionBtn key={k} selected={panel === k} onClick={() => setPanel(k)} label={d.name} desc={d.desc} price={d.pricePerUnit > 0 ? `+${d.pricePerUnit}€` : "Standard"} />
+          {!isInvizibila && carts && (
+            <SectionCard num="02" label="Tip Cărucioare">
+              {Object.entries(carts).map(([k, c]) => (
+                <OptionBtn key={k} selected={carucioare === k} onClick={() => { setCarucioare(k); const cKits = c.kits; setKit(Object.keys(cKits)[0]); }}
+                  label={c.name} desc={c.desc} center />
               ))}
             </SectionCard>
           )}
 
-          {/* Step 4: Glass */}
-          <SectionCard num={ty.panelTypes ? "04" : "03"} label="Sticlă 10mm">
-            {Object.entries(ty.glassTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
-            ))}
-          </SectionCard>
+          {currentKits && !isInvizibila && (
+            <SectionCard num="03" label="Kit Montaj">
+              {Object.entries(currentKits).map(([k, d]) => (
+                <OptionBtn key={k} selected={kit === k} onClick={() => setKit(k)} label={d.name}
+                  price={d.price > 0 ? `${d.price}€` : "Standard"} />
+              ))}
+            </SectionCard>
+          )}
 
-          {/* Step 5: Options */}
-          <SectionCard num={ty.panelTypes ? "05" : "04"} label="Accesorii">
-            <ToggleOption checked={inclManere} onChange={setInclManere} label={ty.options.manere.name} desc={ty.options.manere.desc} price={`${ty.options.manere.price}€`} />
-            <ToggleOption checked={inclInc} onChange={setInclInc} label={ty.options.incuietoare.name} desc={ty.options.incuietoare.desc} price={`${ty.options.incuietoare.price}€`} />
-            <ToggleOption checked={inclCar} onChange={setInclCar} label={ty.options.caroiaj.name} desc={ty.options.caroiaj.desc} price={`${ty.options.caroiaj.pricePerSqm}€/m²`} />
-          </SectionCard>
+          {glassTypes && (
+            <SectionCard num={currentKits ? "04" : isInvizibila ? "02" : "03"} label="Sticlă 10mm ESG">
+              {Object.entries(glassTypes).map(([k, d]) => (
+                <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name}
+                  price={`${d.pricePerSqm}€/m²`} />
+              ))}
+            </SectionCard>
+          )}
 
-          {/* Step 6: Dimensions */}
-          <SectionCard num={ty.panelTypes ? "06" : "05"} label="Dimensiuni">
+          <SectionCard num={currentKits ? "05" : isInvizibila ? "03" : "04"} label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lățime ușă (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} step="0.05" />
+              <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} step="0.05" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} step="0.05" />
             </div>
           </SectionCard>
-        </div>
 
+          {options && Object.keys(options).length > 0 && (
+            <SectionCard num="06" label="Accesorii">
+              {options.maner && <ToggleOption checked={inclManer} onChange={setInclManer} label={options.maner.name} desc="" price={`${options.maner.price}€`} />}
+              {options.incuietoare && <ToggleOption checked={inclInc} onChange={setInclInc} label={options.incuietoare.name} desc="" price={`${options.incuietoare.price}€`} />}
+              {options.amortizor && <ToggleOption checked={inclAmortizor} onChange={setInclAmortizor} label={options.amortizor.name} desc="" price={`${options.amortizor.price}€`} />}
+              {options.sincron && <ToggleOption checked={inclSincron} onChange={setInclSincron} label={options.sincron.name} desc="" price={`${options.sincron.price}€`} />}
+              {options["profil-ornamental"] && hasRama && (
+                <ToggleOption checked={inclProfilOrnamental} onChange={setInclProfilOrnamental} label={options["profil-ornamental"].name} desc="" price={`${options["profil-ornamental"].pricePerMeter}€/m`} />
+              )}
+            </SectionCard>
+          )}
+
+          {isInvizibila && (
+            <div style={{ padding: 12, borderRadius: 12, background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", color: "rgba(200,169,110,0.7)", fontSize: "0.85rem", textAlign: "center" }}>
+              Feronerie invizibilă — {ty.price || 349}€ (include kit complet)
+            </div>
+          )}
+        </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox>
-            <SlidingDoorPreview dims={dims} typology={typology} mount={mount} panel={panel} glass={glass} />
+            <SlidingDoorPreview dims={dims} typology={typology} carucioare={carucioare} />
           </PreviewBox>
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
             lines={quote ? [
-              { label: "Tipologie", value: ty.name },
               { label: "Suprafață", value: `${quote.area} m²` },
+              quote.kitP > 0 && { label: "Kit", value: `${quote.kitP}€`, accent: true },
               { label: "Sticlă", value: `${quote.glP}€` },
-              quote.mountP > 0 && { label: "Prindere", value: `+${quote.mountP}€`, accent: true },
-              quote.panelP > 0 && { label: "Buzunar", value: `+${quote.panelP}€`, accent: true },
-              quote.manP > 0 && { label: "Mânere", value: `+${quote.manP}€`, accent: true },
+              quote.manP > 0 && { label: "Mâner", value: `+${quote.manP}€`, accent: true },
               quote.incP > 0 && { label: "Încuietoare", value: `+${quote.incP}€`, accent: true },
-              quote.carP > 0 && { label: "Caroiaj", value: `+${quote.carP}€`, accent: true },
-            ] : []}
+              quote.amortP > 0 && { label: "Amortizor", value: `+${quote.amortP}€`, accent: true },
+              quote.sincP > 0 && { label: "Sincron", value: `+${quote.sincP}€`, accent: true },
+              quote.profilP > 0 && { label: "Profile orn.", value: `+${quote.profilP}€`, accent: true },
+            ].filter(Boolean) : []}
           />
-          <button
-            onClick={() => setShowSaveModal(true)}
+          <button onClick={() => setShowSaveModal(true)}
             className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
-            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
-          >
+            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}>
             💾 Salvează proiect
           </button>
         </div>
       </main>
 
       {showSaveModal && (
-        <SaveProjectModal
-          productType="sliding"
-          config={{ dims, typology, mount, panel, glass, inclManere, inclInc, inclCar }}
-          onClose={() => setShowSaveModal(false)}
-        />
+        <SaveProjectModal productType="sliding"
+          config={{ dims, typology, mount, carucioare, kit, glass, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }}
+          onClose={() => setShowSaveModal(false)} />
       )}
     </div>
   );

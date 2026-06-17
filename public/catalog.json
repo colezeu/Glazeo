@@ -1435,255 +1435,180 @@
     },
     "usi-batante": {
       "name": "Uși Batante",
-      "basePrice": 160,
-      "doorConfigs": {
-        "simpla": {
-          "name": "Simplă",
-          "pricePerUnit": 0,
-          "desc": "Un canat, standard"
+      "basePrice": 0,
+      "doorTypes": {
+        "full-glass-amortizor": {
+          "name": "Full Glass cu Amortizor Hidraulic",
+          "desc": "Canat full glass, balama inferioară cu amortizor soft-close",
+          "variants": {
+            "fara-luminator": { "name": "Fără Luminator", "price": 176, "desc": "Doar canatul" },
+            "cu-luminator": { "name": "Cu Luminator", "price": 252, "desc": "Canat + luminator superior" }
+          },
+          "glassTypes": {
+            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+          },
+          "options": {
+            "maner": { "name": "Mâner Inox", "price": 55, "desc": "Mâner interax 300mm" }
+          }
         },
-        "pe-toc": {
-          "name": "Cu Închidere pe Toc",
-          "pricePerUnit": 200,
-          "desc": "Închidere precisă, etanșare sporită"
+        "full-glass-toc-zidarie": {
+          "name": "Full Glass cu Toc Aluminiu – Zidărie",
+          "desc": "Canat full glass cu toc aluminiu, montat în perete de zidărie",
+          "variants": {
+            "tip-l": { "name": "Tip L (montat în spalet)", "price": 265, "desc": "Fixare directă" },
+            "tip-z": { "name": "Tip Z (montat pe colț)", "price": 631, "desc": "Kit IMBOTTE 148AL" }
+          },
+          "glassTypes": {
+            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+          },
+          "options": {
+            "maner": { "name": "Mâner Inox", "price": 55, "desc": "Mâner interax 300mm" }
+          }
+        },
+        "full-glass-toc-sticla": {
+          "name": "Full Glass cu Toc – Perete Sticlă",
+          "desc": "Canat full glass cu toc aluminiu, montat în perete de sticlă existent",
+          "variants": {
+            "standard": { "name": "Kit PROFIXDOOR", "price": 869, "desc": "Kit complet PROFIXDOOR 4ALSQ" }
+          },
+          "glassTypes": {
+            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+          },
+          "options": {}
         },
         "fono": {
-          "name": "Cu Izolație Fonică Ridicată",
-          "pricePerUnit": 467,
-          "desc": "Garnituri multiple, Rw≥42dB"
-        }
-      },
-      "closerTypes": {
-        "balama": {
-          "name": "Balamale Standard",
-          "pricePerUnit": 0,
-          "desc": "Balamale inox reglabile"
-        },
-        "hidraulic": {
-          "name": "Amortizor Hidraulic",
-          "pricePerUnit": 127,
-          "desc": "Soft-close, reglabil"
-        }
-      },
-      "glassTypes": {
-        "10mm": {
-          "name": "Securit 10mm Clar",
-          "pricePerSqm": 293,
-          "desc": "Standard, rezistență bună"
-        },
-        "12mm": {
-          "name": "Securit 12mm",
-          "pricePerSqm": 373,
-          "desc": "Greutate și rezistență sporită"
-        },
-        "frosted": {
-          "name": "Securit Sablat",
-          "pricePerSqm": 413,
-          "desc": "Confidențialitate, design sofisticat"
-        }
-      },
-      "options": {
-        "manere": {
-          "name": "Mânere Inox Premium",
-          "price": 160,
-          "desc": "Push-pull, diverse finisaje"
-        },
-        "incuietoare": {
-          "name": "Încuietoare Magnetică",
-          "price": 240,
-          "desc": "Blocare automată la închidere"
-        },
-        "blocator": {
-          "name": "Blocator Interior",
-          "price": 87,
-          "desc": "Blocare din interior"
-        },
-        "caroiaj": {
-          "name": "Profile Caroiaj",
-          "pricePerSqm": 47,
-          "desc": "Grilaj decorativ pe sticlă"
+          "name": "Foaie Înrămată – Izolație Fonică",
+          "desc": "Sticlă înrămată cu toc aluminiu, garnituri multiple",
+          "variants": {
+            "pret-cerere": { "name": "Preț la Cerere", "price": 0, "desc": "Consultă-ne pentru ofertă personalizată" }
+          },
+          "glassTypes": {},
+          "options": {}
         }
       }
     },
     "usi-culisante": {
       "name": "Uși Culisante",
-      "basePrice": 200,
+      "basePrice": 0,
       "typologies": {
-        "cu-sina": {
-          "name": "Cu șină",
+        "canat-cu-rama": {
+          "name": "Canat cu Ramă",
+          "desc": "Max 5 canate, 2.8m înălțime. Doar 10mm ESG.",
           "mountTypes": {
-            "perete": {
-              "name": "Prindere pe Perete",
-              "pricePerUnit": 0,
-              "desc": "Șină montată pe perete"
-            },
-            "tavan": {
-              "name": "Prindere pe Tavan",
-              "pricePerUnit": 107,
-              "desc": "Șină ascunsă în tavan"
-            }
+            "tavan": { "name": "Prindere pe Tavan", "pricePerMeter": 0, "desc": "Șină fixată pe tavan" }
           },
-          "panelTypes": {
-            "panou-fix": {
-              "name": "Cu Panou Fix",
-              "pricePerUnit": 0,
-              "desc": "Panou lateral fix + ușă culisantă"
+          "carucioareTypes": {
+            "la-vedere-inox": {
+              "name": "La Vedere – Inox",
+              "desc": "Design industrial, 1 mobil",
+              "maxCanate": 1,
+              "kits": {
+                "perete-2m": { "name": "Perete 2m", "price": 519 },
+                "perete-3m": { "name": "Perete 3m", "price": 589 },
+                "tavan-2m": { "name": "Tavan 2m", "price": 679 },
+                "tavan-3m": { "name": "Tavan 3m", "price": 808 }
+              }
             },
-            "fara-fix": {
-              "name": "Fără Panou Fix",
-              "pricePerUnit": 0,
-              "desc": "Doar ușă culisantă"
-            },
-            "buzunar": {
-              "name": "Cu Buzunar",
-              "pricePerUnit": 373,
-              "desc": "Ușa dispare în perete"
+            "in-sina-aluminiu": {
+              "name": "În Șină – Aluminiu",
+              "desc": "Max 5 canate",
+              "maxCanate": 5,
+              "kits": {
+                "1c-920": { "name": "1 canat ≤920mm", "price": 289 },
+                "1c-1420": { "name": "1 canat ≤1420mm", "price": 331 },
+                "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 531 },
+                "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 418 },
+                "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 517 },
+                "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 781 },
+                "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
+                "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
+                "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
+                "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 }
+              }
             }
           },
           "glassTypes": {
-            "10mm-clara": {
-              "name": "Securit 10mm Clară",
-              "pricePerSqm": 69.33,
-              "desc": "Sticlă securizată transparentă"
-            },
-            "10mm-parsol-gri": {
-              "name": "Securit 10mm Parsol Gri",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol gri"
-            },
-            "10mm-parsol-bronze": {
-              "name": "Securit 10mm Parsol Bronze",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol bronze"
-            },
-            "10mm-satin": {
-              "name": "Securit 10mm Satinată",
-              "pricePerSqm": 99.33,
-              "desc": "Sticlă securizată satinată (privacy)"
-            }
+            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
           },
           "options": {
-            "manere": {
-              "name": "Mânere Inox",
-              "price": 127,
-              "desc": "Mâner îngropat sau aplicat"
-            },
-            "incuietoare": {
-              "name": "Încuietoare",
-              "price": 200,
-              "desc": "Cilindru sau magnetic"
-            },
-            "caroiaj": {
-              "name": "Profile Caroiaj",
-              "pricePerSqm": 47,
-              "desc": "Grilaj decorativ"
-            }
+            "maner": { "name": "Mâner în Sticlă MSC7", "price": 77, "desc": "Pereche mânere buzunar" },
+            "incuietoare": { "name": "Încuietoare cu Gheară DQS15", "price": 84, "desc": "Blocare ușă" },
+            "amortizor": { "name": "Amortizor Softbreak", "price": 120, "desc": "61kg, încetinire fină" },
+            "sincron": { "name": "Kit Sincronizare", "price": 261, "desc": "Doar la uși duble+" }
           }
         },
-        "industrial": {
-          "name": "Industrial",
+        "canat-fara-rama": {
+          "name": "Canat Fără Ramă",
+          "desc": "Max 4 canate, 2.8m înălțime. Doar 10mm ESG.",
           "mountTypes": {
-            "perete": {
-              "name": "Prindere pe Perete",
-              "pricePerUnit": 0,
-              "desc": "Șină montată pe perete"
+            "tavan": { "name": "Prindere pe Tavan", "pricePerMeter": 0, "desc": "Șină fixată pe tavan" }
+          },
+          "carucioareTypes": {
+            "la-vedere-inox": {
+              "name": "La Vedere – Inox",
+              "desc": "Design industrial, 1 mobil",
+              "maxCanate": 1,
+              "kits": {
+                "perete-2m": { "name": "Perete 2m", "price": 519 },
+                "perete-3m": { "name": "Perete 3m", "price": 589 },
+                "tavan-2m": { "name": "Tavan 2m", "price": 679 },
+                "tavan-3m": { "name": "Tavan 3m", "price": 808 }
+              }
             },
-            "tavan": {
-              "name": "Prindere pe Tavan",
-              "pricePerUnit": 107,
-              "desc": "Șină ascunsă în tavan"
+            "in-sina-aluminiu": {
+              "name": "În Șină – Aluminiu",
+              "desc": "Max 4 canate",
+              "maxCanate": 4,
+              "kits": {
+                "1c-920": { "name": "1 canat ≤920mm", "price": 296 },
+                "1c-1420": { "name": "1 canat ≤1420mm", "price": 348 },
+                "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 556 },
+                "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 455 },
+                "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 565 },
+                "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 829 }
+              }
             }
           },
-          "panelTypes": null,
           "glassTypes": {
-            "10mm-clara": {
-              "name": "Securit 10mm Clară",
-              "pricePerSqm": 69.33,
-              "desc": "Sticlă securizată transparentă"
-            },
-            "10mm-parsol-gri": {
-              "name": "Securit 10mm Parsol Gri",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol gri"
-            },
-            "10mm-parsol-bronze": {
-              "name": "Securit 10mm Parsol Bronze",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol bronze"
-            },
-            "10mm-satin": {
-              "name": "Securit 10mm Satinată",
-              "pricePerSqm": 99.33,
-              "desc": "Sticlă securizată satinată (privacy)"
-            }
+            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
           },
           "options": {
-            "manere": {
-              "name": "Mânere Inox",
-              "price": 127,
-              "desc": "Mâner îngropat sau aplicat"
-            },
-            "incuietoare": {
-              "name": "Încuietoare",
-              "price": 200,
-              "desc": "Cilindru sau magnetic"
-            },
-            "caroiaj": {
-              "name": "Profile Caroiaj",
-              "pricePerSqm": 47,
-              "desc": "Grilaj decorativ"
-            }
+            "maner": { "name": "Mâner în Sticlă MSC7", "price": 77, "desc": "Pereche mânere buzunar" },
+            "incuietoare": { "name": "Încuietoare cu Gheară DQS15", "price": 84, "desc": "Blocare ușă" },
+            "amortizor": { "name": "Amortizor Softbreak", "price": 120, "desc": "61kg, încetinire fină" },
+            "sincron": { "name": "Kit Sincronizare", "price": 261, "desc": "Doar la uși duble+" },
+            "profil-ornamental": { "name": "Profile Ornamentale (×2 fețe)", "pricePerMeter": 58, "desc": "FOP15 + FOU1013, ambele fețe" }
           }
         },
-        "magica": {
-          "name": "Usă Magică (fără șină)",
+        "feronerie-invizibila": {
+          "name": "Feronerie Invizibilă",
+          "desc": "Fără șină vizibilă, 1 mobil, max 1.7m, 75kg",
+          "price": 349,
           "mountTypes": {
-            "perete": {
-              "name": "Prindere pe Perete",
-              "pricePerUnit": 0,
-              "desc": "Fără șină, prindere directă pe perete"
-            }
+            "perete": { "name": "Prindere pe Perete", "pricePerMeter": 0, "desc": "Prindere directă, invizibilă" }
           },
-          "panelTypes": null,
           "glassTypes": {
-            "10mm-clara": {
-              "name": "Securit 10mm Clară",
-              "pricePerSqm": 69.33,
-              "desc": "Sticlă securizată transparentă"
-            },
-            "10mm-parsol-gri": {
-              "name": "Securit 10mm Parsol Gri",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol gri"
-            },
-            "10mm-parsol-bronze": {
-              "name": "Securit 10mm Parsol Bronze",
-              "pricePerSqm": 109.33,
-              "desc": "Sticlă securizată cu folie Parsol bronze"
-            },
-            "10mm-satin": {
-              "name": "Securit 10mm Satinată",
-              "pricePerSqm": 99.33,
-              "desc": "Sticlă securizată satinată (privacy)"
-            }
+            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
+            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
+            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
           },
-          "options": {
-            "manere": {
-              "name": "Mânere Inox",
-              "price": 127,
-              "desc": "Mâner îngropat sau aplicat"
-            },
-            "incuietoare": {
-              "name": "Încuietoare",
-              "price": 200,
-              "desc": "Cilindru sau magnetic"
-            },
-            "caroiaj": {
-              "name": "Profile Caroiaj",
-              "pricePerSqm": 47,
-              "desc": "Grilaj decorativ"
-            }
-          }
+          "options": {}
         }
       }
     },
