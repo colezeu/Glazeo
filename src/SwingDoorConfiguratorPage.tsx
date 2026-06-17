@@ -220,13 +220,19 @@ export default function SwingDoorConfiguratorPage() {
             </SectionCard>
           )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, position: "sticky", top: 24, alignSelf: "start" }}>
           <PreviewBox>
             <SwingDoorPreview dims={dims} doorType={doorType} glass={glass} />
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
             <img src="/usi-batante.png" alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            {options?.maner && (
+              <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                <img src="/maner-msc7.png" alt="Mâner" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclManer ? 1 : 0.4, border: inclManer ? "1px solid #c8a96e" : "none" }} />
+                <span style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.65rem", alignSelf: "center" }}>Mâner Inox</span>
+              </div>
+            )}
           </div>
           <QuoteSidebar quote={quote} isFormValid={isValid && !isFono} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}

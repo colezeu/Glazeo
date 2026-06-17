@@ -322,7 +322,7 @@ export default function SlidingDoorConfiguratorPage() {
             </div>
           )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, position: "sticky", top: 24, alignSelf: "start" }}>
           <PreviewBox>
             <SlidingDoorPreview dims={dims} typology={typology} carucioare={carucioare} />
           </PreviewBox>
@@ -343,6 +343,12 @@ export default function SlidingDoorConfiguratorPage() {
                 : "/usi-culisante.png"}
                 alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
             }
+            {!isCanatCuRama && (options?.maner || options?.incuietoare) && (
+              <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                {options?.maner && <img src="/maner-msc7.png" alt="Mâner" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclManer ? 1 : 0.35, border: inclManer ? "1px solid #c8a96e" : "none" }} />}
+                {options?.incuietoare && <img src="/incuietoare-dqs15.png" alt="Încuietoare" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclInc ? 1 : 0.35, border: inclInc ? "1px solid #c8a96e" : "none" }} />}
+              </div>
+            )}
           </div>
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
