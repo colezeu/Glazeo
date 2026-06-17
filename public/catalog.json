@@ -1536,7 +1536,9 @@
                   "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 517 },
                   "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 781 },
                   "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
-                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 }
+                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
+                  "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
+                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 }
                 }
               }
             }
@@ -1592,7 +1594,9 @@
                   "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 517 },
                   "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 781 },
                   "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
-                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 }
+                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
+                  "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
+                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 }
                 }
               }
             }

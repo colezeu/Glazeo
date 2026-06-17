@@ -266,7 +266,7 @@ export default function SlidingDoorConfiguratorPage() {
             <SectionCard num="07" label="Accesorii">
               {options.maner && (
                 <div>
-                  <ToggleOption checked={inclManer} onChange={setInclManer} label={options.maner.name} desc="" price={`${options.maner.price}€`} />
+                  <ToggleOption checked={inclManer} onChange={(v) => { setInclManer(v); if (v) setInclInc(false); }} label={options.maner.name} desc="" price={`${options.maner.price}€`} />
                   <div style={{ display: "flex", gap: 8, marginTop: 4, marginLeft: 12 }}>
                     <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: 60, height: 36, objectFit: "contain", borderRadius: 8, filter: "invert(0.92)", opacity: 0.5 }} />
                   </div>
@@ -274,7 +274,7 @@ export default function SlidingDoorConfiguratorPage() {
               )}
               {options.incuietoare && (
                 <div>
-                  <ToggleOption checked={inclInc} onChange={setInclInc} label={options.incuietoare.name} desc="" price={`${options.incuietoare.price}€`} />
+                  <ToggleOption checked={inclInc} onChange={(v) => { setInclInc(v); if (v) setInclManer(false); }} label={options.incuietoare.name} desc="" price={`${options.incuietoare.price}€`} />
                   <div style={{ display: "flex", gap: 8, marginTop: 4, marginLeft: 12 }}>
                     <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: 60, height: 36, objectFit: "contain", borderRadius: 8, filter: "invert(0.92)", opacity: 0.5 }} />
                   </div>
@@ -309,6 +309,8 @@ export default function SlidingDoorConfiguratorPage() {
                 : kit === "2fix-dubla-4m" ? "/culisante-2fix-dubla.png"
                 : kit?.includes("buzunar") ? "/culisante-buzunar.png"
                 : kit?.includes("2c-1fix") ? "/culisante-2c-1fix.png"
+                : kit?.includes("3c-buzunar") ? "/culisante-3c-buzunar.png"
+                : kit?.includes("3c-1fix") ? "/culisante-3c-1fix.png"
                 : "/usi-culisante.png"}
                 alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
             }
