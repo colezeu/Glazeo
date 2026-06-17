@@ -306,8 +306,9 @@ export default function SlidingDoorConfiguratorPage() {
                 : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
                 : kit === "2c-1940" ? "/culisante-dubla.png"
                 : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
+                : kit === "2fix-dubla-4m" ? "/culisante-2fix-dubla.png"
                 : kit?.includes("buzunar") ? "/culisante-buzunar.png"
-                : kit?.includes("2fix") ? "/culisante-fix-mobil.png"
+                : kit?.includes("2c-1fix") ? "/culisante-2c-1fix.png"
                 : "/usi-culisante.png"}
                 alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
             }
