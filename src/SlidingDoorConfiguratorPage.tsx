@@ -119,6 +119,7 @@ export default function SlidingDoorConfiguratorPage() {
           if (cfg.inclInc !== undefined) setInclInc(cfg.inclInc);
           if (cfg.inclAmortizor !== undefined) setInclAmortizor(cfg.inclAmortizor);
           if (cfg.inclSincron !== undefined) setInclSincron(cfg.inclSincron);
+          if (cfg.nrCanate) setNrCanate(cfg.nrCanate);
         }
       } catch (e) { /* ignore */ }
       localStorage.removeItem('loadProject');
@@ -129,6 +130,8 @@ export default function SlidingDoorConfiguratorPage() {
   const typs = p?.typologies as Record<string, Record<string, unknown>> | undefined;
   const ty = typs?.[typology];
   const isInvizibila = typology === "feronerie-invizibila";
+  const isCanatCuRama = typology === "canat-cu-rama";
+  const [nrCanate, setNrCanate] = useState(5);
   const isValid = !!(dims.width && dims.height && ty);
 
   const calculate = async () => {
@@ -141,6 +144,8 @@ export default function SlidingDoorConfiguratorPage() {
     let kitP = 0;
     if (isInvizibila) {
       kitP = (ty.price as number) || 349;
+    } else if (isCanatCuRama) {
+      kitP = ((ty.basePrice as number) || 2000) - ((5 - nrCanate) * ((ty.pricePerCanatMinus as number) || 110));
     } else {
       const carts = ty.carucioareTypes as Record<string, Record<string, unknown>>;
       const cart = carts?.[carucioare];
@@ -198,7 +203,7 @@ export default function SlidingDoorConfiguratorPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă"
-        config={{ dims, typology, mount, carucioare, kit, glass, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }} />
+        config={{ dims, typology, mount, carucioare, kit, glass, nrCanate, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }} />
       <ConfigHeader title="Configurator Uși Culisante" quote={quote} />
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -210,7 +215,7 @@ export default function SlidingDoorConfiguratorPage() {
             ))}
           </SectionCard>
 
-          {!isInvizibila && carts && (
+          {!isInvizibila && !isCanatCuRama && carts && (
             <SectionCard num="02" label="Tip Cărucioare">
               {Object.entries(carts).map(([k, c]) => (
                 <OptionBtn key={k} selected={carucioare === k} onClick={() => {
@@ -237,7 +242,30 @@ export default function SlidingDoorConfiguratorPage() {
             </SectionCard>
           )}
 
-          {currentKits && (
+          {isCanatCuRama && (
+            <>
+              <SectionCard num="02" label="Număr Canate">
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  {[1, 2, 3, 4, 5].map(n => (
+                    <button key={n} onClick={() => setNrCanate(n)}
+                      style={{
+                        padding: "10px 16px", borderRadius: 10, border: nrCanate === n ? "2px solid #c8a96e" : "2px solid rgba(200,169,110,0.25)",
+                        background: nrCanate === n ? "rgba(200,169,110,0.12)" : "transparent",
+                        color: nrCanate === n ? "#c8a96e" : "rgba(240,237,232,0.5)", cursor: "pointer", fontSize: "0.9rem"
+                      }}>{n}</button>
+                  ))}
+                </div>
+                {nrCanate < 5 && <div style={{ color: "rgba(200,169,110,0.5)", fontSize: "0.75rem", marginTop: 6 }}>−{(5 - nrCanate) * 110}€ reducere</div>}
+              </SectionCard>
+              <div style={{ padding: 12, borderRadius: 12, background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", color: "rgba(200,169,110,0.7)", fontSize: "0.85rem", textAlign: "center" }}>
+                Feronerie {2000 - (5 - nrCanate) * 110}€ + TVA — max 3.9m
+              </div>
+            </>
+          )}
+
+          {!isCanatCuRama && (<></>)}
+
+          {currentKits && !isCanatCuRama && (
             <SectionCard num={hasMountKits ? "04" : isInvizibila ? "02" : "03"} label="Kit Montaj">
               {Object.entries(currentKits).map(([k, d]) => (
                 <OptionBtn key={k} selected={kit === k} onClick={() => setKit(k)} label={d.name}
@@ -302,6 +330,7 @@ export default function SlidingDoorConfiguratorPage() {
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
             {(inclManer && !inclInc) ? <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
             : (inclInc && !inclManer) ? <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            : isCanatCuRama ? (<img src="/usi-culisante.png" alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
             : (<img src={isInvizibila ? "/usi-culisante.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
                 : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
                 : kit === "2c-1940" ? "/culisante-dubla.png"
@@ -338,7 +367,7 @@ export default function SlidingDoorConfiguratorPage() {
 
       {showSaveModal && (
         <SaveProjectModal productType="sliding"
-          config={{ dims, typology, mount, carucioare, kit, glass, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }}
+          config={{ dims, typology, mount, carucioare, kit, glass, nrCanate, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }}
           onClose={() => setShowSaveModal(false)} />
       )}
     </div>

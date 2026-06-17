@@ -1571,48 +1571,17 @@
         },
         "canat-cu-rama": {
           "name": "Canat cu Ramă",
-          "desc": "Max 5 canate, 2.8m înălțime. Doar 10mm ESG.",
-          "carucioareTypes": {
-            "in-sina-aluminiu": {
-              "name": "În Șină – Aluminiu",
-              "desc": "Max 5 canate",
-              "maxCanate": 5,
-              "mountKits": {
-                "perete": {
-                  "1c-920": { "name": "1 canat ≤920mm", "price": 296 },
-                  "1c-1420": { "name": "1 canat ≤1420mm", "price": 348 },
-                  "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 556 },
-                  "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 455 },
-                  "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 565 },
-                  "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 829 }
-                },
-                "tavan": {
-                  "1c-920": { "name": "1 canat ≤920mm", "price": 289 },
-                  "1c-1420": { "name": "1 canat ≤1420mm", "price": 331 },
-                  "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 531 },
-                  "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 418 },
-                  "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 517 },
-                  "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 781 },
-                  "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
-                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
-                  "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
-                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 }
-                }
-              }
-            }
-          },
+          "desc": "Max 3.9m, max 5 canate. Doar 10mm ESG.",
+          "basePrice": 2000,
+          "pricePerCanatMinus": 110,
+          "maxCanate": 5,
           "glassTypes": {
             "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
             "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
             "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
             "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
           },
-          "options": {
-            "maner": { "name": "Mâner în Sticlă MSC7", "price": 77, "desc": "Pereche mânere buzunar" },
-            "incuietoare": { "name": "Încuietoare cu Gheară DQS15", "price": 84, "desc": "Blocare ușă" },
-            "amortizor": { "name": "Amortizor Softbreak", "price": 120, "desc": "61kg, încetinire fină" },
-            "sincron": { "name": "Kit Sincronizare", "price": 261, "desc": "Doar la uși duble+" }
-          }
+          "options": {}
         }
       }
     },
