@@ -224,6 +224,10 @@ export default function SwingDoorConfiguratorPage() {
           <PreviewBox>
             <SwingDoorPreview dims={dims} doorType={doorType} glass={glass} />
           </PreviewBox>
+          <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
+            <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
+            <img src="/usi-batante.png" alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+          </div>
           <QuoteSidebar quote={quote} isFormValid={isValid && !isFono} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
             lines={quote ? [
