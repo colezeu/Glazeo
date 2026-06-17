@@ -328,10 +328,8 @@ export default function SlidingDoorConfiguratorPage() {
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
-            {(inclManer && !inclInc) ? <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
-            : (inclInc && !inclManer) ? <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
-            : isCanatCuRama ? (<img src="/canat-cu-rama.png" alt="Canat cu Ramă" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
-            : (<img src={isInvizibila ? "/feronerie-invizibila.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
+            {isCanatCuRama ? <img src="/canat-cu-rama.png" alt="Canat cu Ramă" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            : <img src={isInvizibila ? "/feronerie-invizibila.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
                 : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
                 : kit === "2c-1940" ? "/culisante-dubla.png"
                 : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
@@ -340,9 +338,9 @@ export default function SlidingDoorConfiguratorPage() {
                 : kit?.includes("2c-1fix") ? "/culisante-2c-1fix.png"
                 : kit?.includes("3c-buzunar") ? "/culisante-3c-buzunar.png"
                 : kit?.includes("3c-1fix") ? "/culisante-3c-1fix.png"
-                : "/usi-culisante.png"}
-                alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
-            }
+                : "/usi-culisante.png"} alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />}
+            {inclManer && <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginTop: 8 }} />}
+            {inclInc && <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginTop: 8 }} />}
             {!isCanatCuRama && (options?.maner || options?.incuietoare) && (
               <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                 {options?.maner && <img src="/maner-msc7.png" alt="Mâner" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclManer ? 1 : 0.35, border: inclManer ? "1px solid #c8a96e" : "none" }} />}
