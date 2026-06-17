@@ -1,4 +1,3 @@
-// @ts-nocheck
 import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.tsx";
@@ -16,18 +15,14 @@ function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: str
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
-      {/* Sina / track */}
       {!isInvizibila && (
         <rect x={x0 - 6} y={y0 - (hasSina ? 7 : 4)} width={dW + 12} height={hasSina ? 6 : 3}
           fill={hasSina ? "rgba(200,169,110,0.2)" : "rgba(200,169,110,0.35)"} rx="2" />
       )}
-      {/* Podea */}
       {!isInvizibila && (
         <line x1={x0 - 12} y1={y0 + dH} x2={x0 + dW + 12} y2={y0 + dH} stroke="rgba(200,169,110,0.3)" strokeWidth="2" />
       )}
-      {/* Sticla */}
       <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
-      {/* Cărucioare */}
       {!isInvizibila && carucioare === "la-vedere-inox" && (
         <>
           <circle cx={x0 + dW * 0.3} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
@@ -36,7 +31,6 @@ function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: str
           <line x1={x0 + dW * 0.7} y1={y0} x2={x0 + dW * 0.7} y2={y0 + 14} stroke="rgba(200,200,200,0.4)" strokeWidth="1.5" />
         </>
       )}
-      {/* Mâner */}
       <rect x={x0 + dW * 0.15} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
       <text x={W / 2} y={H - 6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
         {dims.width}m × {dims.height}m
@@ -50,14 +44,13 @@ export default function SlidingDoorConfiguratorPage() {
   const [vatRate, setVatRate] = useState(0.19);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
 
-  const [typology, setTypology] = useState("canat-cu-rama");
-  const [mount, setMount] = useState("tavan");
+  const [typology, setTypology] = useState("canat-fara-rama");
   const [carucioare, setCarucioare] = useState("la-vedere-inox");
+  const [mount, setMount] = useState("perete");
   const [kit, setKit] = useState("perete-2m");
   const [dims, setDims] = useState({ width: "1.0", height: "2.1" });
   const [glass, setGlass] = useState("10mm-clar");
 
-  // Options
   const [inclManer, setInclManer] = useState(false);
   const [inclInc, setInclInc] = useState(false);
   const [inclAmortizor, setInclAmortizor] = useState(false);
@@ -81,30 +74,34 @@ export default function SlidingDoorConfiguratorPage() {
 
   useEffect(() => { getUserMultiplier().then(m => setPriceMultiplier(m)); }, []);
 
-  // Reset sub-selections when typology changes
   useEffect(() => {
     if (!product) return;
     const p = product as Record<string, unknown>;
     const typs = p.typologies as Record<string, Record<string, unknown>>;
     const ty = typs?.[typology];
     if (ty) {
-      const mounts = ty.mountTypes as Record<string, unknown>;
-      setMount(Object.keys(mounts)[0] || "tavan");
       const carts = ty.carucioareTypes as Record<string, Record<string, unknown>>;
       if (carts) {
         const firstCart = Object.keys(carts)[0];
         setCarucioare(firstCart);
-        const kits = carts[firstCart]?.kits as Record<string, unknown>;
-        setKit(Object.keys(kits || {})[0] || "");
+        const cart = carts[firstCart];
+        const mountKits = cart?.mountKits as Record<string, Record<string, unknown>>;
+        if (mountKits) {
+          const firstMount = Object.keys(mountKits)[0];
+          setMount(firstMount);
+          const mKits = mountKits[firstMount];
+          setKit(Object.keys(mKits || {})[0] || "");
+        } else {
+          const cKits = cart?.kits as Record<string, unknown>;
+          setKit(Object.keys(cKits || {})[0] || "");
+        }
       }
       const glasses = ty.glassTypes as Record<string, unknown>;
       setGlass(Object.keys(glasses || {})[0] || "10mm-clar");
     }
-    // Reset options
     setInclManer(false); setInclInc(false); setInclAmortizor(false); setInclSincron(false); setInclProfilOrnamental(false);
   }, [typology, product]);
 
-  // Restore saved project
   useEffect(() => {
     const saved = localStorage.getItem('loadProject');
     if (saved) {
@@ -122,7 +119,6 @@ export default function SlidingDoorConfiguratorPage() {
           if (cfg.inclInc !== undefined) setInclInc(cfg.inclInc);
           if (cfg.inclAmortizor !== undefined) setInclAmortizor(cfg.inclAmortizor);
           if (cfg.inclSincron !== undefined) setInclSincron(cfg.inclSincron);
-          if (cfg.inclProfilOrnamental !== undefined) setInclProfilOrnamental(cfg.inclProfilOrnamental);
         }
       } catch (e) { /* ignore */ }
       localStorage.removeItem('loadProject');
@@ -148,8 +144,13 @@ export default function SlidingDoorConfiguratorPage() {
     } else {
       const carts = ty.carucioareTypes as Record<string, Record<string, unknown>>;
       const cart = carts?.[carucioare];
-      const kits = cart?.kits as Record<string, { price: number }>;
-      kitP = kits?.[kit]?.price || 0;
+      const mountKits = cart?.mountKits as Record<string, Record<string, { price: number }>>;
+      if (mountKits) {
+        kitP = mountKits[mount]?.[kit]?.price || 0;
+      } else {
+        const cKits = cart?.kits as Record<string, { price: number }>;
+        kitP = cKits?.[kit]?.price || 0;
+      }
     }
 
     const glassTypes = ty.glassTypes as Record<string, { pricePerSqm: number }>;
@@ -161,7 +162,7 @@ export default function SlidingDoorConfiguratorPage() {
     const amortP = inclAmortizor && opts?.amortizor ? (opts.amortizor.price || 0) : 0;
     const sincP = inclSincron && opts?.sincron ? (opts.sincron.price || 0) : 0;
     const profilP = inclProfilOrnamental && opts?.["profil-ornamental"]
-      ? (opts["profil-ornamental"].pricePerMeter || 0) * h * 2 : 0; // ×2 fețe
+      ? (opts["profil-ornamental"].pricePerMeter || 0) * h * 2 : 0;
 
     const raw = (p.basePrice as number || 0) + kitP + glP + manP + incP + amortP + sincP + profilP;
     const { subtotal, vat, total } = calcQuote(raw, vatRate);
@@ -184,10 +185,12 @@ export default function SlidingDoorConfiguratorPage() {
 
   if (!p) return <PageLoader />;
 
-  const mounts = ty?.mountTypes as Record<string, { name: string; desc: string }> | undefined;
-  const carts = ty?.carucioareTypes as Record<string, { name: string; desc: string; kits: Record<string, { name: string; price: number }> }> | undefined;
+  const carts = ty?.carucioareTypes as Record<string, { name: string; desc: string; kits?: Record<string, { name: string; price: number }>; mountKits?: Record<string, Record<string, { name: string; price: number }>> }> | undefined;
   const currentCart = carts?.[carucioare];
-  const currentKits = currentCart?.kits as Record<string, { name: string; price: number }> | undefined;
+  const hasMountKits = !!currentCart?.mountKits;
+  const currentKits = hasMountKits
+    ? (currentCart?.mountKits as Record<string, Record<string, { name: string; price: number }>>)?.[mount]
+    : (currentCart?.kits as Record<string, { name: string; price: number }>);
   const glassTypes = ty?.glassTypes as Record<string, { name: string; pricePerSqm: number }> | undefined;
   const options = ty?.options as Record<string, { name: string; price?: number; pricePerMeter?: number }> | undefined;
   const hasRama = typology === "canat-cu-rama";
@@ -201,7 +204,7 @@ export default function SlidingDoorConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
           <SectionCard num="01" label="Tipologie">
-            {Object.entries(typs).map(([k, t]) => (
+            {Object.entries(typs || {}).map(([k, t]) => (
               <OptionBtn key={k} selected={typology === k} onClick={() => setTypology(k)}
                 label={(t as { name: string }).name} desc={(t as { desc: string }).desc} center />
             ))}
@@ -210,14 +213,32 @@ export default function SlidingDoorConfiguratorPage() {
           {!isInvizibila && carts && (
             <SectionCard num="02" label="Tip Cărucioare">
               {Object.entries(carts).map(([k, c]) => (
-                <OptionBtn key={k} selected={carucioare === k} onClick={() => { setCarucioare(k); const cKits = c.kits; setKit(Object.keys(cKits)[0]); }}
-                  label={c.name} desc={c.desc} center />
+                <OptionBtn key={k} selected={carucioare === k} onClick={() => {
+                  setCarucioare(k);
+                  const mk = c.mountKits;
+                  if (mk) { setMount(Object.keys(mk)[0]); setKit(Object.keys(mk[Object.keys(mk)[0]])[0]); }
+                  else if (c.kits) { setKit(Object.keys(c.kits)[0]); }
+                }} label={c.name} desc={c.desc} center />
               ))}
             </SectionCard>
           )}
 
-          {currentKits && !isInvizibila && (
-            <SectionCard num="03" label="Kit Montaj">
+          {hasMountKits && (
+            <SectionCard num="03" label="Prindere">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                {Object.keys(currentCart?.mountKits || {}).map(m => (
+                  <OptionBtn key={m} selected={mount === m} onClick={() => {
+                    setMount(m);
+                    const mk = (currentCart?.mountKits as Record<string, Record<string, unknown>>)?.[m];
+                    setKit(Object.keys(mk || {})[0] || "");
+                  }} label={m === "perete" ? "Perete" : "Tavan"} center />
+                ))}
+              </div>
+            </SectionCard>
+          )}
+
+          {currentKits && (
+            <SectionCard num={hasMountKits ? "04" : isInvizibila ? "02" : "03"} label="Kit Montaj">
               {Object.entries(currentKits).map(([k, d]) => (
                 <OptionBtn key={k} selected={kit === k} onClick={() => setKit(k)} label={d.name}
                   price={d.price > 0 ? `${d.price}€` : "Standard"} />
@@ -226,7 +247,7 @@ export default function SlidingDoorConfiguratorPage() {
           )}
 
           {glassTypes && (
-            <SectionCard num={currentKits ? "04" : isInvizibila ? "02" : "03"} label="Sticlă 10mm ESG">
+            <SectionCard num={currentKits ? "05" : isInvizibila ? "02" : "04"} label="Sticlă 10mm ESG">
               {Object.entries(glassTypes).map(([k, d]) => (
                 <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name}
                   price={`${d.pricePerSqm}€/m²`} />
@@ -234,7 +255,7 @@ export default function SlidingDoorConfiguratorPage() {
             </SectionCard>
           )}
 
-          <SectionCard num={currentKits ? "05" : isInvizibila ? "03" : "04"} label="Dimensiuni">
+          <SectionCard num="06" label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} step="0.05" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} step="0.05" />
@@ -242,7 +263,7 @@ export default function SlidingDoorConfiguratorPage() {
           </SectionCard>
 
           {options && Object.keys(options).length > 0 && (
-            <SectionCard num="06" label="Accesorii">
+            <SectionCard num="07" label="Accesorii">
               {options.maner && (
                 <div>
                   <ToggleOption checked={inclManer} onChange={setInclManer} label={options.maner.name} desc="" price={`${options.maner.price}€`} />
@@ -286,6 +307,7 @@ export default function SlidingDoorConfiguratorPage() {
                 : kit === "2c-1940" ? "/culisante-dubla.png"
                 : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
                 : kit?.includes("buzunar") ? "/culisante-buzunar.png"
+                : kit?.includes("2fix") ? "/culisante-fix-mobil.png"
                 : "/usi-culisante.png"}
                 alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
             }
