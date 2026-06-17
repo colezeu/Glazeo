@@ -279,17 +279,16 @@ export default function SlidingDoorConfiguratorPage() {
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
-            {inclManer && <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginBottom: 8 }} />}
-            {inclInc && <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginBottom: 8 }} />}
-            {(!inclManer && !inclInc) && (
-              <img src={isInvizibila ? "/usi-culisante.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
+            {(inclManer && !inclInc) ? <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            : (inclInc && !inclManer) ? <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            : (<img src={isInvizibila ? "/usi-culisante.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
                 : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
                 : kit === "2c-1940" ? "/culisante-dubla.png"
                 : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
                 : kit?.includes("buzunar") ? "/culisante-buzunar.png"
                 : "/usi-culisante.png"}
-                alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
-            )}
+                alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />)
+            }
           </div>
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
