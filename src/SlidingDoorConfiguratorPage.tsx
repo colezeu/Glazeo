@@ -184,7 +184,6 @@ export default function SlidingDoorConfiguratorPage() {
 
   if (!p) return <PageLoader />;
 
-  consttyp = typs || {};
   const mounts = ty?.mountTypes as Record<string, { name: string; desc: string }> | undefined;
   const carts = ty?.carucioareTypes as Record<string, { name: string; desc: string; kits: Record<string, { name: string; price: number }> }> | undefined;
   const currentCart = carts?.[carucioare];
