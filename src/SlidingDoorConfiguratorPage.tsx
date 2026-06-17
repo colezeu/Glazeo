@@ -243,8 +243,22 @@ export default function SlidingDoorConfiguratorPage() {
 
           {options && Object.keys(options).length > 0 && (
             <SectionCard num="06" label="Accesorii">
-              {options.maner && <ToggleOption checked={inclManer} onChange={setInclManer} label={options.maner.name} desc="" price={`${options.maner.price}€`} />}
-              {options.incuietoare && <ToggleOption checked={inclInc} onChange={setInclInc} label={options.incuietoare.name} desc="" price={`${options.incuietoare.price}€`} />}
+              {options.maner && (
+                <div>
+                  <ToggleOption checked={inclManer} onChange={setInclManer} label={options.maner.name} desc="" price={`${options.maner.price}€`} />
+                  <div style={{ display: "flex", gap: 8, marginTop: 4, marginLeft: 12 }}>
+                    <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: 60, height: 36, objectFit: "contain", borderRadius: 8, filter: "invert(0.92)", opacity: 0.5 }} />
+                  </div>
+                </div>
+              )}
+              {options.incuietoare && (
+                <div>
+                  <ToggleOption checked={inclInc} onChange={setInclInc} label={options.incuietoare.name} desc="" price={`${options.incuietoare.price}€`} />
+                  <div style={{ display: "flex", gap: 8, marginTop: 4, marginLeft: 12 }}>
+                    <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: 60, height: 36, objectFit: "contain", borderRadius: 8, filter: "invert(0.92)", opacity: 0.5 }} />
+                  </div>
+                </div>
+              )}
               {options.amortizor && <ToggleOption checked={inclAmortizor} onChange={setInclAmortizor} label={options.amortizor.name} desc="" price={`${options.amortizor.price}€`} />}
               {options.sincron && <ToggleOption checked={inclSincron} onChange={setInclSincron} label={options.sincron.name} desc="" price={`${options.sincron.price}€`} />}
               {options["profil-ornamental"] && hasRama && (
@@ -265,13 +279,17 @@ export default function SlidingDoorConfiguratorPage() {
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
-            <img src={isInvizibila ? "/usi-culisante.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
-              : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
-              : kit === "2c-1940" ? "/culisante-dubla.png"
-              : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
-              : kit?.includes("buzunar") ? "/culisante-buzunar.png"
-              : "/usi-culisante.png"}
-              alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            {inclManer && <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginBottom: 8 }} />}
+            {inclInc && <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginBottom: 8 }} />}
+            {(!inclManer && !inclInc) && (
+              <img src={isInvizibila ? "/usi-culisante.png" : carucioare === "la-vedere-inox" ? "/culisante-la-vedere-inox.png"
+                : kit === "1c-920" || kit === "1c-1420" ? "/culisante-1canat.png"
+                : kit === "2c-1940" ? "/culisante-dubla.png"
+                : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
+                : kit?.includes("buzunar") ? "/culisante-buzunar.png"
+                : "/usi-culisante.png"}
+                alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            )}
           </div>
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
