@@ -7,23 +7,30 @@ import QuoteModal from "./QuoteModal.js";
 function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: string; height: string }; typology: string; carucioare: string }) {
   const w = parseFloat(dims.width) || 1.2, h = parseFloat(dims.height) || 2.1;
   const isInvizibila = typology === "feronerie-invizibila";
+  const isCanatCuRama = typology === "canat-cu-rama";
   const W = 308, H = 200, M = 16;
   const sc = Math.min((W - M * 2) / w, (H - M * 2) / h);
   const dW = w * sc, dH = h * sc;
   const x0 = (W - dW) / 2, y0 = (H - dH) / 2;
   const hasSina = carucioare === "in-sina-aluminiu";
+  const frameW = isCanatCuRama ? 8 : 0;
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
-      {!isInvizibila && (
+      {!isInvizibila && !isCanatCuRama && (
         <rect x={x0 - 6} y={y0 - (hasSina ? 7 : 4)} width={dW + 12} height={hasSina ? 6 : 3}
           fill={hasSina ? "rgba(200,169,110,0.2)" : "rgba(200,169,110,0.35)"} rx="2" />
       )}
-      {!isInvizibila && (
+      {!isInvizibila && !isCanatCuRama && (
         <line x1={x0 - 12} y1={y0 + dH} x2={x0 + dW + 12} y2={y0 + dH} stroke="rgba(200,169,110,0.3)" strokeWidth="2" />
       )}
-      <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
-      {!isInvizibila && carucioare === "la-vedere-inox" && (
+      {/* Rama perimetrala pentru canat cu rama */}
+      {isCanatCuRama ? (
+        <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.06)" stroke="rgba(200,169,110,0.7)" strokeWidth={frameW} rx="2" />
+      ) : (
+        <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
+      )}
+      {!isInvizibila && !isCanatCuRama && carucioare === "la-vedere-inox" && (
         <>
           <circle cx={x0 + dW * 0.3} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
           <circle cx={x0 + dW * 0.7} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
@@ -31,9 +38,11 @@ function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: str
           <line x1={x0 + dW * 0.7} y1={y0} x2={x0 + dW * 0.7} y2={y0 + 14} stroke="rgba(200,200,200,0.4)" strokeWidth="1.5" />
         </>
       )}
-      <rect x={x0 + dW * 0.15} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
+      {!isCanatCuRama && (
+        <rect x={x0 + dW * 0.15} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
+      )}
       <text x={W / 2} y={H - 6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
-        {dims.width}m × {dims.height}m
+        {dims.width}m × {dims.height}m{isCanatCuRama ? " · Canat cu Ramă" : ""}
       </text>
     </svg>
   );
