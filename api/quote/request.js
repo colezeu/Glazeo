@@ -205,6 +205,7 @@ export default async function handler(req, res) {
     const recipients = [TO_EMAIL];
     if (CC_EMAIL) recipients.push(CC_EMAIL);
 
+    // 1. Notificare către Cornel
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -223,9 +224,67 @@ export default async function handler(req, res) {
     if (!resendRes.ok) {
       const err = await resendRes.text();
       console.error("[quote] Resend error:", err);
-      // Nu returnăm eroare clientului — cererea e înregistrată
     } else {
       console.log("[quote] Email trimis cu succes via Resend");
+    }
+
+    // 2. Ofertă către CLIENT — email cu prețurile direct
+    const clientEmailHtml = `<!DOCTYPE html>
+<html lang="ro">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:40px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+<tr><td style="background:#0f1117;border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
+<img src="${LOGO_URL}" alt="Glazeo" height="36" style="max-width:200px;filter:invert(1);opacity:0.95;display:block;margin:0 auto;">
+<p style="margin:14px 0 0;color:#c8a96e;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;">Oferta ta personalizată</p>
+</td></tr>
+<tr><td style="background:#ffffff;padding:28px 40px;">
+<p style="margin:0;font-size:18px;font-weight:700;color:#111827;">Bună ziua, ${client?.name || ""}</p>
+<p style="margin:12px 0 0;font-size:14px;color:#4b5563;line-height:1.6;">Îți mulțumim pentru interes! Mai jos găsești estimarea pentru <strong>${productName || "produsul solicitat"}</strong>.</p>
+</td></tr>
+<tr><td style="background:#ffffff;padding:0 40px 28px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f1117;border-radius:12px;overflow:hidden;">
+<tr><td style="padding:24px;text-align:center;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#c8a96e;text-transform:uppercase;letter-spacing:1.5px;">Total estimat</p>
+<p style="margin:0;font-size:32px;font-weight:800;color:#c8a96e;">${totalFormatted}</p>
+<p style="margin:8px 0 0;font-size:12px;color:rgba(200,169,110,0.6);">Subtotal: ${quote?.subtotal || "—"}€ + TVA: ${quote?.vat || "—"}€</p>
+</td></tr></table>
+</td></tr>
+${configRows ? `<tr><td style="background:#ffffff;padding:0 40px 28px;">
+<p style="margin:0 0 12px;font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1.5px;">Configurația ta</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #f3f4f6;border-radius:12px;overflow:hidden;">${configRows}</table>
+</td></tr>` : ""}
+<tr><td style="background:#ffffff;border-radius:0 0 16px 16px;padding:0 40px 36px;">
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">Prețurile sunt estimative și nu includ transportul sau montajul. Pentru o ofertă fermă, <a href="mailto:office@glass.associates" style="color:#c8a96e;">contactează-ne</a>.</p>
+</td></tr>
+<tr><td style="padding:20px 40px;text-align:center;">
+<p style="margin:0;font-size:11px;color:#9ca3af;">Glass Associates SRL · <a href="https://glazeo.ro" style="color:#9ca3af;">glazeo.ro</a> · office@glass.associates</p>
+</td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+
+    const clientRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [client.email],
+        subject: `Oferta ta — ${productName || "Produs"} | Glazeo`,
+        html: clientEmailHtml,
+      }),
+    });
+
+    if (!clientRes.ok) {
+      const err = await clientRes.text();
+      console.error("[quote] Client email error:", err);
+    } else {
+      console.log("[quote] Email trimis și către client");
     }
 
     return sendJson(res, 200, { ok: true, message: "Cerere înregistrată" });
