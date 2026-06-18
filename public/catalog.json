@@ -1441,47 +1441,133 @@
           "name": "Full Glass cu Amortizor Hidraulic",
           "desc": "Canat full glass, balama inferioară cu amortizor soft-close",
           "variants": {
-            "fara-luminator": { "name": "Fără Luminator", "price": 176, "desc": "Doar canatul" },
-            "cu-luminator": { "name": "Cu Luminator", "price": 252, "desc": "Canat + luminator superior" }
+            "fara-luminator": {
+              "name": "Fără Luminator",
+              "price": 176,
+              "desc": "Doar canatul"
+            },
+            "cu-luminator": {
+              "name": "Cu Luminator",
+              "price": 252,
+              "desc": "Canat + luminator superior"
+            }
           },
           "glassTypes": {
-            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "Securit 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {
-            "maner": { "name": "Mâner Inox", "price": 55, "desc": "Mâner interax 300mm" }
+            "maner": {
+              "name": "Mâner Inox",
+              "price": 55,
+              "desc": "Mâner interax 300mm"
+            }
           }
         },
         "full-glass-toc-zidarie": {
           "name": "Full Glass cu Toc Aluminiu – Zidărie",
           "desc": "Canat full glass cu toc aluminiu, montat în perete de zidărie",
           "variants": {
-            "tip-l": { "name": "Tip L (montat în spalet)", "price": 265, "desc": "Fixare directă" },
-            "tip-z": { "name": "Tip Z (montat pe colț)", "price": 631, "desc": "Kit IMBOTTE 148AL" }
+            "tip-l": {
+              "name": "Tip L (montat în spalet)",
+              "price": 265,
+              "desc": "Fixare directă"
+            },
+            "tip-z": {
+              "name": "Tip Z (montat pe colț)",
+              "price": 631,
+              "desc": "Kit IMBOTTE 148AL"
+            },
+            "cu-luminator": {
+              "name": "Cu Luminator",
+              "price": 869,
+              "desc": "Kit PROFIXDOOR 4ALSQ, cheie unică"
+            }
           },
           "glassTypes": {
-            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "Securit 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {
-            "maner": { "name": "Mâner Inox", "price": 55, "desc": "Mâner interax 300mm" }
+            "maner": {
+              "name": "Mâner Inox",
+              "price": 55,
+              "desc": "Mâner interax 300mm"
+            }
           }
         },
         "full-glass-toc-sticla": {
           "name": "Full Glass cu Toc – Perete Sticlă",
           "desc": "Canat full glass cu toc aluminiu, montat în perete de sticlă existent",
           "variants": {
-            "standard": { "name": "Kit PROFIXDOOR", "price": 869, "desc": "Kit complet PROFIXDOOR 4ALSQ" }
+            "standard": {
+              "name": "Kit PROFIXDOOR",
+              "price": 869,
+              "desc": "Kit complet PROFIXDOOR 4ALSQ"
+            },
+            "cu-luminator": {
+              "name": "Cu Luminator",
+              "price": 869,
+              "desc": "Kit PROFIXDOOR 4ALSQ, cheie unică"
+            }
           },
           "glassTypes": {
-            "10mm-clar": { "name": "Securit 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "Securit 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "Securit 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "Securit 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "Securit 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "Securit 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "Securit 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "Securit 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {}
         },
@@ -1489,7 +1575,11 @@
           "name": "Foaie Înrămată – Izolație Fonică",
           "desc": "Sticlă înrămată cu toc aluminiu, garnituri multiple",
           "variants": {
-            "pret-cerere": { "name": "Preț la Cerere", "price": 0, "desc": "Consultă-ne pentru ofertă personalizată" }
+            "pret-cerere": {
+              "name": "Preț la Cerere",
+              "price": 0,
+              "desc": "Consultă-ne pentru ofertă personalizată"
+            }
           },
           "glassTypes": {},
           "options": {}
@@ -1509,10 +1599,22 @@
               "desc": "Design industrial, 1 mobil",
               "maxCanate": 1,
               "kits": {
-                "perete-2m": { "name": "Perete 2m", "price": 519 },
-                "perete-3m": { "name": "Perete 3m", "price": 589 },
-                "tavan-2m": { "name": "Tavan 2m", "price": 679 },
-                "tavan-3m": { "name": "Tavan 3m", "price": 808 }
+                "perete-2m": {
+                  "name": "Perete 2m",
+                  "price": 519
+                },
+                "perete-3m": {
+                  "name": "Perete 3m",
+                  "price": 589
+                },
+                "tavan-2m": {
+                  "name": "Tavan 2m",
+                  "price": 679
+                },
+                "tavan-3m": {
+                  "name": "Tavan 3m",
+                  "price": 808
+                }
               }
             },
             "in-sina-aluminiu": {
@@ -1521,41 +1623,128 @@
               "maxCanate": 4,
               "mountKits": {
                 "perete": {
-                  "1c-920": { "name": "1 canat ≤920mm", "price": 296 },
-                  "1c-1420": { "name": "1 canat ≤1420mm", "price": 348 },
-                  "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 556 },
-                  "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 455 },
-                  "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 565 },
-                  "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 829 }
+                  "1c-920": {
+                    "name": "1 canat ≤920mm",
+                    "price": 296
+                  },
+                  "1c-1420": {
+                    "name": "1 canat ≤1420mm",
+                    "price": 348
+                  },
+                  "2c-1940": {
+                    "name": "Ușă dublă ≤1940mm",
+                    "price": 556
+                  },
+                  "fix-mobil-2m": {
+                    "name": "Fix + Mobil 2m",
+                    "price": 455
+                  },
+                  "fix-mobil-3m": {
+                    "name": "Fix + Mobil 3m",
+                    "price": 565
+                  },
+                  "2fix-dubla-4m": {
+                    "name": "2 Fixe + Ușă Dublă 4m",
+                    "price": 829
+                  }
                 },
                 "tavan": {
-                  "1c-920": { "name": "1 canat ≤920mm", "price": 289 },
-                  "1c-1420": { "name": "1 canat ≤1420mm", "price": 331 },
-                  "2c-1940": { "name": "Ușă dublă ≤1940mm", "price": 531 },
-                  "fix-mobil-2m": { "name": "Fix + Mobil 2m", "price": 418 },
-                  "fix-mobil-3m": { "name": "Fix + Mobil 3m", "price": 517 },
-                  "2fix-dubla-4m": { "name": "2 Fixe + Ușă Dublă 4m", "price": 781 },
-                  "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
-                  "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
-                  "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
-                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 },
-                  "3c-1fix-6m": { "name": "3 Culisante + 1 Fix 4-6m (+380€)", "price": 1686 }
+                  "1c-920": {
+                    "name": "1 canat ≤920mm",
+                    "price": 289
+                  },
+                  "1c-1420": {
+                    "name": "1 canat ≤1420mm",
+                    "price": 331
+                  },
+                  "2c-1940": {
+                    "name": "Ușă dublă ≤1940mm",
+                    "price": 531
+                  },
+                  "fix-mobil-2m": {
+                    "name": "Fix + Mobil 2m",
+                    "price": 418
+                  },
+                  "fix-mobil-3m": {
+                    "name": "Fix + Mobil 3m",
+                    "price": 517
+                  },
+                  "2fix-dubla-4m": {
+                    "name": "2 Fixe + Ușă Dublă 4m",
+                    "price": 781
+                  },
+                  "2c-buzunar-3m": {
+                    "name": "2 Culisante + Buzunar 3m",
+                    "price": 728
+                  },
+                  "2c-1fix-3m": {
+                    "name": "2 Culisante + 1 Fix 3m",
+                    "price": 871
+                  },
+                  "3c-buzunar-4m": {
+                    "name": "3 Culisante + Buzunar 4m",
+                    "price": 1136
+                  },
+                  "3c-1fix-4m": {
+                    "name": "3 Culisante + 1 Fix 4m",
+                    "price": 1306
+                  },
+                  "3c-1fix-6m": {
+                    "name": "3 Culisante + 1 Fix 4-6m (+380€)",
+                    "price": 1686
+                  }
                 }
               }
             }
           },
           "glassTypes": {
-            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "ESG 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "ESG 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "ESG 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "ESG 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {
-            "maner": { "name": "Mâner în Sticlă MSC7", "price": 77, "desc": "Pereche mânere buzunar" },
-            "incuietoare": { "name": "Încuietoare cu Gheară DQS15", "price": 84, "desc": "Blocare ușă" },
-            "amortizor": { "name": "Amortizor Softbreak", "price": 120, "desc": "61kg, încetinire fină" },
-            "sincron": { "name": "Kit Sincronizare", "price": 261, "desc": "Doar la uși duble+" },
-            "profil-ornamental": { "name": "Profile Ornamentale (×2 fețe)", "pricePerMeter": 58, "desc": "FOP15 + FOU1013, ambele fețe" }
+            "maner": {
+              "name": "Mâner în Sticlă MSC7",
+              "price": 77,
+              "desc": "Pereche mânere buzunar"
+            },
+            "incuietoare": {
+              "name": "Încuietoare cu Gheară DQS15",
+              "price": 84,
+              "desc": "Blocare ușă"
+            },
+            "amortizor": {
+              "name": "Amortizor Softbreak",
+              "price": 120,
+              "desc": "61kg, încetinire fină"
+            },
+            "sincron": {
+              "name": "Kit Sincronizare",
+              "price": 261,
+              "desc": "Doar la uși duble+"
+            },
+            "profil-ornamental": {
+              "name": "Profile Ornamentale (×2 fețe)",
+              "pricePerMeter": 58,
+              "desc": "FOP15 + FOU1013, ambele fețe"
+            }
           }
         },
         "feronerie-invizibila": {
@@ -1563,10 +1752,26 @@
           "desc": "Fără șină vizibilă, 1 mobil, max 1.7m, 75kg",
           "price": 349,
           "glassTypes": {
-            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "ESG 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "ESG 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "ESG 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "ESG 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {}
         },
@@ -1577,10 +1782,26 @@
           "pricePerCanatMinus": 110,
           "maxCanate": 5,
           "glassTypes": {
-            "10mm-clar": { "name": "ESG 10mm Clar", "pricePerSqm": 86, "desc": "Standard" },
-            "10mm-parsol-gri": { "name": "ESG 10mm Parsol Gri", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-parsol-bronze": { "name": "ESG 10mm Parsol Bronze", "pricePerSqm": 135, "desc": "Filtrare solară" },
-            "10mm-satin": { "name": "ESG 10mm Satinată", "pricePerSqm": 140, "desc": "Confidențialitate" }
+            "10mm-clar": {
+              "name": "ESG 10mm Clar",
+              "pricePerSqm": 86,
+              "desc": "Standard"
+            },
+            "10mm-parsol-gri": {
+              "name": "ESG 10mm Parsol Gri",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-parsol-bronze": {
+              "name": "ESG 10mm Parsol Bronze",
+              "pricePerSqm": 135,
+              "desc": "Filtrare solară"
+            },
+            "10mm-satin": {
+              "name": "ESG 10mm Satinată",
+              "pricePerSqm": 140,
+              "desc": "Confidențialitate"
+            }
           },
           "options": {}
         }

@@ -24,28 +24,71 @@ const FALLBACK = {
   }
 };
 
-function SwingDoorPreview({ dims, doorType, glass }: { dims: { width: string; height: string }; doorType: string; glass: string }) {
+function SwingDoorPreview({ dims, doorType, glass, variant }: { dims: { width: string; height: string }; doorType: string; glass: string; variant: string }) {
   const w = parseFloat(dims.width) || 1, h = parseFloat(dims.height) || 2.1;
   const W = 308, H = 200, M = 20;
-  const sc = Math.min((W * 0.45) / w, (H - M * 2) / h);
-  const dW = w * sc, dH = h * sc, x0 = (W - dW) / 2, y0 = (H - dH) / 2;
+  const isLuminator = variant === "cu-luminator";
+  // Cu luminator: 25% luminator sus, 75% canat jos
+  const lumH = isLuminator ? h * 0.25 : 0;
+  const doorH = isLuminator ? h * 0.70 : h; // 5% gap
+  const totalH = isLuminator ? lumH + doorH + h * 0.05 : h;
+  const sc = Math.min((W * 0.45) / w, (H - M * 2) / totalH);
+  const dW = w * sc, dH = totalH * sc, x0 = (W - dW) / 2, y0 = (H - dH) / 2;
   const isSatin = glass === "10mm-satin";
   const isParsol = glass?.includes("parsol");
   const glF = isSatin ? "rgba(200,200,220,0.28)" : isParsol ? "rgba(160,140,100,0.2)" : "rgba(180,220,255,0.1)";
   const glS = isSatin ? "rgba(200,200,220,0.5)" : isParsol ? "rgba(160,140,100,0.5)" : "rgba(180,220,255,0.45)";
   const hasToc = doorType?.includes("toc");
   const frameW = hasToc ? 6 : 3;
+  const isAmortizor = doorType === "full-glass-amortizor";
+
+  // Dimensiuni scalate
+  const lumScaled = isLuminator ? lumH * sc : 0;
+  const gapScaled = isLuminator ? h * 0.05 * sc : 0;
+  const doorScaled = doorH * sc;
+  const lumY = y0;
+  const doorY = y0 + lumScaled + gapScaled;
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
+      {/* Pardosea */}
       <line x1={x0 - 20} y1={y0 + dH} x2={x0 + dW + 20} y2={y0 + dH} stroke="rgba(200,169,110,0.4)" strokeWidth="2" />
+
+      {/* Cadru exterior (toc) */}
       <rect x={x0} y={y0} width={dW} height={dH} fill="none" stroke="rgba(200,169,110,0.6)" strokeWidth={frameW} />
-      <rect x={x0 + frameW / 2} y={y0 + frameW / 2} width={dW - frameW} height={dH - frameW} fill={glF} stroke={glS} strokeWidth="1" />
-      {/* Balama stânga */}
-      <rect x={x0 - 3} y={y0 + dH * 0.25} width={6} height={14} rx="1" fill="rgba(200,169,110,0.6)" />
-      <rect x={x0 - 3} y={y0 + dH * 0.65} width={6} height={14} rx="1" fill="rgba(200,169,110,0.6)" />
+
+      {isLuminator && (
+        <>
+          {/* Luminator - panou superior */}
+          <rect x={x0 + frameW / 2} y={lumY + frameW / 2} width={dW - frameW} height={lumScaled - frameW}
+            fill="rgba(180,220,255,0.06)" stroke="rgba(180,220,255,0.35)" strokeWidth="1" />
+          {/* Linie separare luminator */}
+          <line x1={x0} y1={doorY} x2={x0 + dW} y2={doorY} stroke="rgba(200,169,110,0.35)" strokeWidth="1.5" />
+        </>
+      )}
+
+      {/* Canat principal */}
+      <rect x={x0 + frameW / 2} y={doorY + frameW / 2} width={dW - frameW} height={doorScaled - frameW}
+        fill={glF} stroke={glS} strokeWidth="1" />
+
+      {/* Balama / pivot */}
+      {isAmortizor ? (
+        <>
+          {/* Pivoturi la colțuri — stânga sus + stânga jos */}
+          <circle cx={x0 + frameW / 2} cy={doorY + frameW} r={4} fill="rgba(200,169,110,0.5)" stroke="rgba(200,169,110,0.8)" strokeWidth="1.5" />
+          <circle cx={x0 + frameW / 2} cy={doorY + doorScaled - frameW} r={4} fill="rgba(200,169,110,0.5)" stroke="rgba(200,169,110,0.8)" strokeWidth="1.5" />
+        </>
+      ) : (
+        <>
+          {/* Balama stânga (doar la toc) */}
+          <rect x={x0 - 3} y={doorY + doorScaled * 0.25} width={6} height={14} rx="1" fill="rgba(200,169,110,0.6)" />
+          <rect x={x0 - 3} y={doorY + doorScaled * 0.65} width={6} height={14} rx="1" fill="rgba(200,169,110,0.6)" />
+        </>
+      )}
+
       {/* Mâner dreapta */}
-      <rect x={x0 + dW - 3} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.8)" />
+      <rect x={x0 + dW - 3} y={doorY + doorScaled / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.8)" />
+
       <text x={x0 + dW / 2} y={H - 6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">{dims.width}m × {dims.height}m</text>
     </svg>
   );
@@ -166,6 +209,15 @@ export default function SwingDoorConfiguratorPage() {
   const isFono = doorType === "fono";
   const isSticla = doorType === "full-glass-toc-sticla";
 
+  // Detail image per doorType + variant
+  const DETAIL_IMG: Record<string, string> = {
+    "full-glass-amortizor": "/usi-batante.png",
+    "full-glass-toc-zidarie-tip-l": "/usi-batante-toc-l.png",
+    "full-glass-toc-zidarie-tip-z": "/usi-batante-toc-z.png",
+    "full-glass-toc-sticla": "/usi-batante-toc-sticla.png",
+  };
+  const detailImg = DETAIL_IMG[`${doorType}-${variant}`] || DETAIL_IMG[doorType] || "/usi-batante.png";
+
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Batantă"
@@ -222,11 +274,11 @@ export default function SwingDoorConfiguratorPage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20, position: "sticky", top: 24, alignSelf: "start" }}>
           <PreviewBox>
-            <SwingDoorPreview dims={dims} doorType={doorType} glass={glass} />
+            <SwingDoorPreview dims={dims} doorType={doorType} glass={glass} variant={variant} />
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
-            <img src="/usi-batante.png" alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            <img src={detailImg} alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
             {options?.maner && (
               <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                 <img src="/maner-msc7.png" alt="Mâner" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclManer ? 1 : 0.4, border: inclManer ? "1px solid #c8a96e" : "none" }} />
