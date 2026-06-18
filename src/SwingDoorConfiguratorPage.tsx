@@ -166,6 +166,15 @@ export default function SwingDoorConfiguratorPage() {
   const isFono = doorType === "fono";
   const isSticla = doorType === "full-glass-toc-sticla";
 
+  // Detail image per doorType + variant
+  const DETAIL_IMG: Record<string, string> = {
+    "full-glass-amortizor": "/usi-batante.png",
+    "full-glass-toc-zidarie-tip-l": "/usi-batante-toc-l.png",
+    "full-glass-toc-zidarie-tip-z": "/usi-batante-toc-z.png",
+    "full-glass-toc-sticla": "/usi-batante-toc-sticla.png",
+  };
+  const detailImg = DETAIL_IMG[`${doorType}-${variant}`] || DETAIL_IMG[doorType] || "/usi-batante.png";
+
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Batantă"
@@ -226,7 +235,7 @@ export default function SwingDoorConfiguratorPage() {
           </PreviewBox>
           <div className="glass-card" style={{ borderRadius: 20, padding: "16px" }}>
             <div style={{ color: "rgba(200,169,110,0.6)", fontSize: "0.72rem", marginBottom: 8 }}>Detaliu selecție</div>
-            <img src="/usi-batante.png" alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
+            <img src={detailImg} alt="Uși Batante" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />
             {options?.maner && (
               <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                 <img src="/maner-msc7.png" alt="Mâner" style={{ width: 56, height: 34, objectFit: "contain", borderRadius: 6, filter: "invert(0.92)", opacity: inclManer ? 1 : 0.4, border: inclManer ? "1px solid #c8a96e" : "none" }} />
