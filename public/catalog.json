@@ -1538,7 +1538,8 @@
                   "2c-buzunar-3m": { "name": "2 Culisante + Buzunar 3m", "price": 728 },
                   "2c-1fix-3m": { "name": "2 Culisante + 1 Fix 3m", "price": 871 },
                   "3c-buzunar-4m": { "name": "3 Culisante + Buzunar 4m", "price": 1136 },
-                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 }
+                  "3c-1fix-4m": { "name": "3 Culisante + 1 Fix 4m", "price": 1306 },
+                  "3c-1fix-6m": { "name": "3 Culisante + 1 Fix 4-6m (+380€)", "price": 1686 }
                 }
               }
             }
