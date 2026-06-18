@@ -334,10 +334,10 @@ export default function SlidingDoorConfiguratorPage() {
                 : kit === "2c-1940" ? "/culisante-dubla.png"
                 : kit?.includes("fix-mobil") ? "/culisante-fix-mobil.png"
                 : kit === "2fix-dubla-4m" ? "/culisante-2fix-dubla.png"
-                : kit?.includes("buzunar") ? "/culisante-buzunar.png"
-                : kit?.includes("2c-1fix") ? "/culisante-2c-1fix.png"
                 : kit?.includes("3c-buzunar") ? "/culisante-3c-buzunar.png"
                 : kit?.includes("3c-1fix") ? "/culisante-3c-1fix.png"
+                : kit?.includes("buzunar") ? "/culisante-buzunar.png"
+                : kit?.includes("2c-1fix") ? "/culisante-2c-1fix.png"
                 : "/usi-culisante.png"} alt="Detaliu" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }} />}
             {inclManer && <img src="/maner-msc7.png" alt="Mâner MSC7" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginTop: 8 }} />}
             {inclInc && <img src="/incuietoare-dqs15.png" alt="Încuietoare DQS15" style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)", marginTop: 8 }} />}
