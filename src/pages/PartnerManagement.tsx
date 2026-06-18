@@ -112,6 +112,20 @@ export default function PartnerManagement() {
     setUpdating(null)
   }
 
+  const deletePartner = async (userId: string) => {
+    if (!confirm(`Ștergi acest partener? Profilul va fi șters (proiectele rămân).`)) return
+    setUpdating(userId)
+    setMsg('')
+    const { error } = await supabase.from('profiles').delete().eq('user_id', userId)
+    if (error) {
+      setMsg('Eroare ștergere: ' + error.message)
+    } else {
+      setPartners(prev => prev.filter(p => p.user_id !== userId))
+      setMsg('Partener șters.')
+    }
+    setUpdating(null)
+  }
+
   useEffect(() => { fetchPartners() }, [])
 
   if (loading) return <div className="min-h-screen bg-[#0f1117] flex items-center justify-center text-gray-400">Se încarcă partenerii...</div>
@@ -179,6 +193,9 @@ export default function PartnerManagement() {
                       <option value="partner">Partener (×0.85)</option>
                       <option value="volume">Volum (×0.75)</option>
                     </select>
+                    <button onClick={() => deletePartner(p.user_id)} disabled={updating === p.user_id}
+                      style={{ marginLeft: 8, padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.1)', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}
+                      title="Șterge partener">🗑</button>
                   </td>
                 </tr>
               )
@@ -215,12 +232,17 @@ export default function PartnerManagement() {
                   <TierBadge tier={tier} />
                   <span style={{ marginLeft: 10, fontSize: '0.8rem', color: 'rgba(240,237,232,0.4)' }}>{p.projectCount} proiecte</span>
                 </div>
-                <select value={tier} onChange={(e) => setTier(p.user_id, e.target.value as PricingTier)} disabled={updating === p.user_id}
-                  className="input-field" style={{ width: 'auto', padding: '6px 12px', fontSize: '0.8rem' }}>
-                  <option value="standard">Standard</option>
-                  <option value="partner">Partener</option>
-                  <option value="volume">Volum</option>
-                </select>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <select value={tier} onChange={(e) => setTier(p.user_id, e.target.value as PricingTier)} disabled={updating === p.user_id}
+                    className="input-field" style={{ width: 'auto', padding: '6px 12px', fontSize: '0.8rem' }}>
+                    <option value="standard">Standard</option>
+                    <option value="partner">Partener</option>
+                    <option value="volume">Volum</option>
+                  </select>
+                  <button onClick={() => deletePartner(p.user_id)} disabled={updating === p.user_id}
+                    style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.1)', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}
+                    title="Șterge partener">🗑</button>
+                </div>
               </div>
             </div>
           )
