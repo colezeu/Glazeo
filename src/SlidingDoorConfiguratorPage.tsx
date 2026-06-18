@@ -247,6 +247,16 @@ export default function SlidingDoorConfiguratorPage() {
   const options = ty?.options as Record<string, { name: string; price?: number; pricePerMeter?: number }> | undefined;
   const hasRama = typology === "canat-cu-rama";
 
+  // Max lățime din kit/typologie
+  const maxWidth = isInvizibila ? 1.7 : isCanatCuRama ? 3.9
+    : kit ? (() => {
+      // Extrage numărul din numele kitului: "perete-2m"→2, "1c-920"→0.92, "fix-mobil-3m"→3
+      const m = kit.match(/(\d+\.?\d*)\s*m/i) || kit.match(/(\d+)$/);
+      if (!m) return 6;
+      const v = parseFloat(m[1]);
+      return v > 20 ? v / 1000 : v; // "920"→0.92, "2"→2
+    })() : 6;
+
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă"
@@ -332,18 +342,20 @@ export default function SlidingDoorConfiguratorPage() {
 
           <SectionCard num="06" label="Dimensiuni">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} step="0.05" />
+              <NumberInput label="Lățime (m)" value={dims.width} onChange={v => {
+                const nv = Math.min(Math.max(parseFloat(v) || 0, 0.5), maxWidth);
+                setDims(d => ({ ...d, width: String(Math.round(nv * 100) / 100) }));
+              }} step="0.05" min={0.5} max={maxWidth} />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} step="0.05" />
             </div>
             {/* Limitări */}
             <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.15)", fontSize: "0.75rem", color: "rgba(200,169,110,0.6)", lineHeight: 1.6 }}>
-              {isInvizibila && <>ⓘ Max 1.7m lățime, 75kg</>}
-              {isCanatCuRama && <>ⓘ Max 3.9m lățime, max 5 canate · 1–5 canate</>}
+              {isInvizibila && <>ⓘ Max {maxWidth}m lățime, 75kg</>}
+              {isCanatCuRama && <>ⓘ Max {maxWidth}m lățime, max 5 canate · 1–{nrCanate} canate</>}
               {!isInvizibila && !isCanatCuRama && kit && <>
-                ⓘ Kit {currentKits?.[kit]?.name || kit}
+                ⓘ Kit {currentKits?.[kit]?.name || kit} · max {maxWidth}m
                 {Number(dims.width) > 0 && <> · {Number(dims.width) > 1.0 ? `${Math.max(1, Math.round(Number(dims.width)))} panouri ≈${(Number(dims.width) / Math.max(1, Math.round(Number(dims.width)))).toFixed(2)}m` : "1 panou"}</>}
               </>}
-              {!isInvizibila && !isCanatCuRama && !kit && <>ⓘ Selectează kitul de montaj</>}
             </div>
           </SectionCard>
 
