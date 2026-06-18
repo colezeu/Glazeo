@@ -211,10 +211,11 @@ export default function SwingDoorConfiguratorPage() {
 
   // Detail image per doorType + variant
   const DETAIL_IMG: Record<string, string> = {
-    "full-glass-amortizor": "/usi-batante.png",
+    "full-glass-amortizor": "/usi-batante-amortizor.jpg",
     "full-glass-toc-zidarie-tip-l": "/usi-batante-toc-l.png",
     "full-glass-toc-zidarie-tip-z": "/usi-batante-toc-z.png",
     "full-glass-toc-sticla": "/usi-batante-toc-sticla.png",
+    "fono": "/usi-batante-fonica.jpg",
   };
   const detailImg = DETAIL_IMG[`${doorType}-${variant}`] || DETAIL_IMG[doorType] || "/usi-batante.png";
 
