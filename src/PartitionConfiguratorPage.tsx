@@ -141,7 +141,7 @@ export default function PartitionConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" config={{ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }} />
       <ConfigHeader title="Configurator Partiționări" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>

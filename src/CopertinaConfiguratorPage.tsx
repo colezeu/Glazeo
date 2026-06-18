@@ -147,7 +147,7 @@ export default function CopertinaConfiguratorPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Copertină" config={{ dims, type, glass, inclLed, inclDegivrare }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Copertină" productType="copertina" config={{ dims, type, glass, inclLed, inclDegivrare }} />
       <ConfigHeader title="Configurator Copertine" quote={quote}/>
       <main className="configurator-grid" style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
