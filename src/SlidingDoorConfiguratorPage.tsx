@@ -5,31 +5,65 @@ import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 
 function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: string; height: string }; typology: string; carucioare: string }) {
-  const w = parseFloat(dims.width) || 1.2, h = parseFloat(dims.height) || 2.1;
+  const w = parseFloat(dims.width) || 1.0, h = parseFloat(dims.height) || 2.1;
   const isInvizibila = typology === "feronerie-invizibila";
   const isCanatCuRama = typology === "canat-cu-rama";
   const W = 308, H = 200, M = 16;
+
+  // Panouri: ~0.9-1m fiecare, min 1 panou
+  const numPanels = w > 1.0 ? Math.max(1, Math.round(w)) : 1;
+  const panelW = w / numPanels;
+
   const sc = Math.min((W - M * 2) / w, (H - M * 2) / h);
   const dW = w * sc, dH = h * sc;
   const x0 = (W - dW) / 2, y0 = (H - dH) / 2;
+  const panelScaledW = panelW * sc;
+  const gap = 2; // gap between panels
   const hasSina = carucioare === "in-sina-aluminiu";
   const frameW = isCanatCuRama ? 8 : 0;
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
+      {/* Sina sus */}
       {!isInvizibila && !isCanatCuRama && (
         <rect x={x0 - 6} y={y0 - (hasSina ? 7 : 4)} width={dW + 12} height={hasSina ? 6 : 3}
           fill={hasSina ? "rgba(200,169,110,0.2)" : "rgba(200,169,110,0.35)"} rx="2" />
       )}
+      {/* Sina jos */}
       {!isInvizibila && !isCanatCuRama && (
         <line x1={x0 - 12} y1={y0 + dH} x2={x0 + dW + 12} y2={y0 + dH} stroke="rgba(200,169,110,0.3)" strokeWidth="2" />
       )}
-      {/* Rama perimetrala pentru canat cu rama */}
-      {isCanatCuRama ? (
+
+      {/* Cadru exterior pentru canat cu rama */}
+      {isCanatCuRama && (
         <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.06)" stroke="rgba(200,169,110,0.7)" strokeWidth={frameW} rx="2" />
-      ) : (
-        <rect x={x0} y={y0} width={dW} height={dH} fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
       )}
+
+      {/* Panouri individuale */}
+      {Array.from({ length: numPanels }).map((_, i) => {
+        const px = x0 + i * panelScaledW + (i > 0 ? gap : 0);
+        const pw = panelScaledW - (i < numPanels - 1 ? gap : 0);
+        // Alternating offset for sliding effect
+        const offsetY = i % 2 === 0 ? 0 : 2;
+        return (
+          <g key={i}>
+            {isCanatCuRama ? (
+              <rect x={px} y={y0 + frameW / 2 + offsetY} width={pw} height={dH - frameW}
+                fill="rgba(180,220,255,0.04)" stroke="rgba(200,169,110,0.35)" strokeWidth="1.5" rx="1" />
+            ) : (
+              <rect x={px} y={y0 + offsetY} width={pw} height={dH}
+                fill="rgba(180,220,255,0.08)" stroke="rgba(180,220,255,0.4)" strokeWidth="1.5" />
+            )}
+            {/* Linii separare între panouri */}
+            {i > 0 && (
+              <line x1={px - gap / 2} y1={y0 + 4} x2={px - gap / 2} y2={y0 + dH - 4}
+                stroke="rgba(200,169,110,0.25)" strokeWidth="1" strokeDasharray="3,3" />
+            )}
+          </g>
+        );
+      })}
+
+      {/* Cărucioare la vedere */}
       {!isInvizibila && !isCanatCuRama && carucioare === "la-vedere-inox" && (
         <>
           <circle cx={x0 + dW * 0.3} cy={y0 - 1} r={8} fill="none" stroke="rgba(200,200,200,0.5)" strokeWidth="2" />
@@ -38,11 +72,15 @@ function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: str
           <line x1={x0 + dW * 0.7} y1={y0} x2={x0 + dW * 0.7} y2={y0 + 14} stroke="rgba(200,200,200,0.4)" strokeWidth="1.5" />
         </>
       )}
-      {!isCanatCuRama && (
-        <rect x={x0 + dW * 0.15} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
+
+      {/* Mâner */}
+      {!isCanatCuRama && numPanels > 0 && (
+        <rect x={x0 + (panelScaledW - gap) / 2 - 2} y={y0 + dH / 2 - 18} width={4} height={36} rx="2" fill="rgba(200,169,110,0.6)" />
       )}
+
+      {/* Dimensiuni + info panouri */}
       <text x={W / 2} y={H - 6} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
-        {dims.width}m × {dims.height}m{isCanatCuRama ? " · Canat cu Ramă" : ""}
+        {dims.width}m × {dims.height}m{numPanels > 1 ? ` · ${numPanels} panouri ≈${panelW.toFixed(2)}m` : ""}{isCanatCuRama ? " · Canat cu Ramă" : ""}
       </text>
     </svg>
   );
@@ -296,6 +334,16 @@ export default function SlidingDoorConfiguratorPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} step="0.05" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} step="0.05" />
+            </div>
+            {/* Limitări */}
+            <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.15)", fontSize: "0.75rem", color: "rgba(200,169,110,0.6)", lineHeight: 1.6 }}>
+              {isInvizibila && <>ⓘ Max 1.7m lățime, 75kg</>}
+              {isCanatCuRama && <>ⓘ Max 3.9m lățime, max 5 canate · 1–5 canate</>}
+              {!isInvizibila && !isCanatCuRama && kit && <>
+                ⓘ Kit {currentKits?.[kit]?.name || kit}
+                {Number(dims.width) > 0 && <> · {Number(dims.width) > 1.0 ? `${Math.max(1, Math.round(Number(dims.width)))} panouri ≈${(Number(dims.width) / Math.max(1, Math.round(Number(dims.width)))).toFixed(2)}m` : "1 panou"}</>}
+              </>}
+              {!isInvizibila && !isCanatCuRama && !kit && <>ⓘ Selectează kitul de montaj</>}
             </div>
           </SectionCard>
 
