@@ -75,7 +75,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppErrorBoundary>
-       <div className="fixed top-20 right-4 md:right-6 z-[100] flex items-center gap-2 md:gap-3">
+       <div className="fixed top-0 right-4 md:right-6 z-[100] flex items-center gap-2 md:gap-3" style={{ height: 56, background: "linear-gradient(180deg, rgba(15,17,23,0.98) 60%, rgba(15,17,23,0))", paddingRight: 4 }}>
   {user ? (
     <>
       <Link 

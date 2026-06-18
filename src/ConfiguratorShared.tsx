@@ -4,7 +4,7 @@ import { ArrowLeft, Loader2, Check, RotateCcw } from "lucide-react";
 
 export function ConfigHeader({ title, quote }) {
   return (
-    <header style={{ background:"rgba(15,17,23,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 32px", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:40 }}>
+    <header style={{ background:"rgba(15,17,23,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 32px", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:56, zIndex:40 }}>
       <div style={{ display:"flex", alignItems:"center", gap:16 }}>
         <Link to="/" style={{ display:"flex", alignItems:"center", justifyContent:"center", width:36, height:36, borderRadius:10, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", color:"#f0ede8", textDecoration:"none" }}>
           <ArrowLeft size={16} />
