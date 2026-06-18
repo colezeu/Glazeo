@@ -221,7 +221,7 @@ export default function SwingDoorConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Batantă"
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Batantă" productType="swingdoor"
         config={{ dims, doorType, variant, glass, inclManer }} />
       <ConfigHeader title="Configurator Uși Batante" quote={quote} />
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>

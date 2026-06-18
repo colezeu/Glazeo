@@ -259,7 +259,7 @@ export default function SlidingDoorConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă"
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă" productType="sliding"
         config={{ dims, typology, mount, carucioare, kit, glass, nrCanate, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }} />
       <ConfigHeader title="Configurator Uși Culisante" quote={quote} />
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>

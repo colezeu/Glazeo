@@ -6,7 +6,7 @@ import { generateQuotePDF, sendQuoteEmail } from "./quotePdf";
 import { saveQuote } from "./lib/quotes";
 import { formatPrice } from "./ConfiguratorShared";
 
-export default function QuoteModal({ isOpen, onClose, quote, productName, config }) {
+export default function QuoteModal({ isOpen, onClose, quote, productName, productType, config }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -36,6 +36,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, config
       client_phone: form.phone || undefined,
       client_message: form.message || undefined,
       product_name: productName,
+      product_type: productType || undefined,
       config,
       quote_total: quote?.total ? parseFloat(String(quote.total)) : undefined,
       quote_subtotal: quote?.subtotal ? parseFloat(String(quote.subtotal)) : undefined,
