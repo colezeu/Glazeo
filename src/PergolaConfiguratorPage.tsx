@@ -47,6 +47,27 @@ export default function PergolaConfiguratorPage() {
       });
   }, []);
 
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'pergola' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.width) setDims(d => ({ ...d, width: cfg.width }));
+          if (cfg.depth) setDims(d => ({ ...d, depth: cfg.depth }));
+          if (cfg.type) setType(cfg.type);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.inclLed !== undefined) setInclLed(cfg.inclLed);
+          if (cfg.inclMob !== undefined) setInclMob(cfg.inclMob);
+          if (cfg.inclPan !== undefined) setInclPan(cfg.inclPan);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   if (!product) return <PageLoader />;
 
   const p = product;
@@ -72,7 +93,7 @@ export default function PergolaConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Pergolă" productType="pergola" config={{ width: dims.width, depth: dims.depth, type, glass }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Pergolă" productType="pergola" config={{ width: dims.width, depth: dims.depth, type, glass, inclLed, inclMob, inclPan }} />
       <ConfigHeader title="Configurator Pergole" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
@@ -143,7 +164,7 @@ export default function PergolaConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="pergola"
-          config={config}
+          config={{ width: dims.width, depth: dims.depth, type, glass, inclLed, inclMob, inclPan }}
           onClose={() => setShowSaveModal(false)}
         />
       )}

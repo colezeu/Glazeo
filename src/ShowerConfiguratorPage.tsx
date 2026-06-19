@@ -102,7 +102,7 @@ export default function ShowerConfiguratorPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem('loadProject');
-    if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config?.config) setConfig(p.config.config); } catch (e) {} localStorage.removeItem('loadProject'); }
+    if (saved) { try { const p = JSON.parse(saved); if (p.product_type === 'shower' && p.config) setConfig(p.config); } catch (e) {} localStorage.removeItem('loadProject'); }
   }, []);
 
   // Pre-compute dims from state (before product guard)
@@ -139,11 +139,11 @@ export default function ShowerConfiguratorPage() {
     const glassCost = Number((glassArea * (glassPricePerSqm + finishPricePerSqm + enduroPricePerSqm)).toFixed(2));
     const towelCost = inclTowel ? (Number(p.options?.towelBar?.price) || 45) : 0;
     
-    // Hardware pricing from Qualmont kits (use tier1 = standard, multiplier handles discount)
+    // Hardware pricing from  kits (use tier1 = standard, multiplier handles discount)
     let hardwareCost = 0;
     const kit = p.hardwareKits?.[enclosure]?.[subtype];
     const hwPrices = p.hardwarePrices || {};
-    const hwFinishMap = p.hardwareFinishes?.[hardwareFinish]?.qualmontFinishes || [];
+    const hwFinishMap = p.hardwareFinishes?.[hardwareFinish]?.finishMapping || [];
     if (kit) {
       for (const [code, qty] of kit) {
         const prices = hwPrices[code];
@@ -186,7 +186,7 @@ export default function ShowerConfiguratorPage() {
     
     const available = [];
     for (const [finKey, finData] of Object.entries(p.hardwareFinishes)) {
-      const qFinishes = finData.qualmontFinishes || [];
+      const qFinishes = finData.finishMapping || [];
       let allAvailable = true;
       for (const [code, qty] of kit) {
         const prices = p.hardwarePrices[code];

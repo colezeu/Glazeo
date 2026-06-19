@@ -10,7 +10,34 @@ function escapeHtml(value) {
   }[char]));
 }
 
+/** Formatare defalcare completă pentru partiționări (coduri ) */
+export function formatPartitionDetails(quote, config) {
+  if (!quote || !quote.kitCodes) return [];
+  const q = quote.kitCodes;
+  const lines = [];
+  lines.push("");
+  lines.push("--- Defalcare Feronerie () ---");
+  if (quote.nrPanouri) lines.push(`Panouri: ${quote.nrPanouri} × ${quote.eachMm || '?'}mm`);
+  if (quote.costU) {
+    const bareU = Math.ceil((quote.mLUcumparat || 3) / 3);
+    lines.push(`Profil U (${q.profilU?.code || '11.6800.100.24'}): ${quote.costU}€ — ${bareU * 2} bare × 3m (cumpărat ${quote.mLUcumparat * 2 || '?'}m, necesar ${((config?.dims?.width || 0) * 2).toFixed(1)}m)`);
+  }
+  if (quote.costL) {
+    const bareL = Math.ceil((quote.mLLcumparat || 3) / 3);
+    lines.push(`Profil L (${q.profilL?.code || '10.6970.100.24'}): ${quote.costL}€ — ${bareL * 2} bare × 3m (cumpărat ${quote.mLLcumparat * 2 || '?'}m, necesar ${((config?.dims?.height || 0) * 2).toFixed(1)}m)`);
+  }
+  if (quote.costGarnituri) lines.push(`Garnituri UP2 (${q.garnitura?.code || '71.ND10.002.00'}): ${quote.costGarnituri}€ (${q.garnitura?.pricePerM}€/m, 2m/ml)`);
+  if (quote.costImbinare > 0) lines.push(`Profile îmbinare H 90° (${q.imbinare?.code || '22.6P10.090.03'}): ${quote.costImbinare}€ — ${quote.bareImbinareTotal || '?'} bare × 3m (${q.imbinare?.pricePerBuc}€/buc)`);
+  if (quote.costUsa > 0) {
+    const usaName = quote.tipUsa === "usa-simpla" ? "Ușă simplă (amortizor hidraulic)" : quote.tipUsa === "usa-toc" ? "Ușă cu toc aluminiu" : "Ușă";
+    lines.push(`${usaName}: ${quote.costUsa}€`);
+  }
+  lines.push("--------------------------------------");
+  return lines;
+}
+
 function createQuoteEmail({ productName, quote, config, clientInfo }) {
+  const partDetails = formatPartitionDetails(quote, config);
   const lines = [
     `Client: ${clientInfo?.name || "-"}`,
     clientInfo?.email ? `Email: ${clientInfo.email}` : null,
@@ -22,7 +49,10 @@ function createQuoteEmail({ productName, quote, config, clientInfo }) {
     quote?.vat ? `TVA: ${quote.vat} EUR` : null,
     "",
     "Configuratie:",
-    ...Object.entries(config || {}).map(([key, value]) => `${key}: ${value}`),
+    ...Object.entries(config || {}).filter(([k]) => k !== 'dims' && k !== 'tipUsa').map(([key, value]) => `${key}: ${value}`),
+    config?.dims?.width ? `Lățime: ${config.dims.width}m` : null,
+    config?.dims?.height ? `Înălțime: ${config.dims.height}m` : null,
+    ...partDetails,
     clientInfo?.message ? "" : null,
     clientInfo?.message ? `Mesaj: ${clientInfo.message}` : null,
   ].filter(line => line !== null);

@@ -37,7 +37,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
       client_message: form.message || undefined,
       product_name: productName,
       product_type: productType || undefined,
-      config,
+      config: { ...config, _breakdown: quote },
       quote_total: quote?.total ? parseFloat(String(quote.total)) : undefined,
       quote_subtotal: quote?.subtotal ? parseFloat(String(quote.subtotal)) : undefined,
       quote_vat: quote?.vat ? parseFloat(String(quote.vat)) : undefined,
