@@ -19,12 +19,12 @@
       "hardwareTypes": {
         "butoni": {
           "name": "Cu Butoni Inox",
-          "pricePerMeter": 113,
+          "pricePerMeter": 35,
           "desc": "Puncte de fixare, design minimalist"
         },
         "mini-montanti": {
           "name": "Cu Mini-Montanți",
-          "pricePerMeter": 104,
+          "pricePerMeter": 50,
           "desc": "Montanți intermediari inox"
         },
         "profil-pardoseala": {
@@ -34,85 +34,85 @@
         },
         "profil-pardoseala-reglaj": {
           "name": "Profil Pardoseală cu Reglaj Mecanic",
-          "pricePerMeter": 227,
+          "pricePerMeter": 215,
           "desc": "Reglaj mecanic de precizie, montaj rapid"
         }
       },
       "profileShapes": {
         "U": {
           "name": "Formă U",
-          "pricePerMeter": 0
+          "pricePerMeter": 17
         },
         "Y": {
           "name": "Formă Y",
-          "pricePerMeter": 144
+          "pricePerMeter": 143
         },
         "L": {
           "name": "Formă L",
-          "pricePerMeter": 132
+          "pricePerMeter": 149
         }
       },
       "glassTypes": {
         "662mm": {
           "name": "Sticlă Securizată/Laminată 662 (13mm)",
-          "pricePerSqm": 112,
+          "pricePerSqm": 113,
           "desc": "Laminat 66.2, ideal interior rezidențial"
         },
         "662mm-parsol-ambele": {
           "name": "Sticlă Laminată 662 Parsol ambele foi (13mm)",
-          "pricePerSqm": 127,
+          "pricePerSqm": 165,
           "desc": "Laminat 66.2, ambele foi Parsol gri/bronze"
         },
         "662mm-parsol-o-foaie": {
           "name": "Sticlă Laminată 662 Parsol o foaie + float clar (13mm)",
-          "pricePerSqm": 109,
+          "pricePerSqm": 139,
           "desc": "Laminat 66.2, o foaie Parsol gri/bronze + una float clar"
         },
         "662mm-folie-mata": {
           "name": "Sticlă Laminată 662 folie mată (13mm)",
-          "pricePerSqm": 135,
+          "pricePerSqm": 162,
           "desc": "Laminat 66.2 cu folie mată/satinată (privacy)"
         },
         "882mm": {
           "name": "Sticlă Securizată/Laminată 882 (17mm)",
-          "pricePerSqm": 131,
+          "pricePerSqm": 128,
           "desc": "Standard exterior, rezistență ridicată"
         },
         "882mm-parsol-ambele": {
           "name": "Sticlă Laminată 882 Parsol ambele foi (17mm)",
-          "pricePerSqm": 159,
+          "pricePerSqm": 206,
           "desc": "Laminat 88.2, ambele foi Parsol gri/bronze"
         },
         "882mm-parsol-o-foaie": {
           "name": "Sticlă Laminată 882 Parsol o foaie + float clar (17mm)",
-          "pricePerSqm": 132,
+          "pricePerSqm": 167,
           "desc": "Laminat 88.2, o foaie Parsol gri/bronze + una float clar"
         },
         "882mm-folie-mata": {
           "name": "Sticlă Laminată 882 folie mată (17mm)",
-          "pricePerSqm": 167,
+          "pricePerSqm": 185,
           "desc": "Laminat 88.2 cu folie mată/satinată (privacy)"
         }
       },
       "options": {
         "handrail-structurala": {
           "name": "Mână Curentă Structurală Aluminiu",
-          "pricePerMeter": 113,
+          "pricePerMeter": 78,
           "desc": "Profil aluminiu structural, rezistență maximă"
         },
         "handrail-rotunda": {
           "name": "Mână Curentă Rotundă Inox",
-          "pricePerMeter": 60,
+          "pricePerMeter": 18,
           "desc": "Rotundă Ø42.4mm, șlefuită satinat"
         },
         "handrail-patrata": {
           "name": "Mână Curentă Pătrată Inox",
-          "pricePerMeter": 73,
+          "pricePerMeter": 38,
           "desc": "Profil pătrat 40x40mm, aspect modern"
         },
         "handrail-slim": {
           "name": "Mână Curentă Slim Aluminiu",
-          "pricePerMeter": 87,
+          "pricePerMeter": 5,
           "desc": "Profil slim 18x12mm, design minimalist"
         },
         "led": {
@@ -154,12 +154,12 @@
       "glassTypes": {
         "8mm": {
           "name": "Sticlă Securizată 8mm",
-          "pricePerSqm": 47.33,
+          "pricePerSqm": 44,
           "desc": "Standard, rezistentă la șocuri termice"
         },
         "10mm": {
           "name": "Sticlă Securizată 10mm",
-          "pricePerSqm": 69.33,
+          "pricePerSqm": 65,
           "desc": "Obligatoriu peste 2.2m înălțime sau 0.9m lățime"
         }
       },
@@ -175,24 +175,24 @@
         "parsol-gri": {
           "name": "Parsol Gri",
           "pricePerSqm": {
-            "8mm": 40.67,
-            "10mm": 38.67
+            "8mm": 39,
+            "10mm": 36
           },
           "desc": "Nuanță gri, protecție solară"
         },
         "parsol-bronze": {
           "name": "Parsol Bronze",
           "pricePerSqm": {
-            "8mm": 40.67,
-            "10mm": 38.67
+            "8mm": 39,
+            "10mm": 36
           },
           "desc": "Nuanță bronze, aspect cald"
         },
         "satin": {
           "name": "Satinată (Opacă)",
           "pricePerSqm": {
-            "8mm": 30.0,
-            "10mm": 42.67
+            "8mm": 28,
+            "10mm": 40
           },
           "desc": "Intimitate totală, aspect mat"
         }
@@ -209,7 +209,7 @@
           "name": "Lucios",
           "priceFactor": 1.0,
           "desc": "Finisaj lucios standard",
-          "qualmontFinishes": [
+          "finishMapping": [
             "al. eloxat lucios",
             "al. eloxat mat",
             "al. efect inox mat",
@@ -226,7 +226,7 @@
           "name": "Negru",
           "priceFactor": 1.1,
           "desc": "Modern, contrast elegant",
-          "qualmontFinishes": [
+          "finishMapping": [
             "al. eloxat lucios",
             "al. eloxat mat",
             "al. efect inox mat",
@@ -242,7 +242,7 @@
           "name": "Satinat",
           "priceFactor": 0.95,
           "desc": "Finisaj mat, amprentele nu se vad",
-          "qualmontFinishes": [
+          "finishMapping": [
             "al. eloxat lucios",
             "al. eloxat mat",
             "al. efect inox mat",
@@ -261,7 +261,7 @@
           "name": "Auriu Lucios",
           "priceFactor": 1.15,
           "desc": "Finisaj premium, aspect cald",
-          "qualmontFinishes": [
+          "finishMapping": [
             "al. efect inox mat",
             "al. eloxat lucios",
             "al. eloxat mat",
@@ -278,7 +278,7 @@
           "name": "Periat",
           "priceFactor": 1.15,
           "desc": "Premium mat, eleganță subtilă",
-          "qualmontFinishes": [
+          "finishMapping": [
             "al. efect inox mat",
             "al. eloxat lucios",
             "al. eloxat mat",
@@ -297,17 +297,17 @@
       "options": {
         "towelBar": {
           "name": "Port Prosop",
-          "price": 60,
+          "price": 26,
           "desc": "Inox satinat, capacitate 5kg"
         },
         "manerScoica": {
           "name": "Mâner Scoică",
-          "price": 40,
+          "price": 13,
           "desc": "Mâner clasic tip scoică"
         },
         "manerRectangular": {
           "name": "Mâner Rectangular",
-          "price": 80,
+          "price": 81,
           "desc": "Mâner dreptunghiular modern"
         }
       },
@@ -1298,22 +1298,22 @@
       "glassTypes": {
         "clar": {
           "name": "Sticlă Clară 10mm ESG",
-          "pricePerSqm": 75,
+          "pricePerSqm": 65,
           "desc": "Standard, transparență maximă, securizat"
         },
         "bronze": {
           "name": "Sticlă Bronze 10mm ESG",
-          "pricePerSqm": 115,
+          "pricePerSqm": 105,
           "desc": "Nuanță caldă, protecție solară, securizat"
         },
         "gri": {
           "name": "Sticlă Gri 10mm ESG",
-          "pricePerSqm": 117,
+          "pricePerSqm": 105,
           "desc": "Nuanță neutră, design modern, securizat"
         },
         "satin": {
           "name": "Sticlă Sablată/Satinată 10mm ESG",
-          "pricePerSqm": 123,
+          "pricePerSqm": 110,
           "desc": "Confidențialitate, aspect mat, securizat"
         }
       },
@@ -1369,7 +1369,7 @@
       "typeCategories": {
         "pergola-bioclimatica": {
           "name": "Pergolă Bioclimatică",
-          "pricePerSqm": 733.33,
+          "pricePerSqm": 734,
           "desc": "Lamele orientabile, ventilație controlată"
         },
         "pergola-sticla": {
@@ -1401,12 +1401,12 @@
       "glassTypes": {
         "662": {
           "name": "Sticlă Laminată 66.2 ESG/VSG (13mm)",
-          "pricePerSqm": 149,
+          "pricePerSqm": 113,
           "desc": "2 foi 6mm securizate, folie PVB, standard"
         },
         "882": {
           "name": "Sticlă Laminată 88.2 ESG/VSG (17mm)",
-          "pricePerSqm": 175,
+          "pricePerSqm": 128,
           "desc": "2 foi 8mm securizate, rezistență sporită"
         }
       },
@@ -1809,61 +1809,81 @@
     },
     "partitionari": {
       "name": "Partiționări",
-      "basePrice": 133,
+      "basePrice": 0,
       "systemTypes": {
         "simpla": {
-          "name": "Simplă (fără profile)",
-          "pricePerSqm": 373,
-          "desc": "Panouri fixe, prinderi punctuale"
-        },
-        "profil": {
-          "name": "Cu Profile (caroiaj)",
-          "pricePerSqm": 467,
-          "desc": "Profile aluminiu, aspect industrial"
+          "name": "Simplă (profile perimetrale)",
+          "desc": "Profile U + L , garnituri UP2, sticlă securizată",
+          "hardwareKit": {
+            "profilU": {
+              "code": "11.6800.100.24",
+              "name": "Profil U 30×24×30 monobloc",
+              "pricePerM": 9.92,
+              "netPricePerM": 6.61
+            },
+            "profilL": {
+              "code": "10.6970.100.24",
+              "name": "Profil L cu clips (capac)",
+              "pricePerM": 12.2,
+              "netPricePerM": 8.13
+            },
+            "garnitura": {
+              "code": "71.ND10.002.00",
+              "name": "Garnitură UP2",
+              "pricePerM": 0.97,
+              "netPricePerM": 0.64,
+              "note": "2m/m liniar profil (interior+exterior)"
+            },
+            "imbinare": {
+              "code": "22.6P10.090.03",
+              "name": "Profil îmbinare H 90° L=3000mm",
+              "pricePerBuc": 13.81,
+              "netPricePerBuc": 9.2
+            }
+          },
+          "panelWidth": {
+            "min": 700,
+            "max": 980,
+            "unit": "mm"
+          }
         },
         "fono": {
-          "name": "Cu Izolație Fonică Ridicată",
-          "pricePerSqm": 640,
-          "desc": "Geam laminat acustic, Rw≥45dB"
+          "name": "Cu Izolație Fonică",
+          "desc": "Sistem acustic cu geam laminat fonoizolant — preț la cerere",
+          "priceOnRequest": true
         }
       },
       "glassTypes": {
-        "8mm": {
-          "name": "Securit 8mm",
-          "pricePerSqm": 173,
-          "desc": "Partiție interior standard"
+        "10mm-clar": {
+          "name": "10mm ESG Clar",
+          "pricePerSqm": 65,
+          "desc": "Sticlă securizată 10mm, transparență maximă"
         },
-        "10mm": {
-          "name": "Securit 10mm",
-          "pricePerSqm": 227,
-          "desc": "Rezistență sporită"
-        },
-        "frosted": {
-          "name": "Sablat / Imprimat",
-          "pricePerSqm": 280,
-          "desc": "Confidențialitate parțială sau totală"
-        },
-        "laminat-acustic": {
-          "name": "Laminat Acustic 10.4",
-          "pricePerSqm": 347,
-          "desc": "PVB acustic, atenuare fonică maximă"
+        "10mm-satinat": {
+          "name": "10mm ESG Satinat",
+          "pricePerSqm": 105,
+          "desc": "Sticlă securizată 10mm, satinată pentru intimitate"
         }
       },
       "options": {
-        "usa-batanta": {
-          "name": "Ușă Batantă Inclusă",
-          "price": 733,
-          "desc": "Ușă din același sistem, cu balamale"
+        "usa-simpla": {
+          "name": "Ușă Simplă (amortizor hidraulic)",
+          "desc": "Ușă batantă full-glass, amortizor hidraulic, fără toc",
+          "finishes": {
+            "inox-satinat": {
+              "name": "Inox Satinat",
+              "price": 293.2
+            },
+            "negru-mat": {
+              "name": "Negru Mat",
+              "price": 313.2
+            }
+          }
         },
-        "usa-culisanta": {
-          "name": "Ușă Culisantă Inclusă",
-          "price": 1000,
-          "desc": "Ușă culisantă integrată în partiție"
-        },
-        "caroiaj": {
-          "name": "Profile Caroiaj",
-          "pricePerSqm": 47,
-          "desc": "Grilaj decorativ"
+        "usa-toc": {
+          "name": "Ușă cu Toc Aluminiu",
+          "price": 371,
+          "desc": "Ușă batantă cu toc aluminiu perimetral, balamale reglabile"
         }
       }
     },
@@ -1946,7 +1966,7 @@
         },
         "antiaburire": {
           "name": "Folie Anti-Aburire",
-          "price": 87,
+          "price": 53,
           "desc": "Dezaburire electrică, ideal băi"
         }
       }

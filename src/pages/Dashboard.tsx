@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { launchOrderFromProject } from '../lib/quotes'
 import { useNavigate } from 'react-router-dom'
 
 interface Project {
@@ -136,6 +137,22 @@ export default function Dashboard() {
     }
   }
 
+  const handleLaunchOrder = async (project: Project) => {
+    if (!confirm(`Lansezi comanda pentru "${project.name}"? Oferta va apărea în panoul de administrare.`)) return
+    try {
+      await launchOrderFromProject(project)
+      alert('✅ Comandă lansată! O vei vedea în secțiunea "Oferte solicitate".')
+      // Refresh quotes list
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase.from('quotes').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+        if (data) setQuotes(data)
+      }
+    } catch (e: any) {
+      alert('Eroare: ' + (e.message || 'Nu s-a putut lansa comanda'))
+    }
+  }
+
   const deleteQuote = async (id: string) => {
     if (!confirm('Sigur vrei să ștergi această ofertă?')) return
     const { error } = await supabase.from('quotes').delete().eq('id', id)
@@ -182,6 +199,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex gap-3">
                       <button onClick={() => loadProject(p)} className="btn-primary px-6">Încarcă</button>
+                      <button onClick={() => handleLaunchOrder(p)} className="btn-primary px-6" style={{ background: 'linear-gradient(90deg, #22c55e, #16a34a)' }}>Comandă</button>
                       <button onClick={() => deleteProject(p.id)} className="btn-ghost px-4 text-red-400 hover:text-red-500">Șterge</button>
                     </div>
                   </div>

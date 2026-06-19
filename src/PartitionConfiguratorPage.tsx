@@ -7,61 +7,94 @@ import QuoteModal from "./QuoteModal";
 
 const FALLBACK = { 
   name: "Partiționări", 
-  basePrice: 100, 
+  basePrice: 0, 
   systemTypes: {
-    simpla: { name: "Simplă (fără profile)", pricePerSqm: 280, desc: "Panouri fixe, prinderi punctuale" },
-    profil: { name: "Cu Profile (caroiaj)", pricePerSqm: 350, desc: "Profile aluminiu, aspect industrial" },
-    fono: { name: "Cu Izolație Fonică Ridicată", pricePerSqm: 480, desc: "Geam laminat acustic, Rw≥45dB" }
+    simpla: { name: "Simplă (profile perimetrale)", desc: "Profile U + L , garnituri UP2, sticlă securizată", 
+      hardwareKit: {
+        profilU: { pricePerM: 9.92 },
+        profilL: { pricePerM: 12.20 },
+        garnitura: { pricePerM: 0.97 },
+        imbinare: { pricePerBuc: 13.81 }
+      },
+      panelWidth: { min: 700, max: 980 }
+    },
+    fono: { name: "Cu Izolație Fonică", desc: "Sistem acustic — preț la cerere", priceOnRequest: true }
   }, 
   glassTypes: {
-    "8mm": { name: "Securit 8mm", pricePerSqm: 130, desc: "Partiție interior standard" },
-    "10mm": { name: "Securit 10mm", pricePerSqm: 170, desc: "Rezistență sporită" },
-    frosted: { name: "Sablat / Imprimat", pricePerSqm: 210, desc: "Confidențialitate parțială sau totală" },
-    "laminat-acustic": { name: "Laminat Acustic 10.4", pricePerSqm: 260, desc: "PVB acustic, atenuare fonică maximă" }
+    "10mm-clar": { name: "10mm ESG Clar", pricePerSqm: 65, desc: "Sticlă securizată 10mm, transparență maximă" },
+    "10mm-satinat": { name: "10mm ESG Satinat", pricePerSqm: 105, desc: "Sticlă securizată 10mm, satinată pentru intimitate" }
   }, 
   options: {
-    "usa-batanta": { name: "Ușă Batantă Inclusă", price: 550, desc: "Ușă din același sistem, cu balamale" },
-    "usa-culisanta": { name: "Ușă Culisantă Inclusă", price: 750, desc: "Ușă culisantă integrată în partiție" },
-    caroiaj: { name: "Profile Caroiaj", pricePerSqm: 35, desc: "Grilaj decorativ" }
+    "usa-simpla": { name: "Ușă Simplă (amortizor hidraulic)", desc: "Ușă batantă full-glass, amortizor hidraulic, fără toc",
+      finishes: { "inox-satinat": { name: "Inox Satinat", price: 294 }, "negru-mat": { name: "Negru Mat", price: 314 } }
+    },
+    "usa-toc": { name: "Ușă cu Toc Aluminiu", price: 371, desc: "Ușă batantă cu toc aluminiu perimetral, balamale reglabile" }
   } 
 };
 
-function PartitionPreview({ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }) {
+/** Calculează numărul de panouri și lățimea fiecăruia (mm) */
+function calcPanels(widthM, panelMin, panelMax) {
+  if (!widthM || widthM <= 0) return { count: 0, eachMm: 0 };
+  const wMm = widthM * 1000;
+  const count = Math.max(1, Math.ceil(wMm / panelMax));
+  const eachMm = wMm / count;
+  if (eachMm < panelMin && count > 1) return { count, eachMm: Math.round(eachMm), warning: true };
+  return { count, eachMm: Math.round(eachMm), warning: eachMm < panelMin };
+}
+
+function PartitionPreview({ dims, system, glass, nrPanouri, tipUsa }) {
   const w = parseFloat(dims.width) || 3;
   const h = parseFloat(dims.height) || 2.4;
   const W = 308, H = 185, M = 20;
   const sc = Math.min((W - M * 2) / w, (H - M * 2) / h);
   const gW = w * sc, gH = h * sc, x0 = (W - gW) / 2, y0 = (H - gH) / 2;
-  const isFrosted = glass === "frosted";
-  const isAcoustic = glass === "laminat-acustic";
-  const glF = isFrosted ? "rgba(200,200,220,0.25)" : isAcoustic ? "rgba(160,200,255,0.12)" : "rgba(180,220,255,0.08)";
-  const glS = isFrosted ? "rgba(200,200,220,0.45)" : "rgba(180,220,255,0.4)";
-  const hasProfil = system === "profil";
+  const isSatinat = glass === "10mm-satinat";
+  const glF = isSatinat ? "rgba(200,200,220,0.25)" : "rgba(180,220,255,0.08)";
+  const glS = isSatinat ? "rgba(200,200,220,0.45)" : "rgba(180,220,255,0.4)";
   const profColor = "rgba(200,169,110,0.5)";
-  const cols = (hasProfil || inclCaroiaj) ? Math.max(2, Math.round(w / 0.9)) : 0;
-  const rows = (hasProfil || inclCaroiaj) ? Math.max(1, Math.round(h / 1.2)) : 0;
-  const doorW = (inclUsaBatanta || inclUsaCulisanta) ? Math.min(gW * 0.3, 60) : 0;
+  const cols = nrPanouri || 0;
+  const hasUsa = tipUsa && tipUsa !== "none";
+  const isToc = tipUsa === "usa-toc";
+  const doorW = hasUsa ? Math.min(gW * 0.3, 60) : 0;
+  const glassW = gW - doorW;
 
   return (
     <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
-      <line x1={x0-8} y1={y0+gH} x2={x0+gW+8} y2={y0+gH} stroke="rgba(200,169,110,0.4)" strokeWidth="2"/>
-      <rect x={x0} y={y0} width={gW-doorW} height={gH} fill={glF} stroke={glS} strokeWidth="1.5"/>
-      {cols > 0 && Array.from({length: cols-1}, (_,i) => (
-        <line key={`c${i}`} x1={x0+(i+1)*((gW-doorW)/cols)} y1={y0} x2={x0+(i+1)*((gW-doorW)/cols)} y2={y0+gH} stroke={profColor} strokeWidth={hasProfil?2:1}/>
+      {/* Perimetral profiles */}
+      <rect x={x0-4} y={y0-4} width={gW+8} height={gH+8} fill="none" stroke="rgba(200,169,110,0.3)" strokeWidth="3" rx="1"/>
+      <line x1={x0-8} y1={y0+gH} x2={x0+gW+8} y2={y0+gH} stroke="rgba(200,169,110,0.25)" strokeWidth="2"/>
+      
+      {/* Glass panels */}
+      {cols > 0 && Array.from({length: cols}, (_, i) => {
+        const px = x0 + i * (glassW / cols);
+        const pw = glassW / cols;
+        return (
+          <g key={`p${i}`}>
+            <rect x={px} y={y0} width={pw} height={gH} fill={glF} stroke={glS} strokeWidth="1.5"/>
+            <text x={px + pw/2} y={y0 + gH/2} textAnchor="middle" fill="rgba(200,200,220,0.5)" fontSize="9" fontFamily="DM Sans">
+              {i+1}
+            </text>
+          </g>
+        );
+      })}
+      
+      {/* Joint profiles between panels */}
+      {cols > 1 && Array.from({length: cols-1}, (_, i) => (
+        <line key={`j${i}`} x1={x0 + (i+1) * (glassW / cols)} y1={y0} x2={x0 + (i+1) * (glassW / cols)} y2={y0+gH} stroke={profColor} strokeWidth="2.5"/>
       ))}
-      {rows > 0 && Array.from({length: rows-1}, (_,i) => (
-        <line key={`r${i}`} x1={x0} y1={y0+(i+1)*(gH/rows)} x2={x0+gW-doorW} y2={y0+(i+1)*(gH/rows)} stroke={profColor} strokeWidth={hasProfil?2:1}/>
-      ))}
-      {(inclUsaBatanta || inclUsaCulisanta) && (
+      
+      {/* Door */}
+      {hasUsa && (
         <>
-          <rect x={x0+gW-doorW} y={y0} width={doorW} height={gH} fill={glF} stroke="rgba(200,169,110,0.6)" strokeWidth="2"/>
-          {inclUsaBatanta && <path d={`M ${x0+gW-doorW} ${y0+gH} A ${doorW} ${doorW} 0 0 0 ${x0+gW-doorW-doorW} ${y0+gH-doorW}`} fill="none" stroke="rgba(200,169,110,0.3)" strokeWidth="1" strokeDasharray="3,3"/>}
-          {inclUsaCulisanta && <rect x={x0+gW-doorW*1.5} y={y0+5} width={doorW} height={gH-10} fill="rgba(200,169,110,0.07)" stroke="rgba(200,169,110,0.35)" strokeWidth="1" strokeDasharray="3,2"/>}
-          <rect x={x0+gW-doorW*0.35} y={y0+gH/2-18} width={3} height={36} rx="1.5" fill="rgba(200,169,110,0.8)"/>
+          <rect x={x0+glassW} y={y0} width={doorW} height={gH} fill={glF} stroke="rgba(200,169,110,0.6)" strokeWidth="2"/>
+          {isToc && <rect x={x0+glassW} y={y0} width={doorW} height={gH} fill="none" stroke="rgba(200,169,110,0.5)" strokeWidth="3" rx="0"/>}
+          <path d={`M ${x0+glassW} ${y0+gH} A ${doorW} ${doorW} 0 0 0 ${x0+glassW-doorW} ${y0+gH-doorW}`} fill="none" stroke="rgba(200,169,110,0.3)" strokeWidth="1" strokeDasharray="3,3"/>
+          <rect x={x0+glassW-doorW*0.65} y={y0+gH/2-18} width={3} height={36} rx="1.5" fill="rgba(200,169,110,0.8)"/>
         </>
       )}
+      
       <text x={W/2} y={H-5} textAnchor="middle" fill="rgba(200,169,110,0.6)" fontSize="8" fontFamily="DM Sans">
-        {dims.width || "—"}m × {dims.height || "—"}m
+        {dims.width || "—"}m × {dims.height || "—"}m {cols > 0 ? `· ${cols} panou${cols>1?'ri':''}` : ''}
       </text>
     </svg>
   );
@@ -72,10 +105,9 @@ export default function PartitionConfiguratorPage() {
   const [vatRate, setVatRate] = useState(0.19);
   const [dims, setDims] = useState({ width: "", height: "2.4" });
   const [system, setSystem] = useState("simpla");
-  const [glass, setGlass] = useState("8mm");
-  const [inclUsaBatanta, setInclUsaBatanta] = useState(false);
-  const [inclUsaCulisanta, setInclUsaCulisanta] = useState(false);
-  const [inclCaroiaj, setInclCaroiaj] = useState(false);
+  const [glass, setGlass] = useState("10mm-clar");
+  const [tipUsa, setTipUsa] = useState("none");
+  const [finishUsa, setFinishUsa] = useState("inox-satinat");
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -103,9 +135,8 @@ export default function PartitionConfiguratorPage() {
           if (cfg.dims) setDims(cfg.dims);
           if (cfg.system) setSystem(cfg.system);
           if (cfg.glass) setGlass(cfg.glass);
-          if (cfg.inclUsaBatanta) setInclUsaBatanta(cfg.inclUsaBatanta);
-          if (cfg.inclUsaCulisanta) setInclUsaCulisanta(cfg.inclUsaCulisanta);
-          if (cfg.inclCaroiaj) setInclCaroiaj(cfg.inclCaroiaj);
+          if (cfg.tipUsa) setTipUsa(cfg.tipUsa);
+          if (cfg.finishUsa) setFinishUsa(cfg.finishUsa);
         }
       } catch (e) {}
       localStorage.removeItem('loadProject');
@@ -118,30 +149,92 @@ export default function PartitionConfiguratorPage() {
   }, []);
 
   const p = product;
-  const isValid = dims.width && parseFloat(dims.width) > 0;
+  const sysData = p?.systemTypes?.[system];
+  const isFono = system === "fono" || sysData?.priceOnRequest;
+  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono;
+
+  // Panel calculation
+  const pw = sysData?.panelWidth || { min: 700, max: 980 };
+  const panels = calcPanels(parseFloat(dims.width), pw.min, pw.max);
+  const nrPanouri = panels.count;
 
   const calculate = async () => {
-    if (!p) return;
+    if (!p || isFono) return;
     setCalculating(true);
     await new Promise(r => setTimeout(r, 600));
+    
     const w = parseFloat(dims.width) || 0;
     const h = parseFloat(dims.height) || 0;
     const area = w * h;
-    const sysP = area * (p.systemTypes[system]?.pricePerSqm || 0);
-    const glP = area * (p.glassTypes[glass]?.pricePerSqm || 0);
-    const ubaP = inclUsaBatanta ? p.options["usa-batanta"]?.price || 0 : 0;
-    const ucuP = inclUsaCulisanta ? p.options["usa-culisanta"]?.price || 0 : 0;
-    const carP = inclCaroiaj ? area * (p.options.caroiaj?.pricePerSqm || 0) : 0;
-    const { subtotal, vat, total } = calcQuote(Math.round((p.basePrice + sysP + glP + ubaP + ucuP + carP) * priceMultiplier), vatRate);
-    setQuote({ area: area.toFixed(2), sysP: Math.round(sysP * priceMultiplier), glP: Math.round(glP * priceMultiplier), ubaP, ucuP, carP: Math.round(carP), subtotal, vat, total });
+    
+    const qp = sysData?.hardwareKit;
+    if (!qp) { setCalculating(false); return; }
+    
+    // Profile perimetrale — bare de 3m, se rotunjește la multiplu de 3
+    const bara = 3; // metri per bară
+    const mLUcumparat = Math.ceil(w / bara) * bara;  // metri cumpărați per profil U
+    const mLLcumparat = Math.ceil(h / bara) * bara;  // metri cumpărați per profil L
+    const costU = 2 * mLUcumparat * qp.profilU.pricePerM;  // 2 buc (sus+jos)
+    const costL = 2 * mLLcumparat * qp.profilL.pricePerM;  // 2 buc (stânga+dreapta)
+    const perimetru = 2*w + 2*h;
+    
+    // Garnituri UP2: 2m per metru liniar de profil (interior + exterior)
+    const costGarnituri = 2 * perimetru * qp.garnitura.pricePerM;
+    
+    // Sticlă
+    const costSticla = area * (p.glassTypes[glass]?.pricePerSqm || 0);
+    
+    // Profile îmbinare — bare de 3m (22.6P10.090.03)
+    const nrImbinari = Math.max(0, nrPanouri - 1);
+    const barePerImbinare = Math.ceil(h / bara);
+    const costImbinare = nrImbinari * barePerImbinare * qp.imbinare.pricePerBuc;
+    
+    // Ușă — preț din finishes dacă există
+    const optUsa = p?.options?.[tipUsa];
+    const costUsa = tipUsa !== "none" 
+      ? (optUsa?.finishes?.[finishUsa]?.price || optUsa?.price || 0) 
+      : 0;
+    
+    const rawTotal = costU + costL + costGarnituri + costSticla + costImbinare + costUsa;
+    const costFeronerie = Math.round((costU + costL + costGarnituri + costImbinare + costUsa) * priceMultiplier);
+    const { subtotal, vat, total } = calcQuote(Math.round(rawTotal * priceMultiplier), vatRate);
+    
+    setQuote({ 
+      area: area.toFixed(2), 
+      nrPanouri,
+      eachMm: panels.eachMm,
+      costFeronerie,
+      costSticla: Math.round(costSticla * priceMultiplier), 
+      // Detalii complete pentru email/export (nu se afișează clientului)
+      costU: Math.round(costU * priceMultiplier),
+      costL: Math.round(costL * priceMultiplier),
+      costGarnituri: Math.round(costGarnituri * priceMultiplier),
+      costImbinare: Math.round(costImbinare * priceMultiplier),
+      costUsa,
+      tipUsa,
+      // Info cumpărare (bare de 3m)
+      mLUcumparat,
+      mLLcumparat,
+      bareImbinareTotal: nrImbinari * barePerImbinare,
+      kitCodes: {
+        profilU: qp.profilU,
+        profilL: qp.profilL,
+        garnitura: qp.garnitura,
+        imbinare: qp.imbinare,
+      },
+      subtotal, vat, total 
+    });
     setCalculating(false);
   };
 
   if (!p) return <PageLoader />;
 
+  const optSimpla = p?.options?.["usa-simpla"];
+  const optToc = p?.options?.["usa-toc"];
+
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa }} />
       <ConfigHeader title="Configurator Partiționări" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
@@ -151,63 +244,107 @@ export default function PartitionConfiguratorPage() {
               <NumberInput label="Lățime totală (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 3.0" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Ex: 2.4" step="0.05" />
             </div>
+            {nrPanouri > 0 && (
+              <div style={{ marginTop: 8, fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>
+                {nrPanouri} panou{nrPanouri>1?'ri':''} × {panels.eachMm}mm 
+                {panels.warning && <span style={{color: "rgba(255,180,100,0.8)", marginLeft: 8}}>(sub 700mm — verificați fezabilitatea)</span>}
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard num="02" label="Tip Sistem">
             {Object.entries(p.systemTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={system === k} onClick={() => setSystem(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
+              <OptionBtn key={k} selected={system === k} onClick={() => setSystem(k)} label={d.name} desc={d.desc} price={d.priceOnRequest ? "Preț la cerere" : ""} />
             ))}
           </SectionCard>
 
-          <SectionCard num="03" label="Tip Sticlă">
-            {Object.entries(p.glassTypes).map(([k, d]) => (
-              <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
-            ))}
-          </SectionCard>
+          {!isFono && (
+            <>
+              <SectionCard num="03" label="Tip Sticlă">
+                {Object.entries(p.glassTypes).map(([k, d]) => (
+                  <OptionBtn key={k} selected={glass === k} onClick={() => setGlass(k)} label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
+                ))}
+              </SectionCard>
 
-          <SectionCard num="04" label="Uși & Accesorii">
-            <ToggleOption checked={inclUsaBatanta} onChange={v => { setInclUsaBatanta(v); if (v) setInclUsaCulisanta(false); }} label={p.options["usa-batanta"].name} desc={p.options["usa-batanta"].desc} price={`${p.options["usa-batanta"].price}€`} />
-            <ToggleOption checked={inclUsaCulisanta} onChange={v => { setInclUsaCulisanta(v); if (v) setInclUsaBatanta(false); }} label={p.options["usa-culisanta"].name} desc={p.options["usa-culisanta"].desc} price={`${p.options["usa-culisanta"].price}€`} />
-            <ToggleOption checked={inclCaroiaj} onChange={setInclCaroiaj} label={p.options.caroiaj.name} desc={p.options.caroiaj.desc} price={`${p.options.caroiaj.pricePerSqm}€/m²`} />
-          </SectionCard>
+              <SectionCard num="04" label="Ușă (opțional)">
+                <ToggleOption checked={tipUsa === "none"} onChange={v => v && setTipUsa("none")} label="Fără ușă" desc="Doar panouri fixe" price="" />
+                <ToggleOption checked={tipUsa === "usa-simpla"} onChange={v => v && setTipUsa("usa-simpla")} label={optSimpla?.name || "Ușă Simplă"} desc={optSimpla?.desc || ""} price={`de la ${optSimpla?.finishes?.["inox-satinat"]?.price || 0}€`} />
+                {tipUsa === "usa-simpla" && optSimpla?.finishes && (
+                  <div style={{ marginLeft: 24, marginTop: 4, display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div style={{ fontSize: "0.72rem", color: "rgba(200,169,110,0.5)", marginBottom: 2 }}>Finisaj:</div>
+                    {optSimpla.finishes["inox-satinat"] && (
+                      <OptionBtn key="inox" selected={finishUsa === "inox-satinat"} onClick={() => setFinishUsa("inox-satinat")} label={optSimpla.finishes["inox-satinat"].name} desc="" price={`${optSimpla.finishes["inox-satinat"].price}€`} />
+                    )}
+                    {optSimpla.finishes["negru-mat"] && (
+                      <OptionBtn key="negru" selected={finishUsa === "negru-mat"} onClick={() => setFinishUsa("negru-mat")} label={optSimpla.finishes["negru-mat"].name} desc="" price={`${optSimpla.finishes["negru-mat"].price}€`} />
+                    )}
+                  </div>
+                )}
+                <ToggleOption checked={tipUsa === "usa-toc"} onChange={v => v && setTipUsa("usa-toc")} label={optToc?.name || "Ușă cu Toc"} desc={optToc?.desc || ""} price={`${optToc?.price || 0}€`} />
+              </SectionCard>
+            </>
+          )}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox>
-            <PartitionPreview dims={dims} system={system} glass={glass} inclUsaBatanta={inclUsaBatanta} inclUsaCulisanta={inclUsaCulisanta} inclCaroiaj={inclCaroiaj} />
+            <img 
+              src={isFono ? "/partitie-fonica.jpg" : "/partitie-simpla.png"} 
+              alt={isFono ? "Partiție cu izolație fonică" : "Partiție simplă — profile perimetrale"}
+              style={{ width: "100%", borderRadius: 8, filter: "invert(0.85) hue-rotate(180deg)" }}
+            />
+            {dims.width && dims.height && (
+              <div style={{ textAlign: "center", marginTop: 8, fontSize: "0.8rem", color: "rgba(200,169,110,0.6)" }}>
+                {dims.width}m × {dims.height}m {nrPanouri > 0 ? `· ${nrPanouri} panou${nrPanouri>1?'ri':''}` : ''}
+              </div>
+            )}
           </PreviewBox>
 
-          <QuoteSidebar 
-            quote={quote} 
-            isFormValid={isValid} 
-            calculating={calculating}
-            onCalculate={calculate} 
-            onReset={() => setQuote(null)} 
-            onSolicita={() => setShowModal(true)}
-            lines={quote ? [
-              { label: "Suprafață", value: `${quote.area} m²` },
-              { label: "Sistem", value: `${quote.sysP}€` },
-              { label: "Sticlă", value: `${quote.glP}€` },
-              quote.ubaP > 0 && { label: "Ușă batantă", value: `+${quote.ubaP}€`, accent: true },
-              quote.ucuP > 0 && { label: "Ușă culisantă", value: `+${quote.ucuP}€`, accent: true },
-              quote.carP > 0 && { label: "Caroiaj", value: `+${quote.carP}€`, accent: true },
-            ] : []}
-          />
+          {isFono ? (
+            <div style={{ background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", borderRadius: 12, padding: 24, textAlign: "center" }}>
+              <p style={{ color: "rgba(200,169,110,0.8)", margin: 0 }}>Preț la cerere</p>
+              <p style={{ color: "rgba(200,200,220,0.5)", fontSize: "0.85rem", margin: "8px 0 0" }}>Solicitați oferta personalizată</p>
+              <button
+                onClick={() => setShowModal(true)}
+                className="btn-primary mt-4"
+                style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)", padding: "10px 24px", borderRadius: 8, border: "none", color: "#0f1117", fontWeight: 600, cursor: "pointer" }}
+              >
+                Solicitați Ofertă
+              </button>
+            </div>
+          ) : (
+            <>
+              <QuoteSidebar 
+                quote={quote} 
+                isFormValid={isValid} 
+                calculating={calculating}
+                onCalculate={calculate} 
+                onReset={() => setQuote(null)} 
+                onSolicita={() => setShowModal(true)}
+                lines={quote ? [
+                  { label: "Suprafață", value: `${quote.area} m²` },
+                  { label: `${quote.nrPanouri} panou${quote.nrPanouri>1?'ri':''} × ${quote.eachMm}mm`, value: "" },
+                  { label: "Feronerie", value: `${quote.costFeronerie}€` },
+                  { label: "Sticlă", value: `${quote.costSticla}€` },
+                ] : []}
+              />
 
-          <button
-            onClick={() => setShowSaveModal(true)}
-            className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
-            style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
-          >
-            💾 Salvează proiect
-          </button>
+              <button
+                onClick={() => setShowSaveModal(true)}
+                className="btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm"
+                style={{ background: "linear-gradient(90deg, #c8a96e, #a88b5a)" }}
+              >
+                💾 Salvează proiect
+              </button>
+            </>
+          )}
         </div>
       </main>
 
       {showSaveModal && (
         <SaveProjectModal
           productType="partitionari"
-          config={{ dims, system, glass, inclUsaBatanta, inclUsaCulisanta, inclCaroiaj }}
+          config={{ dims, system, glass, tipUsa }}
           onClose={() => setShowSaveModal(false)}
         />
       )}

@@ -121,6 +121,31 @@ export default function SlidingDoorConfiguratorPage() {
 
   useEffect(() => { getUserMultiplier().then(m => setPriceMultiplier(m)); }, []);
 
+  // Restore saved project
+  useEffect(() => {
+    const saved = localStorage.getItem('loadProject');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.product_type === 'sliding' && parsed.config) {
+          const cfg = parsed.config;
+          if (cfg.dims) setDims(cfg.dims);
+          if (cfg.typology) setTypology(cfg.typology);
+          if (cfg.mount) setMount(cfg.mount);
+          if (cfg.carucioare) setCarucioare(cfg.carucioare);
+          if (cfg.kit) setKit(cfg.kit);
+          if (cfg.glass) setGlass(cfg.glass);
+          if (cfg.inclManer !== undefined) setInclManer(cfg.inclManer);
+          if (cfg.inclInc !== undefined) setInclInc(cfg.inclInc);
+          if (cfg.inclAmortizor !== undefined) setInclAmortizor(cfg.inclAmortizor);
+          if (cfg.inclSincron !== undefined) setInclSincron(cfg.inclSincron);
+          if (cfg.inclProfilOrnamental !== undefined) setInclProfilOrnamental(cfg.inclProfilOrnamental);
+        }
+      } catch (e) {}
+      localStorage.removeItem('loadProject');
+    }
+  }, []);
+
   useEffect(() => {
     if (!product) return;
     const p = product as Record<string, unknown>;
