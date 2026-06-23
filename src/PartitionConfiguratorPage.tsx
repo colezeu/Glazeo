@@ -288,11 +288,7 @@ export default function PartitionConfiguratorPage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox>
-            <img 
-              src={isFono ? "/partitie-fonica.jpg" : "/partitie-simpla.png"} 
-              alt={isFono ? "Partiție cu izolație fonică" : "Partiție simplă — profile perimetrale"}
-              style={{ width: "100%", borderRadius: 8, filter: "invert(0.85) hue-rotate(180deg)" }}
-            />
+            <PartitionPreview dims={dims} system={system} glass={glass} nrPanouri={nrPanouri} tipUsa={tipUsa} />
             {dims.width && dims.height && (
               <div style={{ textAlign: "center", marginTop: 8, fontSize: "0.8rem", color: "rgba(200,169,110,0.6)" }}>
                 {dims.width}m × {dims.height}m {nrPanouri > 0 ? `· ${nrPanouri} panou${nrPanouri>1?'ri':''}` : ''}
@@ -344,7 +340,7 @@ export default function PartitionConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="partitionari"
-          config={{ dims, system, glass, tipUsa }}
+          config={{ dims, system, glass, tipUsa, finishUsa }}
           onClose={() => setShowSaveModal(false)}
         />
       )}
