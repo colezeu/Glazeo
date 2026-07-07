@@ -312,7 +312,7 @@ export default function SlidingDoorConfiguratorPage() {
 
           {hasMountKits && (
             <SectionCard num="03" label="Prindere">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 {Object.keys(currentCart?.mountKits || {}).map(m => (
                   <OptionBtn key={m} selected={mount === m} onClick={() => {
                     setMount(m);
@@ -366,7 +366,7 @@ export default function SlidingDoorConfiguratorPage() {
           )}
 
           <SectionCard num="06" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v => {
                 const nv = Math.min(Math.max(parseFloat(v) || 0, 0.5), maxWidth);
                 setDims(d => ({ ...d, width: String(Math.round(nv * 100) / 100) }));

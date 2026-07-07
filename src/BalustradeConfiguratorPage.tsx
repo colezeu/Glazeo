@@ -139,7 +139,7 @@ export default function BalustradeConfiguratorPage() {
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <SectionCard num="01" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <div data-field="width">
                 <ValidatedNumberInput label="Lungime (m)" value={length} onChange={v => { update("length", v); setFormTouched(true); }} placeholder="Ex: 5.0" fieldName="width" helperText="Min: 0.1m — Max: 20m" />
               </div>
@@ -155,7 +155,7 @@ export default function BalustradeConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="02" label="Tip Sticlă">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {Object.entries(p.glassShapes).map(([k, d]) => (
                 <OptionBtn key={k} selected={glassShape === k} onClick={() => update("glassShape", k)} label={d.name} desc={d.desc} />
               ))}
@@ -174,7 +174,7 @@ export default function BalustradeConfiguratorPage() {
             {showProfileShape && (
               <div style={{ marginTop: 8 }}>
                 <div style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.4)", marginBottom: 8 }}>Formă profil:</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+                <div className="option-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
                   {Object.entries(p.profileShapes).map(([k, d]) => (
                     <OptionBtn key={k} selected={profileShape === k} onClick={() => update("profileShape", k)} label={d.name} price={d.pricePerMeter > 0 ? `+${d.pricePerMeter}€/m` : "Inclus"} center />
                   ))}

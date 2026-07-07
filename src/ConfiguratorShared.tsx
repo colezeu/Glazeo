@@ -4,13 +4,13 @@ import { ArrowLeft, Loader2, Check, RotateCcw } from "lucide-react";
 
 export function ConfigHeader({ title, quote }) {
   return (
-    <header style={{ background:"rgba(15,17,23,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 32px", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:56, zIndex:40 }}>
+    <header className="config-header" style={{ background:"rgba(15,17,23,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"0 32px", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:56, zIndex:40 }}>
       <div style={{ display:"flex", alignItems:"center", gap:16 }}>
         <Link to="/" style={{ display:"flex", alignItems:"center", justifyContent:"center", width:36, height:36, borderRadius:10, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", color:"#f0ede8", textDecoration:"none" }}>
           <ArrowLeft size={16} />
         </Link>
         <div>
-          <div style={{ fontWeight:700, fontSize:"0.95rem" }}>{title}</div>
+          <div className="config-title" style={{ fontWeight:700, fontSize:"0.95rem" }}>{title}</div>
           <img src="/logo.png" alt="Glass Associates" style={{ height:18, maxWidth:170, objectFit:"contain", filter:"invert(1)", opacity:0.5, marginTop:4 }} />
         </div>
       </div>
@@ -105,7 +105,7 @@ export function QuoteLine({ label, value, accent, muted }) {
 
 export function QuoteSidebar({ quote, isFormValid, calculating, onCalculate, onReset, onSolicita, lines }) {
   return (
-    <div className="glass-card" style={{ borderRadius:20, padding:"24px", position:"sticky", top:80 }}>
+    <div className="config-sidebar glass-card" style={{ borderRadius:20, padding:"24px", position:"sticky", top:80 }}>
       <div style={{ fontSize:"0.75rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", color:"rgba(240,237,232,0.4)", marginBottom:20 }}>Rezumat Ofertă</div>
       {!quote ? (
         <>
@@ -203,7 +203,7 @@ export function ErrorBanner({ message, onRetry, onBack }) {
 
 export function PreviewBox({ title, children }) {
   return (
-    <div className="glass-card" style={{ borderRadius:20, padding:"20px 16px" }}>
+    <div className="preview-svg-wrap glass-card" style={{ borderRadius:20, padding:"20px 16px" }}>
       <div style={{ fontSize:"0.72rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", color:"rgba(240,237,232,0.4)", marginBottom:14 }}>{title || "Previzualizare 2D"}</div>
       {children}
     </div>

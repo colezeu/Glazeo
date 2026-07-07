@@ -234,7 +234,7 @@ export default function ShowerConfiguratorPage() {
                   {["Cu bară stabilizatoare", "Până în tavan"].map((label, gi) => (
                     <div key={gi}>
                       <div style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.4)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                      <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                         {subtypes.slice(gi*2, gi*2+2).map(st => (
                           <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                             style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
@@ -248,7 +248,7 @@ export default function ShowerConfiguratorPage() {
                   ))}
                 </div>
               ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {subtypes.map(st => (
                     <div key={st.key} onClick={() => setConfig(c => ({ ...c, subtype: st.key }))}
                       style={{ cursor: "pointer", padding: 10, borderRadius: 10, border: subtype === st.key ? "2px solid #c8a96e" : "2px solid rgba(255,255,255,0.08)", background: subtype === st.key ? "rgba(200,169,110,0.1)" : "rgba(255,255,255,0.02)" }}>
@@ -281,7 +281,7 @@ export default function ShowerConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num={subtypes.length > 1 ? "04" : "03"} label="Finisaj Sticlă">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {Object.entries(p.glassFinishes || {}).map(([k, d]) => (
                 <OptionBtn key={k} selected={finish === k} onClick={() => setConfig(c => ({ ...c, finish: k }))} label={d.name} desc={d.desc} price={d.pricePerSqm > 0 ? `+${d.pricePerSqm}€/m²` : "Inclus"} />
               ))}
@@ -289,7 +289,7 @@ export default function ShowerConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num={subtypes.length > 1 ? "05" : "04"} label="Finisaj Feronerie">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {Object.entries(p.hardwareFinishes || {}).map(([k, d]) => {
                 const isAvailable = availableFinishes.includes(k);
                 return (

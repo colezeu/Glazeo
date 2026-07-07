@@ -152,7 +152,7 @@ export default function CopertinaConfiguratorPage() {
       <main className="configurator-grid" style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
           <SectionCard num="01" label="Dimensiuni">
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+            <div className="config-dim-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v=>setDims(d=>({...d,width:v}))} placeholder="Ex: 4.0"/>
               <NumberInput label="Proiecție (m)" value={dims.depth} onChange={v=>setDims(d=>({...d,depth:v}))} placeholder="Ex: 2.0"/>
             </div>

@@ -215,7 +215,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
                     </button>
                   )}
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                   <NumberInput label="Lungime (m)" value={section.width}
                     onChange={v => updateSection(section.id, "width", v)}
                     placeholder="Ex: 2.0" step="0.1" />

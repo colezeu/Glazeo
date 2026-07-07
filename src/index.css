@@ -268,31 +268,84 @@ select option {
   to { transform: rotate(360deg); }
 }
 
+/* ─── Responsive configurator header ────────────────────────── */
+@media (max-width: 640px) {
+  .config-header {
+    padding: 0 12px !important;
+    height: 52px !important;
+  }
+  .config-header img {
+    display: none;
+  }
+  .config-header .config-title {
+    font-size: 0.82rem !important;
+  }
+}
+
 /* ─── Responsive configuratoare ─────────────────────────────── */
 @media (max-width: 900px) {
-  /* Grid principal configurator → single column */
   .configurator-grid {
     grid-template-columns: 1fr !important;
+    padding: 20px 16px !important;
+    gap: 16px !important;
   }
-  /* Quote sidebar sus pe mobil */
   .configurator-grid > div:last-child {
     order: -1;
+  }
+  /* Force dimension grids to 2-column */
+  .config-dim-grid {
+    grid-template-columns: 1fr 1fr !important;
   }
 }
 
 @media (max-width: 640px) {
-  /* Dimensiuni grid → 1 coloana */
+  /* Prevent iOS zoom on inputs */
   .configurator-grid input[type="number"] {
-    font-size: 16px; /* Previne zoom pe iOS */
+    font-size: 16px;
   }
-  /* Section cards padding mai mic */
+  /* Cards */
   .glass-card {
-    padding: 16px !important;
+    padding: 14px !important;
   }
-  /* Butoane full width pe mobil */
+  /* Buttons */
   .btn-primary, .btn-ghost {
     width: 100%;
     justify-content: center;
+  }
+  /* Dimension grids → single column */
+  .config-dim-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Option button grids → 2-col then 1 */
+  .option-grid-3 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* Option preview thumbnails smaller */
+  .option-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+    gap: 6px !important;
+  }
+  /* Sidebar sticky → static on mobile */
+  .config-sidebar {
+    position: static !important;
+  }
+  /* Modal overlay padding */
+  .modal-overlay {
+    padding: 12px;
+  }
+  /* SVG preview scrollable horizontal */
+  .preview-svg-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 400px) {
+  .option-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+  .option-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)) !important;
   }
 }
 

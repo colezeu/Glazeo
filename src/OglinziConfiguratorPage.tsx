@@ -213,14 +213,14 @@ export default function OglinziConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
           <SectionCard num="01" label="Dimensiuni">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <NumberInput label="Lățime (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 0.8" step="0.05" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Ex: 1.2" step="0.05" />
             </div>
           </SectionCard>
 
           <SectionCard num="02" label="Tip Oglindă">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {Object.entries(p.mirrorTypes).map(([k, d]) => (
                 <OptionBtn key={k} selected={mirrorType === k} onClick={() => setMirrorType(k)}
                   label={d.name} desc={d.desc} price={`${d.pricePerSqm}€/m²`} />
@@ -229,7 +229,7 @@ export default function OglinziConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="03" label="Formă">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {Object.entries(p.shapes).map(([k, d]) => (
                 <OptionBtn key={k} selected={shape === k} onClick={() => setShape(k)}
                   label={d.name} desc={d.desc} price={d.price > 0 ? `+${d.price}€` : "Standard"} />
@@ -238,7 +238,7 @@ export default function OglinziConfiguratorPage() {
           </SectionCard>
 
           <SectionCard num="04" label="Grosime">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {Object.entries(p.thicknesses).map(([k, d]) => (
                 <OptionBtn key={k} selected={thickness === k} onClick={() => setThickness(k)}
                   label={d.name} desc={d.desc} price={d.pricePerSqm > 0 ? `+${d.pricePerSqm}€/m²` : "Standard"} />
