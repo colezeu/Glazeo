@@ -8,6 +8,7 @@ import { supabase } from "./lib/supabase";
 import HomePage from "./HomePage";
 import AuthPage from "./pages/AuthPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 
 // Lazy load — se încarcă doar când userul navighează la ele
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -148,8 +149,8 @@ function App() {
             <Route path="/" element={<AuthPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/admin/partners" element={<ProtectedRoute><PartnerManagement /></ProtectedRoute>} />
-            <Route path="/admin/quotes" element={<ProtectedRoute><QuotesAdmin /></ProtectedRoute>} />
+            <Route path="/admin/partners" element={<AdminRoute><PartnerManagement /></AdminRoute>} />
+            <Route path="/admin/quotes" element={<AdminRoute><QuotesAdmin /></AdminRoute>} />
 
             {/* Configuratoare — lazy loaded */}
             <Route path="/configurator/balustrade" element={<BalustradeConfiguratorPage />} />
