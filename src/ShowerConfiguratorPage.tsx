@@ -121,9 +121,10 @@ export default function ShowerConfiguratorPage() {
 
   const auto10mm = p.auto10mm || { heightThreshold: 2.2, widthThreshold: 0.9 };
   const h = parseFloat(height) || 0, w = parseFloat(width) || 0, d = hasLateral ? (parseFloat(depth) || 0) : 0;
-  // Culisante: lățimea totală se împarte la 2 panouri frontale (fix + mobil)
-  const isSliding = enclosure?.startsWith("culisant");
-  const panelWidth = isSliding ? w / 2 : w;
+  // Subtypes where front width is split across 2 panels (fix + usă)
+  const SPLIT_WIDTH_SUBTYPES = new Set(["standard", "0l", "1l", "2l"]);
+  const splitWidth = SPLIT_WIDTH_SUBTYPES.has(subtype);
+  const panelWidth = splitWidth ? w / 2 : w;
   const forced10mm = h > auto10mm.heightThreshold || panelWidth > auto10mm.widthThreshold;
   const effectiveGlassType = forced10mm ? "10mm" : glassType;
   const isValid = w > 0 && h > 0 && (!hasLateral || d > 0);
@@ -278,7 +279,7 @@ export default function ShowerConfiguratorPage() {
             )}
             {forced10mm && (
               <div style={{ marginTop: 8, padding: "8px 12px", background: "rgba(200,169,110,0.1)", borderRadius: 6, fontSize: "0.85rem", color: "#c8a96e" }}>
-                {isSliding
+                {splitWidth
                   ? `⚠️ Dimensiunile impun sticlă securizată de 10mm (H > ${auto10mm.heightThreshold}m sau lățime panou > ${auto10mm.widthThreshold}m — fiecare panou ≈${panelWidth.toFixed(2)}m)`
                   : `⚠️ Dimensiunile impun sticlă securizată de 10mm (H > ${auto10mm.heightThreshold}m sau L > ${auto10mm.widthThreshold}m)`
                 }
