@@ -92,6 +92,10 @@ export const SEO_PAGES = {
     title: "Configurator Oglinzi la Comandă",
     description: "Configurați oglinzi la comandă. Clară, bronze, gri sau antichizată. Forme standard sau speciale, cu iluminare LED.",
   },
+  vitrovibe: {
+    title: "Configurator VitroVibe®",
+    description: "Configurați panouri decorative premium VitroVibe®. Sticlă laminată cu textile reale (denim, in, catifea), carbon, ardezie, inserții metalice. Ofertă personalizată — Glass Associates.",
+  },
   despre: {
     title: "Despre Noi",
     description: "Glass Associates — peste 18 ani de experiență în sticlă structurală. Peste 2400 de proiecte finalizate.",

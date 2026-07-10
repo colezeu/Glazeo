@@ -1970,6 +1970,16 @@
           "desc": "Dezaburire electrică, ideal băi"
         }
       }
+    },
+    "vitrovibe": {
+      "name": "VitroVibe®",
+      "basePrice": 250,
+      "desc": "Sticlă laminată cu textile și materiale reale — nu folii printate. Fiecare panou este unic, personalizat. Preț orientativ, oferta finală după consultanță.",
+      "categories": ["textile", "tehnice", "naturale", "decorative"],
+      "grosime": "10–17 mm (depinde de material)",
+      "sticla": "Float extra-clară, securizată ESG",
+      "dimensiuneMaxima": "2000 × 4000 mm",
+      "certificari": ["EN 12150", "EN 14449"]
     }
   }
 }

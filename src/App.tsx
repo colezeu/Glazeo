@@ -24,7 +24,9 @@ const SlidingDoorConfiguratorPage = lazy(() => import("./SlidingDoorConfigurator
 const PartitionConfiguratorPage = lazy(() => import("./PartitionConfiguratorPage"));
 const OglinziConfiguratorPage = lazy(() => import("./OglinziConfiguratorPage"));
 const CopertinaConfiguratorPage = lazy(() => import("./CopertinaConfiguratorPage"));
+const VitroVibeConfiguratorPage = lazy(() => import("./VitroVibeConfiguratorPage"));
 const QuotesAdmin = lazy(() => import("./pages/QuotesAdmin"));
+const ServicesPage = lazy(() => import("./ServicesPage"));
 
 /** Loading fallback pentru lazy components */
 function PageLoader() {
@@ -162,6 +164,8 @@ function App() {
             <Route path="/configurator/partitionari" element={<PartitionConfiguratorPage />} />
             <Route path="/configurator/oglinzi" element={<OglinziConfiguratorPage />} />
             <Route path="/configurator/copertina" element={<CopertinaConfiguratorPage />} />
+            <Route path="/configurator/vitrovibe" element={<VitroVibeConfiguratorPage />} />
+            <Route path="/services" element={<ServicesPage />} />
           </Routes>
         </Suspense>
       </AppErrorBoundary>
