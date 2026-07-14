@@ -28,7 +28,8 @@ const FALLBACK = {
     "usa-simpla": { name: "Ușă Simplă (amortizor hidraulic)", desc: "Ușă batantă full-glass, amortizor hidraulic, fără toc",
       finishes: { "inox-satinat": { name: "Inox Satinat", price: 294 }, "negru-mat": { name: "Negru Mat", price: 314 } }
     },
-    "usa-toc": { name: "Ușă cu Toc Aluminiu", price: 371, desc: "Ușă batantă cu toc aluminiu perimetral, balamale reglabile" }
+    "usa-toc": { name: "Ușă cu Toc Aluminiu", price: 371, desc: "Ușă batantă cu toc aluminiu perimetral, balamale reglabile" },
+    "profil-policarbonat": { name: "Profil Policarbonat (între sticle)", code: "22.6P10.180.03", pricePerBuc: 12.34, desc: "Profil transparent 180° între panouri, L=3000mm" }
   } 
 };
 
@@ -108,6 +109,7 @@ export default function PartitionConfiguratorPage() {
   const [glass, setGlass] = useState("10mm-clar");
   const [tipUsa, setTipUsa] = useState("none");
   const [finishUsa, setFinishUsa] = useState("inox-satinat");
+  const [inclPolicarbonat, setInclPolicarbonat] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -137,6 +139,7 @@ export default function PartitionConfiguratorPage() {
           if (cfg.glass) setGlass(cfg.glass);
           if (cfg.tipUsa) setTipUsa(cfg.tipUsa);
           if (cfg.finishUsa) setFinishUsa(cfg.finishUsa);
+          if (cfg.inclPolicarbonat !== undefined) setInclPolicarbonat(cfg.inclPolicarbonat);
         }
       } catch (e) {}
       localStorage.removeItem('loadProject');
@@ -189,14 +192,19 @@ export default function PartitionConfiguratorPage() {
     const barePerImbinare = Math.ceil(h / bara);
     const costImbinare = nrImbinari * barePerImbinare * qp.imbinare.pricePerBuc;
     
+    // Profil policarbonat (22.6P10.180.03) — alternativă la H-profile
+    const costPolicarbonat = inclPolicarbonat 
+      ? nrImbinari * barePerImbinare * (p?.options?.["profil-policarbonat"]?.pricePerBuc || 12.34)
+      : 0;
+    
     // Ușă — preț din finishes dacă există
     const optUsa = p?.options?.[tipUsa];
     const costUsa = tipUsa !== "none" 
       ? (optUsa?.finishes?.[finishUsa]?.price || optUsa?.price || 0) 
       : 0;
     
-    const rawTotal = costU + costL + costGarnituri + costSticla + costImbinare + costUsa;
-    const costFeronerie = Math.round((costU + costL + costGarnituri + costImbinare + costUsa) * priceMultiplier);
+    const rawTotal = costU + costL + costGarnituri + costSticla + costImbinare + costPolicarbonat + costUsa;
+    const costFeronerie = Math.round((costU + costL + costGarnituri + costImbinare + costPolicarbonat + costUsa) * priceMultiplier);
     const { subtotal, vat, total } = calcQuote(Math.round(rawTotal * priceMultiplier), vatRate);
     
     setQuote({ 
@@ -210,6 +218,7 @@ export default function PartitionConfiguratorPage() {
       costL: Math.round(costL * priceMultiplier),
       costGarnituri: Math.round(costGarnituri * priceMultiplier),
       costImbinare: Math.round(costImbinare * priceMultiplier),
+      costPolicarbonat: Math.round(costPolicarbonat * priceMultiplier),
       costUsa,
       tipUsa,
       // Info cumpărare (bare de 3m)
@@ -234,7 +243,7 @@ export default function PartitionConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa, inclPolicarbonat }} />
       <ConfigHeader title="Configurator Partiționări" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
@@ -282,6 +291,18 @@ export default function PartitionConfiguratorPage() {
                 )}
                 <ToggleOption checked={tipUsa === "usa-toc"} onChange={v => v && setTipUsa("usa-toc")} label={optToc?.name || "Ușă cu Toc"} desc={optToc?.desc || ""} price={`${optToc?.price || 0}€`} />
               </SectionCard>
+
+              {nrPanouri > 1 && (
+                <SectionCard num="05" label="Accesorii">
+                  <ToggleOption 
+                    checked={inclPolicarbonat} 
+                    onChange={setInclPolicarbonat} 
+                    label={p?.options?.["profil-policarbonat"]?.name || "Profil Policarbonat"} 
+                    desc={p?.options?.["profil-policarbonat"]?.desc || "Profil transparent între panouri"} 
+                    price={`${p?.options?.["profil-policarbonat"]?.pricePerBuc || 12.34}€/bară`} 
+                  />
+                </SectionCard>
+              )}
             </>
           )}
         </div>
@@ -310,6 +331,32 @@ export default function PartitionConfiguratorPage() {
             </div>
           ) : (
             <>
+              {/* Detail panel — profile images */}
+              <div className="glass-card" style={{ borderRadius: 20, padding: "20px" }}>
+                <div style={{ fontSize: "0.72rem", color: "rgba(200,169,110,0.5)", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
+                  Detaliu Profile
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <div style={{ textAlign: "center" }}>
+                    <img src="/profil-u-perimetral.png" alt="Profil U" 
+                      style={{ width: "100%", maxHeight: 80, objectFit: "contain", filter: "invert(0.92)", borderRadius: 8, padding: 4 }} />
+                    <div style={{ fontSize: "0.65rem", color: "rgba(240,237,232,0.4)", marginTop: 4 }}>Profil U</div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <img src="/profil-l-cu-capac.png" alt="Profil L cu capac" 
+                      style={{ width: "100%", maxHeight: 80, objectFit: "contain", filter: "invert(0.92)", borderRadius: 8, padding: 4 }} />
+                    <div style={{ fontSize: "0.65rem", color: "rgba(240,237,232,0.4)", marginTop: 4 }}>Profil L cu capac</div>
+                  </div>
+                </div>
+                {inclPolicarbonat && (
+                  <div style={{ marginTop: 12, textAlign: "center" }}>
+                    <img src="/profil-policarbonat.png" alt="Profil Policarbonat" 
+                      style={{ width: "100%", maxHeight: 80, objectFit: "contain", filter: "invert(0.92)", borderRadius: 8, padding: 4 }} />
+                    <div style={{ fontSize: "0.65rem", color: "rgba(200,169,110,0.5)", marginTop: 4 }}>Profil Policarbonat 180°</div>
+                  </div>
+                )}
+              </div>
+
               <QuoteSidebar 
                 quote={quote} 
                 isFormValid={isValid} 
@@ -340,7 +387,7 @@ export default function PartitionConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="partitionari"
-          config={{ dims, system, glass, tipUsa, finishUsa }}
+          config={{ dims, system, glass, tipUsa, finishUsa, inclPolicarbonat }}
           onClose={() => setShowSaveModal(false)}
         />
       )}

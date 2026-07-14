@@ -1884,6 +1884,13 @@
           "name": "Ușă cu Toc Aluminiu",
           "price": 371,
           "desc": "Ușă batantă cu toc aluminiu perimetral, balamale reglabile"
+        },
+        "profil-policarbonat": {
+          "name": "Profil Policarbonat (între sticle)",
+          "code": "22.6P10.180.03",
+          "pricePerBuc": 12.34,
+          "netPricePerBuc": 8.22,
+          "desc": "Profil transparent 180° între panouri, L=3000mm — aspect discret, fără profile metalice vizibile"
         }
       }
     },
