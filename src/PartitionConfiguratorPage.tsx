@@ -1,6 +1,6 @@
 // @ts-nocheck
 import SaveProjectModal from "./components/SaveProjectModal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal";
@@ -161,14 +161,21 @@ export default function PartitionConfiguratorPage() {
   const panels = calcPanels(parseFloat(dims.width), pw.min, pw.max);
   const nrPanouriDefault = panels.count;
   const [nrPanouri, setNrPanouri] = useState(nrPanouriDefault);
-  const [userPickedPanels, setUserPickedPanels] = useState(false);
   
-  // Update default when width changes, but only if user hasn't manually picked
+  // When width changes, keep user's choice if still valid, otherwise reset
+  const prevWidth = useRef(dims.width);
   useEffect(() => {
-    if (!userPickedPanels) {
-      setNrPanouri(nrPanouriDefault);
+    if (dims.width !== prevWidth.current) {
+      prevWidth.current = dims.width;
+      // Check if current nrPanouri is still in the valid range for the new width
+      const w = parseFloat(dims.width) * 1000;
+      const newMin = Math.max(1, Math.ceil(w / pw.max));
+      const newMax = Math.min(6, Math.max(1, Math.floor(w / pw.min)));
+      if (nrPanouri < newMin || nrPanouri > newMax) {
+        setNrPanouri(nrPanouriDefault);
+      }
     }
-  }, [dims.width, system]);
+  }, [dims.width]);
   
   // Calculate actual panel width
   const wMm = (parseFloat(dims.width) || 0) * 1000;
@@ -299,7 +306,7 @@ export default function PartitionConfiguratorPage() {
                 <span style={{ fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>Panouri:</span>
                 <select 
                   value={nrPanouri} 
-                  onChange={e => { setNrPanouri(Number(e.target.value)); setUserPickedPanels(true); }}
+                  onChange={e => setNrPanouri(Number(e.target.value))}
                   className="input-field"
                   style={{ padding: "6px 12px", fontSize: "0.85rem", width: "auto" }}
                 >
