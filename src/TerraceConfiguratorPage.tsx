@@ -5,9 +5,6 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, Select
 import QuoteModal from "./QuoteModal.js";
 import { Plus, Trash2 } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 
 interface Section {
   id: number;
@@ -50,10 +47,6 @@ export default function TerraceConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [loadError, setLoadError] = useState(false);
-
-  useAutoSave("terrace", { sections, height, glass, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL, blocator });
-
-  const resetAll = () => { clearSavedConfig("terrace"); window.location.reload(); };
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -194,8 +187,7 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
   };
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="terrace" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Multitrack" productType="terrace-multitrack" config={{ sections, glass, height, totalCanate, deschidereMijloc, sineNeintrerupte, manerScoica, manerRectangular, incuietoare, profileLaterale, vopsireRAL, blocator }} />
       <ConfigHeader title="Configurator Terase — Multitrack" quote={quote} />
 

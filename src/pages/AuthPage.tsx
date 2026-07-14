@@ -24,13 +24,6 @@ export default function AuthPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
-
-      // Loghează login-ul
-      supabase.from('partner_activity').insert({
-        user_id: (await supabase.auth.getUser()).data.user?.id,
-        email,
-        event: 'login'
-      }).then(() => {})
       navigate('/home', { replace: true })
     } catch (error: unknown) {
       setMessage(error instanceof Error ? error.message : 'A apărut o eroare')

@@ -18,77 +18,10 @@ function normalizeConfig(source, defaultConfig) {
   const normalized = { ...defaultConfig };
 
   for (const [key, value] of Object.entries(source || {})) {
-    if (key === "_savedAt") continue; // nu face parte din config
     normalized[key] = coerceValue(value, defaultConfig[key]);
   }
 
   return normalized;
-}
-
-const META_KEY = "_glazeo_meta";
-
-function getMeta() {
-  try {
-    const raw = localStorage.getItem(META_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function setMeta(updates) {
-  try {
-    const current = getMeta();
-    localStorage.setItem(META_KEY, JSON.stringify({ ...current, ...updates }));
-  } catch {}
-}
-
-/**
- * Verifică dacă există o configurație salvată pentru un configurator,
- * care nu a fost încărcată în sesiunea curentă.
- * Returnează { hasSaved, savedAt, productName } sau null.
- */
-export function getSavedConfigMeta(key) {
-  try {
-    const raw = localStorage.getItem(`ga_${key}`);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    const meta = getMeta();
-    const lastLoaded = meta[`loaded_${key}`];
-    const savedAt = parsed._savedAt;
-
-    // Dacă a fost deja încărcat în această sesiune, nu mai arăta bannerul
-    if (lastLoaded && savedAt && lastLoaded >= savedAt) {
-      return null;
-    }
-
-    return {
-      hasSaved: true,
-      savedAt: savedAt || null,
-      productName: parsed._productName || null,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Marchează o configurație ca fiind încărcată în sesiunea curentă.
- */
-export function markConfigLoaded(key) {
-  setMeta({ [`loaded_${key}`]: Date.now() });
-}
-
-/**
- * Șterge configurația salvată pentru un configurator.
- */
-export function clearSavedConfig(key) {
-  try {
-    localStorage.removeItem(`ga_${key}`);
-    const meta = getMeta();
-    delete meta[`loaded_${key}`];
-    localStorage.setItem(META_KEY, JSON.stringify(meta));
-  } catch {}
 }
 
 /**
@@ -115,20 +48,14 @@ export function usePersistedConfig(key, defaultConfig) {
       }
     }
     if (hasUrlParams) {
-      const restored = normalizeConfig(urlConfig, defaultConfig);
-      // Marchează ca încărcat
-      markConfigLoaded(key);
-      return restored;
+      return normalizeConfig(urlConfig, defaultConfig);
     }
 
     // 2. Încearcă localStorage
     try {
       const saved = localStorage.getItem(`ga_${key}`);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        const restored = normalizeConfig(parsed, defaultConfig);
-        markConfigLoaded(key);
-        return restored;
+        return normalizeConfig(JSON.parse(saved), defaultConfig);
       }
     } catch {}
 
@@ -139,8 +66,7 @@ export function usePersistedConfig(key, defaultConfig) {
   // Salvează în localStorage la fiecare schimbare
   useEffect(() => {
     try {
-      const toSave = { ...config, _savedAt: Date.now() };
-      localStorage.setItem(`ga_${key}`, JSON.stringify(toSave));
+      localStorage.setItem(`ga_${key}`, JSON.stringify(config));
     } catch {}
   }, [key, config]);
 
@@ -171,7 +97,7 @@ export function usePersistedConfig(key, defaultConfig) {
   const resetConfig = useCallback(() => {
     setConfigState(defaultConfig);
     if (typeof window !== "undefined") {
-      clearSavedConfig(key);
+      localStorage.removeItem(`ga_${key}`);
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, [key, defaultConfig]);

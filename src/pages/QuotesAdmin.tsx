@@ -4,9 +4,8 @@ import { fetchQuotes, updateQuoteStatus, type QuoteData } from '../lib/quotes'
 import { formatPrice } from '../ConfiguratorShared'
 import { format } from 'date-fns'
 import { ro } from 'date-fns/locale'
-import { FileText, ChevronDown, ChevronRight, Clock } from 'lucide-react'
+import { FileText, ChevronDown, ChevronRight } from 'lucide-react'
 import { generateQuotePDF, formatPartitionDetails } from '../quotePdf'
-import { supabase } from '../lib/supabase'
 
 function formatBreakdown(breakdown: any, config: any, quote: any) {
   // Partiționări — recalculează mereu din config (nu depinde de _breakdown)
@@ -168,18 +167,10 @@ export default function QuotesAdmin() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
-  const [activities, setActivities] = useState<any[]>([])
-  const [showActivity, setShowActivity] = useState(true)
 
   useEffect(() => {
     loadQuotes()
-    loadActivity()
   }, [])
-
-  const loadActivity = async () => {
-    const { data } = await supabase.from('partner_activity').select('*').order('created_at', { ascending: false }).limit(30)
-    if (data) setActivities(data)
-  }
 
   const loadQuotes = async () => {
     setLoading(true)
@@ -223,39 +214,6 @@ export default function QuotesAdmin() {
             {quotes.length} oferte
           </span>
         </div>
-
-        {/* Activitate parteneri */}
-        {showActivity && activities.length > 0 && (
-          <div className="glass-card" style={{ borderRadius: 16, padding: '16px 20px', marginBottom: 24, position: 'relative' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Clock size={16} style={{ color: '#c8a96e' }} />
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'rgba(240,237,232,0.5)' }}>
-                  Activitate Parteneri
-                </span>
-                <span style={{ fontSize: '0.7rem', color: 'rgba(240,237,232,0.25)', marginLeft: 4 }}>
-                  (ultimele 30)
-                </span>
-              </div>
-              <button onClick={() => setShowActivity(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(240,237,232,0.3)', cursor: 'pointer', fontSize: '0.9rem', padding: '2px 6px', lineHeight: 1 }}>
-                ×
-              </button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 200, overflowY: 'auto' }}>
-              {activities.map((a, i) => (
-                <div key={a.id || i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 8px', borderRadius: 6, background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent', fontSize: '0.78rem' }}>
-                  <span style={{ color: '#22c55e', fontWeight: 600, minWidth: 14, textAlign: 'center' }}>●</span>
-                  <span style={{ color: 'rgba(240,237,232,0.7)', fontWeight: 500 }}>{a.email}</span>
-                  <span style={{ color: 'rgba(240,237,232,0.3)' }}>{a.event === 'login' ? 's-a autentificat' : a.event}</span>
-                  <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'rgba(240,237,232,0.25)', whiteSpace: 'nowrap' }}>
-                    {a.created_at ? format(new Date(a.created_at), 'dd MMM, HH:mm', { locale: ro }) : ''}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Filter tabs */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>

@@ -3,9 +3,6 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, SelectInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal.jsx";
 
 const FALLBACK = {
@@ -130,10 +127,6 @@ export default function OglinziConfiguratorPage() {
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-  useAutoSave("oglinzi", { dims, mirrorType, shape, thickness, edge, inclLed, inclAntiAburire });
-
-  const resetAll = () => { clearSavedConfig("oglinzi"); window.location.reload(); };
-
   useEffect(() => {
     fetch("/catalog.json").then(r => r.json())
       .then(d => {
@@ -212,8 +205,7 @@ export default function OglinziConfiguratorPage() {
   if (!p) return <PageLoader />;
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="oglinzi" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Oglindă" productType="oglinda" config={{ dims, mirrorType, shape, thickness, edge, inclLed, inclAntiAburire }} />
       <ConfigHeader title="Configurator Oglinzi" quote={quote} />
 

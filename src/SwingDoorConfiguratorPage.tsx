@@ -3,9 +3,6 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.tsx";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal.js";
 
 const FALLBACK = {
@@ -112,10 +109,6 @@ export default function SwingDoorConfiguratorPage() {
   const [quote, setQuote] = useState<Record<string, number | string> | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
-
-  useAutoSave("swingdoor", { doorType, variant, dims, glass, inclManer });
-
-  const resetAll = () => { clearSavedConfig("swingdoor"); window.location.reload(); };
 
   useEffect(() => {
     fetch(`/catalog.json?v=${Date.now()}`)
@@ -227,8 +220,7 @@ export default function SwingDoorConfiguratorPage() {
   const detailImg = DETAIL_IMG[`${doorType}-${variant}`] || DETAIL_IMG[doorType] || "/usi-batante.png";
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="swingdoor" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Batantă" productType="swingdoor"
         config={{ dims, doorType, variant, glass, inclManer }} />
       <ConfigHeader title="Configurator Uși Batante" quote={quote} />

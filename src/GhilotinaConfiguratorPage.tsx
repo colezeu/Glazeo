@@ -4,9 +4,6 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 
 export default function GhilotinaConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -22,10 +19,6 @@ export default function GhilotinaConfiguratorPage() {
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [loadError, setLoadError] = useState(false);
-
-  useAutoSave("ghilotina", { dims, glass, manerScoica, manerRectangular, vopsireRAL });
-
-  const resetAll = () => { clearSavedConfig("ghilotina"); window.location.reload(); };
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -96,8 +89,7 @@ export default function GhilotinaConfiguratorPage() {
   };
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="ghilotina" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Ghilotină" productType="terrace-ghilotina" config={{ dims, glass, manerScoica, manerRectangular, vopsireRAL }} />
       <ConfigHeader title="Configurator Terase — Ghilotină" quote={quote} />
 

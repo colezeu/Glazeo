@@ -3,9 +3,6 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal";
 
 const FALLBACK = { 
@@ -116,10 +113,6 @@ export default function PartitionConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
-
-  useAutoSave("partition", { dims, system, glass, tipUsa, finishUsa });
-
-  const resetAll = () => { clearSavedConfig("partition"); window.location.reload(); };
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -240,8 +233,7 @@ export default function PartitionConfiguratorPage() {
   const optToc = p?.options?.["usa-toc"];
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="partition" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa }} />
       <ConfigHeader title="Configurator Partiționări" quote={quote} />
 

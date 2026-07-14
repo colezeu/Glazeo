@@ -3,9 +3,6 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import { getUserMultiplier } from "./lib/user";
-import { useAutoSave } from "./useAutoSave";
-import ResumeBanner from "./components/ResumeBanner";
-import { clearSavedConfig } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal.jsx";
 import { getUserMultiplier } from "./lib/user";
 
@@ -23,10 +20,6 @@ export default function PergolaConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
-
-  useAutoSave("pergola", { dims, type, glass, inclLed, inclMob, inclPan });
-
-  const resetAll = () => { clearSavedConfig("pergola"); window.location.reload(); };
 
   useEffect(() => {
     getUserMultiplier().then(m => setPriceMultiplier(m));
@@ -99,8 +92,7 @@ export default function PergolaConfiguratorPage() {
   };
 
   return (
-    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <ResumeBanner storageKey="pergola" onDismiss={resetAll} />
+    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Pergolă" productType="pergola" config={{ width: dims.width, depth: dims.depth, type, glass, inclLed, inclMob, inclPan }} />
       <ConfigHeader title="Configurator Pergole" quote={quote} />
 
