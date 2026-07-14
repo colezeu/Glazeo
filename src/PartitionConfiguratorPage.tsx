@@ -16,7 +16,7 @@ const FALLBACK = {
         garnitura: { pricePerM: 0.97 },
         imbinare: { pricePerBuc: 13.81 }
       },
-      panelWidth: { min: 700, max: 980 }
+      panelWidth: { min: 500 }
     },
     fono: { name: "Cu Izolație Fonică", desc: "Sistem acustic — preț la cerere", priceOnRequest: true }
   }, 
@@ -37,7 +37,8 @@ const FALLBACK = {
 function calcPanels(widthM, panelMin, panelMax) {
   if (!widthM || widthM <= 0) return { count: 0, eachMm: 0 };
   const wMm = widthM * 1000;
-  const count = Math.max(1, Math.ceil(wMm / panelMax));
+  const realMax = panelMax || 3000;
+  const count = Math.max(1, Math.ceil(wMm / realMax));
   const eachMm = wMm / count;
   if (eachMm < panelMin && count > 1) return { count, eachMm: Math.round(eachMm), warning: true };
   return { count, eachMm: Math.round(eachMm), warning: eachMm < panelMin };
@@ -157,7 +158,7 @@ export default function PartitionConfiguratorPage() {
   const isFono = system === "fono" || sysData?.priceOnRequest;
 
   // Panel calculation
-  const pw = sysData?.panelWidth || { min: 700, max: 980 };
+  const pw = sysData?.panelWidth || { min: 500 };
   const panels = calcPanels(parseFloat(dims.width), pw.min, pw.max);
   const nrPanouriDefault = panels.count;
   const [nrPanouri, setNrPanouri] = useState(nrPanouriDefault);
@@ -167,10 +168,10 @@ export default function PartitionConfiguratorPage() {
   useEffect(() => {
     if (dims.width !== prevWidth.current) {
       prevWidth.current = dims.width;
-      // Check if current nrPanouri is still in the valid range for the new width
       const w = parseFloat(dims.width) * 1000;
-      const newMin = Math.max(1, Math.ceil(w / pw.max));
-      const newMax = Math.min(6, Math.max(1, Math.floor(w / pw.min)));
+      const realMax = pw.max || 3000;
+      const newMin = Math.max(1, Math.ceil(w / realMax));
+      const newMax = 6;
       if (nrPanouri < newMin || nrPanouri > newMax) {
         setNrPanouri(nrPanouriDefault);
       }
@@ -180,22 +181,17 @@ export default function PartitionConfiguratorPage() {
   // Calculate actual panel width
   const wMm = (parseFloat(dims.width) || 0) * 1000;
   const eachMm = nrPanouri > 0 ? Math.round(wMm / nrPanouri) : 0;
-  const isValidPanel = eachMm >= pw.min && eachMm <= pw.max;
-
+  const isValidPanel = eachMm >= pw.min;
+  
   // Dimension limits
   const h = parseFloat(dims.height) || 0;
   const over3m = h > 3.0;
   const over4m = parseFloat(dims.width) > 4.0;
   const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
 
-  // Build panel options — always show 1-6, mark recommended range
-  const recMin = Math.max(1, Math.ceil(wMm / pw.max));
-  const recMax = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
+  // Build panel options — always show 1-6, only min constraint
   const panouriOptions = [];
   for (let i = 1; i <= 6; i++) panouriOptions.push(i);
-  // Ensure the currently selected count is in the list
-  const recSet = new Set();
-  for (let i = recMin; i <= recMax; i++) recSet.add(i);
 
   const calculate = async () => {
     if (!p || isFono) return;
@@ -303,35 +299,35 @@ export default function PartitionConfiguratorPage() {
               <div style={{ marginTop: 8 }}>
                 <div style={{ fontSize: "0.8rem", color: "rgba(200,169,110,0.5)", marginBottom: 6 }}>Panouri (1–6):</div>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {panouriOptions.map(n => {
-                    const isRec = recSet.has(n);
-                    return (
+                  {panouriOptions.map(n => (
                     <button
                       key={n}
                       onClick={() => setNrPanouri(n)}
                       style={{
                         padding: "6px 14px",
                         borderRadius: 8,
-                        border: nrPanouri === n ? "1px solid #c8a96e" : isRec ? "1px solid rgba(100,200,120,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                        border: nrPanouri === n ? "1px solid #c8a96e" : "1px solid rgba(255,255,255,0.1)",
                         background: nrPanouri === n ? "rgba(200,169,110,0.15)" : "rgba(255,255,255,0.04)",
-                        color: nrPanouri === n ? "#c8a96e" : isRec ? "rgba(100,200,120,0.7)" : "rgba(240,237,232,0.35)",
+                        color: nrPanouri === n ? "#c8a96e" : "rgba(240,237,232,0.6)",
                         fontSize: "0.82rem",
                         cursor: "pointer",
                         transition: "all 0.15s",
                       }}
                     >
-                      {n}{isRec ? "" : ""}
+                      {n}
                     </button>
-                  )})}
+                  ))}
                 </div>
-                <span style={{ fontSize: "0.8rem", color: isValidPanel ? "rgba(100,200,120,0.6)" : "rgba(255,180,100,0.85)" }}>
-                  × {eachMm}mm
-                </span>
-                {!isValidPanel && (
-                  <span style={{ fontSize: "0.75rem", color: "rgba(255,180,100,0.8)", padding: "4px 8px", background: "rgba(255,180,100,0.1)", borderRadius: 6 }}>
-                    ⚠ {eachMm < pw.min ? `Min ${pw.min}mm` : `Max ${pw.max}mm`} — alegeți alt număr de panouri
+                <div style={{ marginTop: 4 }}>
+                  <span style={{ fontSize: "0.8rem", color: isValidPanel ? "rgba(100,200,120,0.6)" : "rgba(255,180,100,0.85)" }}>
+                    × {eachMm}mm
                   </span>
-                )}
+                  {!isValidPanel && (
+                    <span style={{ fontSize: "0.75rem", color: "rgba(255,180,100,0.8)", padding: "4px 8px", background: "rgba(255,180,100,0.1)", borderRadius: 6, marginLeft: 8 }}>
+                      ⚠ Min {pw.min}mm — alegeți mai multe panouri
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </SectionCard>

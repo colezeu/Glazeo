@@ -1842,8 +1842,7 @@
             }
           },
           "panelWidth": {
-            "min": 700,
-            "max": 980,
+            "min": 500,
             "unit": "mm"
           }
         },
