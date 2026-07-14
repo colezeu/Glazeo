@@ -155,7 +155,9 @@ export default function PartitionConfiguratorPage() {
   const p = product;
   const sysData = p?.systemTypes?.[system];
   const isFono = system === "fono" || sysData?.priceOnRequest;
-  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel;
+  const h = parseFloat(dims.height) || 0;
+  const over3m = h > 3.0;
+  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
 
   // Panel calculation
   const pw = sysData?.panelWidth || { min: 700, max: 980 };
@@ -173,11 +175,12 @@ export default function PartitionConfiguratorPage() {
   const eachMm = nrPanouri > 0 ? Math.round(wMm / nrPanouri) : 0;
   const isValidPanel = eachMm >= pw.min && eachMm <= pw.max;
   
-  // Possible panel counts for dropdown
+  // Possible panel counts for dropdown — capped at 6
   const minPanouri = Math.max(1, Math.ceil(wMm / pw.max));
-  const maxPanouri = Math.max(1, Math.floor(wMm / pw.min));
+  const maxPanouri = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
   const panouriOptions = [];
   for (let i = minPanouri; i <= maxPanouri; i++) panouriOptions.push(i);
+  const over4m = parseFloat(dims.width) > 4.0;
 
   const calculate = async () => {
     if (!p || isFono) return;
@@ -268,9 +271,19 @@ export default function PartitionConfiguratorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <SectionCard num="01" label="Dimensiuni Partiție">
             <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lățime totală (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 3.0" />
-              <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Ex: 2.4" step="0.05" />
+              <NumberInput label="Lățime totală (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="0.5 – 4.0" min="0.5" max="4.0" step="0.01" />
+              <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Max 3.0" min="0.5" max="3.0" step="0.05" />
             </div>
+            {over4m && (
+              <div style={{ marginTop: 8, fontSize: "0.8rem", color: "rgba(255,180,100,0.85)", padding: "8px 12px", background: "rgba(255,180,100,0.08)", borderRadius: 8 }}>
+                ⚠️ Peste 4m lățime — consultați fezabilitatea structurală. Maxim 6 panouri.
+              </div>
+            )}
+            {over3m && (
+              <div style={{ marginTop: 8, fontSize: "0.8rem", color: "rgba(255,180,100,0.85)", padding: "8px 12px", background: "rgba(255,180,100,0.08)", borderRadius: 8 }}>
+                ⚠️ Peste 3.0m înălțime necesită sticlă 12mm ESG. Solicitați ofertă personalizată.
+              </div>
+            )}
             {nrPanouriDefault > 0 && (
               <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>Panouri:</span>
@@ -284,12 +297,12 @@ export default function PartitionConfiguratorPage() {
                     <option key={n} value={n}>{n} panou{n>1?'ri':''}</option>
                   ))}
                 </select>
-                <span style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.4)" }}>
+                <span style={{ fontSize: "0.8rem", color: isValidPanel ? "rgba(100,200,120,0.6)" : "rgba(255,180,100,0.85)" }}>
                   × {eachMm}mm
                 </span>
                 {!isValidPanel && (
-                  <span style={{ fontSize: "0.75rem", color: "rgba(255,180,100,0.8)" }}>
-                    ({pw.min}–{pw.max}mm recomandat)
+                  <span style={{ fontSize: "0.75rem", color: "rgba(255,180,100,0.8)", padding: "4px 8px", background: "rgba(255,180,100,0.1)", borderRadius: 6 }}>
+                    ⚠ {eachMm < pw.min ? `Min ${pw.min}mm` : `Max ${pw.max}mm`} — alegeți alt număr de panouri
                   </span>
                 )}
               </div>
