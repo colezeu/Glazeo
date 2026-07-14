@@ -128,10 +128,8 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
   if (montajVal > 0) priceRows.push({ label: "Transport și montaj", value: `+${montajVal}€`, cls: "extra" });
   priceRows.push({ label: "TOTAL (cu TVA inclus)", value: `${finalTotal}€`, cls: "total" });
 
-  // Discount tiers
-  const disc5 = Math.round(finalTotal * 0.95);
+  // Discount tiers — removed, just one standard option
   const disc10 = Math.round(finalTotal * 0.90);
-  const disc15 = Math.round(finalTotal * 0.85);
 
   const html = `<!DOCTYPE html>
 <html lang="ro">
@@ -245,10 +243,8 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
     </table>
 
     <div class="discount-box">
-      <h3>Opțiuni de preț disponibile</h3>
-      <div class="discount-row"><span>Plată integrală la semnare</span><span class="pct">−15%</span><span class="prc">${disc15}€</span></div>
-      <div class="discount-row"><span>Avans 50% + 50% la livrare</span><span class="pct">−10%</span><span class="prc">${disc10}€</span></div>
-      <div class="discount-row"><span>Plată standard (30% + 70% la livrare)</span><span class="pct">−5%</span><span class="prc">${disc5}€</span></div>
+      <h3>Condiții de plată</h3>
+      <div class="discount-row"><span>Avans 50% la lansare + 50% înainte de livrare</span><span class="pct">−10%</span><span class="prc">${disc10}€</span></div>
     </div>
 
     <p style="font-size:0.75rem;color:#999;margin-top:12px;">Prețurile nu includ ridicarea la etaj (dacă este cazul). Plata se face în lei la cursul BNR din ziua plății. Ofertă valabilă 30 zile.</p>
@@ -274,7 +270,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
       <div><span class="lbl">Garanție de conformitate:</span> <span class="val">Soluția respectă specificațiile agreate</span></div>
       <div><span class="lbl">Garanție de montaj:</span> <span class="val">Montaj corect, conform standardelor</span></div>
       <div><span class="lbl">Garanție de funcționalitate:</span> <span class="val">Produs verificat și funcțional la predare</span></div>
-      <div><span class="lbl">Termen de garanție:</span> <span class="val">60 luni</span></div>
+      <div><span class="lbl">Termen de garanție:</span> <span class="val">24 luni</span></div>
     </div>
   </div>
 
@@ -289,7 +285,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
       <div class="step"><div class="num">5</div>Montaj &amp; verificare</div>
       <div class="step"><div class="num">6</div>Predare finală</div>
     </div>
-    <p style="font-size:0.8rem;color:#888;margin-top:12px;">Termen de livrare și montaj: 4-8 săptămâni de la confirmare, în funcție de complexitate.</p>
+    <p style="font-size:0.8rem;color:#888;margin-top:12px;">Termen de livrare și montaj: 3-4 săptămâni de la confirmare, în funcție de complexitate.</p>
   </div>
 
   <!-- 8. CGV -->
