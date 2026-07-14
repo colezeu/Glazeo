@@ -155,9 +155,6 @@ export default function PartitionConfiguratorPage() {
   const p = product;
   const sysData = p?.systemTypes?.[system];
   const isFono = system === "fono" || sysData?.priceOnRequest;
-  const h = parseFloat(dims.height) || 0;
-  const over3m = h > 3.0;
-  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
 
   // Panel calculation
   const pw = sysData?.panelWidth || { min: 700, max: 980 };
@@ -175,12 +172,17 @@ export default function PartitionConfiguratorPage() {
   const eachMm = nrPanouri > 0 ? Math.round(wMm / nrPanouri) : 0;
   const isValidPanel = eachMm >= pw.min && eachMm <= pw.max;
   
+  // Dimension limits
+  const h = parseFloat(dims.height) || 0;
+  const over3m = h > 3.0;
+  const over4m = parseFloat(dims.width) > 4.0;
+  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
+
   // Possible panel counts for dropdown — capped at 6
   const minPanouri = Math.max(1, Math.ceil(wMm / pw.max));
   const maxPanouri = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
   const panouriOptions = [];
   for (let i = minPanouri; i <= maxPanouri; i++) panouriOptions.push(i);
-  const over4m = parseFloat(dims.width) > 4.0;
 
   const calculate = async () => {
     if (!p || isFono) return;
