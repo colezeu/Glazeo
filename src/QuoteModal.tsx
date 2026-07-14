@@ -34,7 +34,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
 
   const markupPct = parseFloat(markupPercent) || 0;
   const montajEur = parseFloat(montaj) || 0;
-  const baseTotal = quote?.total || 0;
+  const baseTotal = Number(quote?.total || 0);
   const markupValue = Math.round(baseTotal * markupPct / 100);
   const finalTotal = baseTotal + markupValue + montajEur;
 
