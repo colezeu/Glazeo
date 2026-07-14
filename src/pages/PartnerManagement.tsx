@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase'
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { TIER_MULTIPLIERS, getTierFromMultiplier, type PricingTier } from '../lib/user'
+import { format } from 'date-fns'
+import { ro } from 'date-fns/locale'
 
 /** Tier badge pill */
 function TierBadge({ tier }: { tier: PricingTier }) {
@@ -28,6 +30,7 @@ interface PartnerRow {
   email: string
   name: string
   projectCount: number
+  lastLogin: string | null
 }
 
 export default function PartnerManagement() {
@@ -49,10 +52,10 @@ export default function PartnerManagement() {
   }
 
   const fetchPartners = async () => {
-    // Get unique users from projects table (RLS-safe)
-    const { data, error } = await supabase
-      .from('projects')
-      .select('user_id')
+    // Get ALL profiles (not just users with projects)
+    const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('user_id, price_multiplier, email, name')
 
     if (error) {
       console.error(error)
@@ -60,30 +63,31 @@ export default function PartnerManagement() {
       return
     }
 
-    // Get unique user IDs
-    const userIds = [...new Set((data || []).map(p => p.user_id))]
-
-    // Get their profiles
+    // Enrich with project counts and last login
     const enriched: PartnerRow[] = []
-    for (const uid of userIds) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('price_multiplier, email, name')
-        .eq('user_id', uid)
-        .single()
-
+    for (const profile of (profiles || [])) {
       // Count their projects
       const { count } = await supabase
         .from('projects')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', uid)
+        .eq('user_id', profile.user_id)
+
+      // Last login
+      const { data: loginData } = await supabase
+        .from('partner_activity')
+        .select('created_at')
+        .eq('user_id', profile.user_id)
+        .eq('event', 'login')
+        .order('created_at', { ascending: false })
+        .limit(1)
 
       enriched.push({
-        user_id: uid,
-        price_multiplier: profile?.price_multiplier ?? 1.0,
-        email: profile?.email || uid.substring(0, 12) + '...',
-        name: profile?.name || '',
+        user_id: profile.user_id,
+        price_multiplier: profile.price_multiplier ?? 1.0,
+        email: profile.email || profile.user_id.substring(0, 12) + '...',
+        name: profile.name || '',
         projectCount: count || 0,
+        lastLogin: loginData?.[0]?.created_at || null,
       })
     }
 
@@ -149,13 +153,14 @@ export default function PartnerManagement() {
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Nume</th>
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Proiecte</th>
               <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Tier</th>
+              <th style={{ textAlign: 'left', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Ultima logare</th>
               <th style={{ textAlign: 'right', padding: '12px 8px', color: 'rgba(240,237,232,0.4)', fontWeight: 500, fontSize: '0.75rem', textTransform: 'uppercase' }}>Acțiune</th>
             </tr>
           </thead>
           <tbody>
             {partners.length === 0 && (
               <tr>
-                <td colSpan={4} style={{ padding: '32px 8px', textAlign: 'center', color: 'rgba(240,237,232,0.3)' }}>
+                <td colSpan={5} style={{ padding: '32px 8px', textAlign: 'center', color: 'rgba(240,237,232,0.3)' }}>
                   Niciun partener. Partenerii apar aici după ce își fac cont și salvează un proiect.
                 </td>
               </tr>
@@ -185,6 +190,9 @@ export default function PartnerManagement() {
                   <td style={{ padding: '12px 8px', color: 'rgba(240,237,232,0.5)' }}>{p.projectCount}</td>
                   <td style={{ padding: '12px 8px' }}>
                     <TierBadge tier={tier} />
+                  </td>
+                  <td style={{ padding: '12px 8px', fontSize: '0.78rem', color: p.lastLogin ? 'rgba(240,237,232,0.5)' : 'rgba(240,237,232,0.2)' }}>
+                    {p.lastLogin ? format(new Date(p.lastLogin), 'dd MMM, HH:mm', { locale: ro }) : '—'}
                   </td>
                   <td style={{ padding: '12px 8px', textAlign: 'right' }}>
                     <select value={tier} onChange={(e) => setTier(p.user_id, e.target.value as PricingTier)} disabled={updating === p.user_id}
@@ -231,6 +239,11 @@ export default function PartnerManagement() {
                 <div>
                   <TierBadge tier={tier} />
                   <span style={{ marginLeft: 10, fontSize: '0.8rem', color: 'rgba(240,237,232,0.4)' }}>{p.projectCount} proiecte</span>
+                  {p.lastLogin && (
+                    <span style={{ marginLeft: 10, fontSize: '0.75rem', color: 'rgba(240,237,232,0.35)' }}>
+                      🕐 {format(new Date(p.lastLogin), 'dd MMM, HH:mm', { locale: ro })}
+                    </span>
+                  )}
                 </div>
                 <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                   <select value={tier} onChange={(e) => setTier(p.user_id, e.target.value as PricingTier)} disabled={updating === p.user_id}

@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.jsx";
 import { getUserMultiplier } from "./lib/user";
+import { useAutoSave } from "./useAutoSave";
+import ResumeBanner from "./components/ResumeBanner";
+import { clearSavedConfig } from "./usePersistedConfig";
 
 const FALLBACK = {
   name: "Copertină", basePrice: 0,
@@ -71,6 +74,10 @@ export default function CopertinaConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [priceMultiplier, setPriceMultiplier] = useState(1.0);
   const [showSaveModal, setShowSaveModal] = useState(false);
+
+  useAutoSave("copertina", { dims, type, glass, inclLed, inclDegivrare });
+
+  const resetAll = () => { clearSavedConfig("copertina"); window.location.reload(); };
 
   useEffect(() => {
     fetch("/catalog.json").then(r => r.json())
@@ -146,7 +153,8 @@ export default function CopertinaConfiguratorPage() {
   if (!p) return <PageLoader/>;
 
   return (
-    <div style={{ minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
+    <div style={{minHeight:"100vh", background:"#0f1117", color:"#f0ede8" }}>
+      <ResumeBanner storageKey="copertina" onDismiss={resetAll} />
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Copertină" productType="copertina" config={{ dims, type, glass, inclLed, inclDegivrare }} />
       <ConfigHeader title="Configurator Copertine" quote={quote}/>
       <main className="configurator-grid" style={{ maxWidth:1100, margin:"0 auto", padding:"32px 24px", display:"grid", gridTemplateColumns:"1fr 340px", gap:24 }}>

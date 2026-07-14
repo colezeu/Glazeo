@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, ErrorBanner, calcQuote, formatPrice } from "./ConfiguratorShared.js";
 import QuoteModal from "./QuoteModal.js";
 import { getUserMultiplier } from "./lib/user";
+import { useAutoSave } from "./useAutoSave";
+import ResumeBanner from "./components/ResumeBanner";
+import { clearSavedConfig } from "./usePersistedConfig";
 
 export default function FramelessConfiguratorPage() {
   const [product, setProduct] = useState(null);
@@ -18,6 +21,10 @@ export default function FramelessConfiguratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [loadError, setLoadError] = useState(false);
+
+  useAutoSave("frameless", { dims, glass, incuietoare, vopsireRAL });
+
+  const resetAll = () => { clearSavedConfig("frameless"); window.location.reload(); };
 
   useEffect(() => {
     fetch("/catalog.json")
@@ -83,7 +90,8 @@ export default function FramelessConfiguratorPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
+    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
+      <ResumeBanner storageKey="frameless" onDismiss={resetAll} />
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Închidere Frameless" productType="terrace-frameless" config={{ dims, glass, incuietoare, vopsireRAL }} />
       <ConfigHeader title="Configurator Terase — Frameless" quote={quote} />
 

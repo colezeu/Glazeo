@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, lazy, Suspense } from "react";
 import type { User } from "@supabase/supabase-js";
 import AppErrorBoundary from "./AppErrorBoundary";
@@ -76,7 +76,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppErrorBoundary>
        <div className="fixed right-4 md:right-6 z-[100] flex items-center gap-2 md:gap-3" style={{ top: 72, background: "none", paddingRight: 4 }}>
   {user ? (
@@ -170,7 +170,7 @@ function App() {
           </Routes>
         </Suspense>
       </AppErrorBoundary>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

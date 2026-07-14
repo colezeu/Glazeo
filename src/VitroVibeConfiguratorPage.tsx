@@ -6,6 +6,7 @@ import QuoteModal from "./QuoteModal";
 import SaveProjectModal from "./components/SaveProjectModal";
 import { getUserMultiplier } from "./lib/user";
 import { Palette, Layers, Sparkles } from "lucide-react";
+import ResumeBanner from "./components/ResumeBanner";
 
 const CATEGORIES = [
   { id: "textile",   name: "Textile",       icon: "🧵", desc: "Denim, in, catifea, mătase, lână — textile naturale încapsulate în sticlă" },
@@ -49,7 +50,7 @@ const USE_CASES = [
 export default function VitroVibeConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.21);
-  const [config, setConfig] = usePersistedConfig("vitrovibe", {
+  const [config, setConfig, resetConfig] = usePersistedConfig("vitrovibe", {
     category: "", material: "", useCase: "", width: "", height: "", message: "",
   });
   const [quote, setQuote] = useState(null);
@@ -107,6 +108,7 @@ export default function VitroVibeConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #0f1117 0%, #15181f 100%)", color: "#f0ede8" }}>
+      <ResumeBanner storageKey="vitrovibe" onDismiss={resetConfig} />
       <ConfigHeader
         title="VitroVibe"
         subtitle="Sticlă laminată cu textile reale"

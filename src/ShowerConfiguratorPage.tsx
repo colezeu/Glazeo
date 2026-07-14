@@ -6,6 +6,7 @@ import { usePersistedConfig } from "./usePersistedConfig.js";
 import { getUserMultiplier } from "./lib/user";
 import QuoteModal from "./QuoteModal.js";
 import ShowerPreview2D from "./ShowerPreview2D";
+import ResumeBanner from "./components/ResumeBanner";
 const TYPE_THUMB = {
   "paravan": "/paravan cu bara.jpg",
   "fix-batant": "/fix-usa-batanta.png",
@@ -81,7 +82,7 @@ const DEFAULT_CONFIG = { width: "", depth: "", height: "2.0", enclosure: "fix-ba
 export default function ShowerConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.19);
-  const [config, setConfig] = usePersistedConfig("shower", DEFAULT_CONFIG);
+  const [config, setConfig, resetConfig] = usePersistedConfig("shower", DEFAULT_CONFIG);
   const [calculating, setCalculating] = useState(false);
   const [quote, setQuote] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -210,6 +211,7 @@ export default function ShowerConfiguratorPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Cabina Duș" productType="shower" config={config} />
+      <ResumeBanner storageKey="shower" onDismiss={resetConfig} />
       <ConfigHeader title="Configurator Cabine Duș" quote={quote} />
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

@@ -2,6 +2,9 @@ import SaveProjectModal from "./components/SaveProjectModal";
 import { useState, useEffect } from "react";
 import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, QuoteSidebar, PreviewBox, PageLoader, calcQuote } from "./ConfiguratorShared.tsx";
 import { getUserMultiplier } from "./lib/user";
+import { useAutoSave } from "./useAutoSave";
+import ResumeBanner from "./components/ResumeBanner";
+import { clearSavedConfig } from "./usePersistedConfig";
 import QuoteModal from "./QuoteModal.js";
 
 function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: string; height: string }; typology: string; carucioare: string }) {
@@ -108,6 +111,10 @@ export default function SlidingDoorConfiguratorPage() {
   const [quote, setQuote] = useState<Record<string, number | string> | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
+
+  useAutoSave("slidingdoor", { typology, carucioare, mount, kit, dims, glass, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental, nrCanate });
+
+  const resetAll = () => { clearSavedConfig("slidingdoor"); window.location.reload(); };
 
   useEffect(() => {
     fetch(`/catalog.json?v=${Date.now()}`)
@@ -283,7 +290,8 @@ export default function SlidingDoorConfiguratorPage() {
     })() : 6;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
+    <div style={{minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
+      <ResumeBanner storageKey="slidingdoor" onDismiss={resetAll} />
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Ușă Culisantă" productType="sliding"
         config={{ dims, typology, mount, carucioare, kit, glass, nrCanate, inclManer, inclInc, inclAmortizor, inclSincron, inclProfilOrnamental }} />
       <ConfigHeader title="Configurator Uși Culisante" quote={quote} />

@@ -8,11 +8,12 @@ import BalustradePreview3D from "./BalustradePreview2D";
 import SaveProjectModal from "./components/SaveProjectModal";
 import { Share2, Check } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
+import ResumeBanner from "./components/ResumeBanner";
 
 export default function BalustradeConfiguratorPage() {
   const [product, setProduct] = useState(null);
   const [vatRate, setVatRate] = useState(0.21);
-  const [config, setConfig] = usePersistedConfig("balustrade", {
+  const [config, setConfig, resetConfig] = usePersistedConfig("balustrade", {
     length: "", height: "0.9", glassShape: "dreapta", hardware: "butoni",
     profileShape: "U", glassType: "662mm", handrail: "none", includeLed: false,
   });
@@ -134,6 +135,7 @@ export default function BalustradeConfiguratorPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
       <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Balustradă Sticlă" productType="balustrade" config={config} />
+      <ResumeBanner storageKey="balustrade" onDismiss={resetConfig} />
       <ConfigHeader title="Configurator Balustrade" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
