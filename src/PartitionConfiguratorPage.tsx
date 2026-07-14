@@ -161,28 +161,36 @@ export default function PartitionConfiguratorPage() {
   const panels = calcPanels(parseFloat(dims.width), pw.min, pw.max);
   const nrPanouriDefault = panels.count;
   const [nrPanouri, setNrPanouri] = useState(nrPanouriDefault);
+  const [userPickedPanels, setUserPickedPanels] = useState(false);
   
-  // Update default when width changes
+  // Update default when width changes, but only if user hasn't manually picked
   useEffect(() => {
-    setNrPanouri(nrPanouriDefault);
+    if (!userPickedPanels) {
+      setNrPanouri(nrPanouriDefault);
+    }
   }, [dims.width, system]);
   
   // Calculate actual panel width
   const wMm = (parseFloat(dims.width) || 0) * 1000;
   const eachMm = nrPanouri > 0 ? Math.round(wMm / nrPanouri) : 0;
   const isValidPanel = eachMm >= pw.min && eachMm <= pw.max;
-  
+
   // Dimension limits
   const h = parseFloat(dims.height) || 0;
   const over3m = h > 3.0;
   const over4m = parseFloat(dims.width) > 4.0;
   const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
 
-  // Possible panel counts for dropdown — capped at 6
+  // Build panel options, ensuring current value is always included
   const minPanouri = Math.max(1, Math.ceil(wMm / pw.max));
   const maxPanouri = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
   const panouriOptions = [];
   for (let i = minPanouri; i <= maxPanouri; i++) panouriOptions.push(i);
+  // Ensure the currently selected count is in the list
+  if (nrPanouri > 0 && !panouriOptions.includes(nrPanouri)) {
+    panouriOptions.push(nrPanouri);
+    panouriOptions.sort((a, b) => a - b);
+  }
 
   const calculate = async () => {
     if (!p || isFono) return;
@@ -291,7 +299,7 @@ export default function PartitionConfiguratorPage() {
                 <span style={{ fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>Panouri:</span>
                 <select 
                   value={nrPanouri} 
-                  onChange={e => setNrPanouri(Number(e.target.value))}
+                  onChange={e => { setNrPanouri(Number(e.target.value)); setUserPickedPanels(true); }}
                   className="input-field"
                   style={{ padding: "6px 12px", fontSize: "0.85rem", width: "auto" }}
                 >
