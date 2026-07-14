@@ -188,16 +188,14 @@ export default function PartitionConfiguratorPage() {
   const over4m = parseFloat(dims.width) > 4.0;
   const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel && !over3m;
 
-  // Build panel options, ensuring current value is always included
-  const minPanouri = Math.max(1, Math.ceil(wMm / pw.max));
-  const maxPanouri = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
+  // Build panel options — always show 1-6, mark recommended range
+  const recMin = Math.max(1, Math.ceil(wMm / pw.max));
+  const recMax = Math.min(6, Math.max(1, Math.floor(wMm / pw.min)));
   const panouriOptions = [];
-  for (let i = minPanouri; i <= maxPanouri; i++) panouriOptions.push(i);
+  for (let i = 1; i <= 6; i++) panouriOptions.push(i);
   // Ensure the currently selected count is in the list
-  if (nrPanouri > 0 && !panouriOptions.includes(nrPanouri)) {
-    panouriOptions.push(nrPanouri);
-    panouriOptions.sort((a, b) => a - b);
-  }
+  const recSet = new Set();
+  for (let i = recMin; i <= recMax; i++) recSet.add(i);
 
   const calculate = async () => {
     if (!p || isFono) return;
@@ -301,28 +299,30 @@ export default function PartitionConfiguratorPage() {
                 ⚠️ Peste 3.0m înălțime necesită sticlă 12mm ESG. Solicitați ofertă personalizată.
               </div>
             )}
-            {nrPanouriDefault > 0 && panouriOptions.length > 0 && (
+            {nrPanouriDefault > 0 && (
               <div style={{ marginTop: 8 }}>
-                <div style={{ fontSize: "0.8rem", color: "rgba(200,169,110,0.5)", marginBottom: 6 }}>Panouri:</div>
+                <div style={{ fontSize: "0.8rem", color: "rgba(200,169,110,0.5)", marginBottom: 6 }}>Panouri (1–6):</div>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {panouriOptions.map(n => (
+                  {panouriOptions.map(n => {
+                    const isRec = recSet.has(n);
+                    return (
                     <button
                       key={n}
                       onClick={() => setNrPanouri(n)}
                       style={{
                         padding: "6px 14px",
                         borderRadius: 8,
-                        border: nrPanouri === n ? "1px solid #c8a96e" : "1px solid rgba(255,255,255,0.1)",
+                        border: nrPanouri === n ? "1px solid #c8a96e" : isRec ? "1px solid rgba(100,200,120,0.3)" : "1px solid rgba(255,255,255,0.06)",
                         background: nrPanouri === n ? "rgba(200,169,110,0.15)" : "rgba(255,255,255,0.04)",
-                        color: nrPanouri === n ? "#c8a96e" : "rgba(240,237,232,0.6)",
+                        color: nrPanouri === n ? "#c8a96e" : isRec ? "rgba(100,200,120,0.7)" : "rgba(240,237,232,0.35)",
                         fontSize: "0.82rem",
                         cursor: "pointer",
                         transition: "all 0.15s",
                       }}
                     >
-                      {n}
+                      {n}{isRec ? "" : ""}
                     </button>
-                  ))}
+                  )})}
                 </div>
                 <span style={{ fontSize: "0.8rem", color: isValidPanel ? "rgba(100,200,120,0.6)" : "rgba(255,180,100,0.85)" }}>
                   × {eachMm}mm
