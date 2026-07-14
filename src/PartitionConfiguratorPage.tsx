@@ -140,6 +140,7 @@ export default function PartitionConfiguratorPage() {
           if (cfg.tipUsa) setTipUsa(cfg.tipUsa);
           if (cfg.finishUsa) setFinishUsa(cfg.finishUsa);
           if (cfg.inclPolicarbonat !== undefined) setInclPolicarbonat(cfg.inclPolicarbonat);
+          if (cfg.nrPanouri) setNrPanouri(cfg.nrPanouri);
         }
       } catch (e) {}
       localStorage.removeItem('loadProject');
@@ -154,12 +155,29 @@ export default function PartitionConfiguratorPage() {
   const p = product;
   const sysData = p?.systemTypes?.[system];
   const isFono = system === "fono" || sysData?.priceOnRequest;
-  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono;
+  const isValid = dims.width && parseFloat(dims.width) > 0 && !isFono && isValidPanel;
 
   // Panel calculation
   const pw = sysData?.panelWidth || { min: 700, max: 980 };
   const panels = calcPanels(parseFloat(dims.width), pw.min, pw.max);
-  const nrPanouri = panels.count;
+  const nrPanouriDefault = panels.count;
+  const [nrPanouri, setNrPanouri] = useState(nrPanouriDefault);
+  
+  // Update default when width changes
+  useEffect(() => {
+    setNrPanouri(nrPanouriDefault);
+  }, [dims.width, system]);
+  
+  // Calculate actual panel width
+  const wMm = (parseFloat(dims.width) || 0) * 1000;
+  const eachMm = nrPanouri > 0 ? Math.round(wMm / nrPanouri) : 0;
+  const isValidPanel = eachMm >= pw.min && eachMm <= pw.max;
+  
+  // Possible panel counts for dropdown
+  const minPanouri = Math.max(1, Math.ceil(wMm / pw.max));
+  const maxPanouri = Math.max(1, Math.floor(wMm / pw.min));
+  const panouriOptions = [];
+  for (let i = minPanouri; i <= maxPanouri; i++) panouriOptions.push(i);
 
   const calculate = async () => {
     if (!p || isFono) return;
@@ -210,7 +228,7 @@ export default function PartitionConfiguratorPage() {
     setQuote({ 
       area: area.toFixed(2), 
       nrPanouri,
-      eachMm: panels.eachMm,
+      eachMm,
       costFeronerie,
       costSticla: Math.round(costSticla * priceMultiplier), 
       // Detalii complete pentru email/export (nu se afișează clientului)
@@ -243,7 +261,7 @@ export default function PartitionConfiguratorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f1117", color: "#f0ede8" }}>
-      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa, inclPolicarbonat }} />
+      <QuoteModal isOpen={showModal} onClose={() => setShowModal(false)} quote={quote} productName="Partiționare" productType="partitionari" config={{ dims, system, glass, tipUsa, nrPanouri, inclPolicarbonat }} />
       <ConfigHeader title="Configurator Partiționări" quote={quote} />
 
       <main className="configurator-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px", display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
@@ -253,10 +271,27 @@ export default function PartitionConfiguratorPage() {
               <NumberInput label="Lățime totală (m)" value={dims.width} onChange={v => setDims(d => ({ ...d, width: v }))} placeholder="Ex: 3.0" />
               <NumberInput label="Înălțime (m)" value={dims.height} onChange={v => setDims(d => ({ ...d, height: v }))} placeholder="Ex: 2.4" step="0.05" />
             </div>
-            {nrPanouri > 0 && (
-              <div style={{ marginTop: 8, fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>
-                {nrPanouri} panou{nrPanouri>1?'ri':''} × {panels.eachMm}mm 
-                {panels.warning && <span style={{color: "rgba(255,180,100,0.8)", marginLeft: 8}}>(sub 700mm — verificați fezabilitatea)</span>}
+            {nrPanouriDefault > 0 && (
+              <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>Panouri:</span>
+                <select 
+                  value={nrPanouri} 
+                  onChange={e => setNrPanouri(Number(e.target.value))}
+                  className="input-field"
+                  style={{ padding: "6px 12px", fontSize: "0.85rem", width: "auto" }}
+                >
+                  {panouriOptions.map(n => (
+                    <option key={n} value={n}>{n} panou{n>1?'ri':''}</option>
+                  ))}
+                </select>
+                <span style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.4)" }}>
+                  × {eachMm}mm
+                </span>
+                {!isValidPanel && (
+                  <span style={{ fontSize: "0.75rem", color: "rgba(255,180,100,0.8)" }}>
+                    ({pw.min}–{pw.max}mm recomandat)
+                  </span>
+                )}
               </div>
             )}
           </SectionCard>
@@ -387,7 +422,7 @@ export default function PartitionConfiguratorPage() {
       {showSaveModal && (
         <SaveProjectModal
           productType="partitionari"
-          config={{ dims, system, glass, tipUsa, finishUsa, inclPolicarbonat }}
+          config={{ dims, system, glass, tipUsa, finishUsa, nrPanouri, inclPolicarbonat }}
           onClose={() => setShowSaveModal(false)}
         />
       )}
