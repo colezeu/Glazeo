@@ -11,6 +11,10 @@ export interface QuoteData {
   quote_total?: number
   quote_subtotal?: number
   quote_vat?: number
+  markup_percent?: number
+  markup_value?: number
+  montaj?: number
+  wa_recipient?: string
   send_method: 'email' | 'whatsapp' | 'pdf'
 }
 

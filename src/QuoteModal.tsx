@@ -8,12 +8,21 @@ import { formatPrice } from "./ConfiguratorShared";
 
 export default function QuoteModal({ isOpen, onClose, quote, productName, productType, config }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [markupPercent, setMarkupPercent] = useState("");
+  const [montaj, setMontaj] = useState("");
+  const [waNumber, setWaNumber] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [touched, setTouched] = useState(false);
-  const [sendMethod, setSendMethod] = useState("email"); // "email" | "whatsapp" | "pdf"
+  const [sendMethod, setSendMethod] = useState("email");
 
   if (!isOpen) return null;
+
+  const markupPct = parseFloat(markupPercent) || 0;
+  const montajEur = parseFloat(montaj) || 0;
+  const baseTotal = quote?.total || 0;
+  const markupValue = Math.round(baseTotal * markupPct / 100);
+  const finalTotal = baseTotal + markupValue + montajEur;
 
   const validation = validateForm({
     name: form.name,
@@ -29,7 +38,6 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
     const check = validateForm({ name: form.name, email: form.email, phone: form.phone, message: form.message });
     if (!check.valid) return;
 
-    // Salvează oferta în Supabase indiferent de metoda de trimitere
     saveQuote({
       client_name: form.name,
       client_email: form.email,
@@ -38,17 +46,20 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
       product_name: productName,
       product_type: productType || undefined,
       config: { ...config, _breakdown: quote },
-      quote_total: quote?.total ? parseFloat(String(quote.total)) : undefined,
+      quote_total: finalTotal,
       quote_subtotal: quote?.subtotal ? parseFloat(String(quote.subtotal)) : undefined,
       quote_vat: quote?.vat ? parseFloat(String(quote.vat)) : undefined,
+      markup_percent: markupPct || undefined,
+      markup_value: markupValue || undefined,
+      montaj: montajEur || undefined,
+      wa_recipient: waNumber || undefined,
       send_method: sendMethod as 'email' | 'whatsapp' | 'pdf',
     });
 
     if (sendMethod === "pdf") {
-      // Generare PDF
       generateQuotePDF({
         productName,
-        quote,
+        quote: { ...quote, markupPercent: markupPct, markupValue, montaj: montajEur, finalTotal },
         config,
         clientInfo: form,
       });
@@ -61,7 +72,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
       try {
         await sendQuoteEmail({
           productName,
-          quote,
+          quote: { ...quote, markupPercent: markupPct, markupValue, montaj: montajEur, finalTotal },
           config,
           clientInfo: form,
         });
@@ -75,16 +86,15 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
     }
 
     if (sendMethod === "whatsapp") {
-      // Generare mesaj WhatsApp
       const lines = [];
-      lines.push(`*Cere Ofertă — ${productName}*`);
+      lines.push(`*Cerere Ofertă — ${productName}*`);
       lines.push("");
-      lines.push(`*Client:* ${form.name}`);
-      if (form.phone) lines.push(`*Telefon:* ${form.phone}`);
-      if (form.email) lines.push(`*Email:* ${form.email}`);
+      lines.push(`👤 *Client:* ${form.name}`);
+      if (form.phone) lines.push(`📞 *Telefon:* ${form.phone}`);
+      if (form.email) lines.push(`📧 *Email:* ${form.email}`);
       lines.push("");
       if (config) {
-        lines.push("*Configurație:*");
+        lines.push("*📐 Configurație:*");
         if (config.length) lines.push(`• Lungime: ${config.length}m`);
         if (config.width) lines.push(`• Lățime: ${config.width}m`);
         if (config.depth) lines.push(`• Adâncime: ${config.depth}m`);
@@ -93,25 +103,37 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
         if (config.glassShape) lines.push(`• Formă: ${config.glassShape}`);
         if (config.hardware) lines.push(`• Feronerie: ${config.hardware}`);
         if (config.enclosure) lines.push(`• Tip cabină: ${config.enclosure}`);
+        if (config.nrPanouri) lines.push(`• Nr. panouri: ${config.nrPanouri}`);
+        if (config.system) lines.push(`• Sistem: ${config.system}`);
         lines.push("");
       }
       if (quote) {
-        lines.push(`*Total estimat: ${formatPrice(quote.total)}*`);
-        lines.push(`(Subtotal: ${formatPrice(quote.subtotal)} + TVA: ${formatPrice(quote.vat)})`);
+        lines.push("*💰 Detalii Preț:*");
+        lines.push(`• Preț bază: ${formatPrice(baseTotal)}`);
+        if (markupPct > 0) lines.push(`• Adaos (${markupPct}%): +${formatPrice(markupValue)}`);
+        if (montajEur > 0) lines.push(`• Montaj: +${formatPrice(montajEur)}`);
+        lines.push(`• *Total: ${formatPrice(finalTotal)}*`);
+        if (quote.area) {
+          lines.push(`  (Suprafață: ${quote.area} m² · Subtotal: ${formatPrice(quote.subtotal)} + TVA ${formatPrice(quote.vat)})`);
+        }
       }
       if (form.message) {
         lines.push("");
-        lines.push(`*Mesaj:* ${form.message}`);
+        lines.push(`💬 *Mesaj:* ${form.message}`);
       }
 
       const msg = encodeURIComponent(lines.join("\n"));
-      window.open(`https://wa.me/40734712187?text=${msg}`, "_blank");
+      const targetNumber = waNumber.trim() || "40734712187";
+      window.open(`https://wa.me/${targetNumber.replace(/\D/g,"")}?text=${msg}`, "_blank");
       setSent(true);
     }
   };
 
   const handleClose = () => {
     setForm({ name: "", email: "", phone: "", message: "" });
+    setMarkupPercent("");
+    setMontaj("");
+    setWaNumber("");
     setTouched(false);
     setSent(false);
     onClose();
@@ -164,12 +186,70 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
                 borderRadius: 12, padding: "16px 20px", marginBottom: 20
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.85rem" }}>Total estimat</span>
-                  <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "#c8a96e" }}>{formatPrice(quote.total)}</span>
+                  <span style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.85rem" }}>Preț bază</span>
+                  <span style={{ fontSize: "1.4rem", fontWeight: 700, color: "#c8a96e" }}>{formatPrice(baseTotal)}</span>
                 </div>
+                {(markupPct > 0 || montajEur > 0) && (
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 10, paddingTop: 10 }}>
+                    {markupPct > 0 && (
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                        <span style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.8rem" }}>Adaos {markupPct}%</span>
+                        <span style={{ color: "rgba(100,200,120,0.7)", fontSize: "0.85rem" }}>+{formatPrice(markupValue)}</span>
+                      </div>
+                    )}
+                    {montajEur > 0 && (
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                        <span style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.8rem" }}>Montaj</span>
+                        <span style={{ color: "rgba(100,200,120,0.7)", fontSize: "0.85rem" }}>+{formatPrice(montajEur)}</span>
+                      </div>
+                    )}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingTop: 8, borderTop: "1px solid rgba(200,169,110,0.15)" }}>
+                      <span style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.85rem", fontWeight: 600 }}>Total final</span>
+                      <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "#c8a96e" }}>{formatPrice(finalTotal)}</span>
+                    </div>
+                  </div>
+                )}
                 <div style={{ color: "rgba(240,237,232,0.4)", fontSize: "0.78rem", marginTop: 4 }}>
-                  Suprafață: {quote.area} m² · Subtotal: {formatPrice(quote.subtotal)} + TVA {formatPrice(quote.vat)}
+                  {quote.area && <>Suprafață: {quote.area} m² · </>}Subtotal: {formatPrice(quote.subtotal)} + TVA {formatPrice(quote.vat)}
                 </div>
+              </div>
+            )}
+
+            {/* Markup & Montaj */}
+            {quote && (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+                <div>
+                  <label style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
+                    Adaos (%)
+                  </label>
+                  <input className="input-field" type="number" min="0" max="200" placeholder="0"
+                    value={markupPercent}
+                    onChange={e => setMarkupPercent(e.target.value)}
+                    style={{ padding: "8px 12px", fontSize: "0.82rem" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.78rem", color: "rgba(240,237,232,0.5)", display: "block", marginBottom: 6 }}>
+                    Montaj (€)
+                  </label>
+                  <input className="input-field" type="number" min="0" placeholder="0"
+                    value={montaj}
+                    onChange={e => setMontaj(e.target.value)}
+                    style={{ padding: "8px 12px", fontSize: "0.82rem" }} />
+                </div>
+              </div>
+            )}
+
+            {/* WhatsApp destination */}
+            {sendMethod === "whatsapp" && (
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ fontSize: "0.78rem", color: "rgba(37,211,102,0.7)", display: "block", marginBottom: 6 }}>
+                  Trimite către (WhatsApp)
+                </label>
+                <input className="input-field" type="tel" placeholder="+40 7xx xxx xxx"
+                  value={waNumber}
+                  onChange={e => setWaNumber(e.target.value)}
+                  style={{ padding: "8px 12px", fontSize: "0.82rem", borderColor: waNumber ? "rgba(37,211,102,0.3)" : undefined }} />
+                {!waNumber && <div style={{ fontSize: "0.7rem", color: "rgba(240,237,232,0.35)", marginTop: 4 }}>Implicit: Glass Associates</div>}
               </div>
             )}
 
