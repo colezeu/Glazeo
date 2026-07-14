@@ -128,8 +128,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
   if (montajVal > 0) priceRows.push({ label: "Transport și montaj", value: `+${montajVal}€`, cls: "extra" });
   priceRows.push({ label: "TOTAL (cu TVA inclus)", value: `${finalTotal}€`, cls: "total" });
 
-  // Discount tiers — removed, just one standard option
-  const disc10 = Math.round(finalTotal * 0.90);
+  // Payment: 50% advance + 50% before delivery
 
   const html = `<!DOCTYPE html>
 <html lang="ro">
@@ -244,7 +243,7 @@ export function generateQuotePDF({ productName, quote, config, clientInfo, previ
 
     <div class="discount-box">
       <h3>Condiții de plată</h3>
-      <div class="discount-row"><span>Avans 50% la lansare + 50% înainte de livrare</span><span class="pct">−10%</span><span class="prc">${disc10}€</span></div>
+      <div class="discount-row"><span>Avans 50% la lansare + 50% înainte de livrare</span><span class="prc">${finalTotal}€</span></div>
     </div>
 
     <p style="font-size:0.75rem;color:#999;margin-top:12px;">Prețurile nu includ ridicarea la etaj (dacă este cazul). Plata se face în lei la cursul BNR din ziua plății. Ofertă valabilă 30 zile.</p>
