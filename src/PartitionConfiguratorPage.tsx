@@ -301,19 +301,29 @@ export default function PartitionConfiguratorPage() {
                 ⚠️ Peste 3.0m înălțime necesită sticlă 12mm ESG. Solicitați ofertă personalizată.
               </div>
             )}
-            {nrPanouriDefault > 0 && (
-              <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: "0.85rem", color: "rgba(200,169,110,0.7)" }}>Panouri:</span>
-                <select 
-                  value={nrPanouri} 
-                  onChange={e => setNrPanouri(Number(e.target.value))}
-                  className="input-field"
-                  style={{ padding: "6px 12px", fontSize: "0.85rem", width: "auto" }}
-                >
+            {nrPanouriDefault > 0 && panouriOptions.length > 0 && (
+              <div style={{ marginTop: 8 }}>
+                <div style={{ fontSize: "0.8rem", color: "rgba(200,169,110,0.5)", marginBottom: 6 }}>Panouri:</div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {panouriOptions.map(n => (
-                    <option key={n} value={n}>{n} panou{n>1?'ri':''}</option>
+                    <button
+                      key={n}
+                      onClick={() => setNrPanouri(n)}
+                      style={{
+                        padding: "6px 14px",
+                        borderRadius: 8,
+                        border: nrPanouri === n ? "1px solid #c8a96e" : "1px solid rgba(255,255,255,0.1)",
+                        background: nrPanouri === n ? "rgba(200,169,110,0.15)" : "rgba(255,255,255,0.04)",
+                        color: nrPanouri === n ? "#c8a96e" : "rgba(240,237,232,0.6)",
+                        fontSize: "0.82rem",
+                        cursor: "pointer",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      {n}
+                    </button>
                   ))}
-                </select>
+                </div>
                 <span style={{ fontSize: "0.8rem", color: isValidPanel ? "rgba(100,200,120,0.6)" : "rgba(255,180,100,0.85)" }}>
                   × {eachMm}mm
                 </span>
