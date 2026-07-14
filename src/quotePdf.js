@@ -74,7 +74,7 @@ function openMailFallback(payload) {
  * Generare PDF ofertă - client side, fără dependențe externe
  * Creează un HTML frumos și deschide print dialog
  */
-export function generateQuotePDF({ productName, quote, config, clientInfo }) {
+export function generateQuotePDF({ productName, quote, config, clientInfo, previewSvg }) {
   const today = new Date().toLocaleDateString("ro-RO", {
     year: "numeric", month: "long", day: "numeric"
   });
@@ -264,6 +264,15 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
   </div>
   ` : ""}
 
+  ${previewSvg ? `
+  <div class="section">
+    <h2>Schiță 2D</h2>
+    <div style="text-align:center; padding:16px; background:#fafafa; border-radius:8px; border:1px solid #eee;">
+      ${previewSvg}
+    </div>
+  </div>
+  ` : ""}
+
   ${quote ? `
   <div class="section">
     <h2>Detaliu Preț</h2>
@@ -272,9 +281,11 @@ export function generateQuotePDF({ productName, quote, config, clientInfo }) {
       <tr class="subtotal"><td colspan="2" style="text-align:right; padding:8px 0;">
         Subtotal: ${quote.subtotal}€ &nbsp;•&nbsp; TVA: ${quote.vat}€
       </td></tr>
+      ${quote.markupValue > 0 ? `<tr><td>Adaos (${quote.markupPercent}%)</td><td style="color:#22c55e;">+${quote.markupValue}€</td></tr>` : ""}
+      ${quote.montaj > 0 ? `<tr><td>Montaj</td><td style="color:#22c55e;">+${quote.montaj}€</td></tr>` : ""}
       <tr class="total">
         <td>TOTAL</td>
-        <td>${quote.total}€</td>
+        <td>${quote.finalTotal || quote.total}€</td>
       </tr>
     </table>
   </div>

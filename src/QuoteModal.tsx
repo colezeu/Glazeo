@@ -6,6 +6,20 @@ import { generateQuotePDF, sendQuoteEmail } from "./quotePdf";
 import { saveQuote } from "./lib/quotes";
 import { formatPrice } from "./ConfiguratorShared";
 
+/** Capture the 2D preview SVG from the page */
+function capturePreviewSvg() {
+  // Try to find SVG inside the preview box
+  const previewBox = document.querySelector('.preview-svg-wrap');
+  if (previewBox) {
+    const svg = previewBox.querySelector('svg');
+    if (svg) return svg.outerHTML;
+  }
+  // Fallback: look for any preview SVG
+  const el = document.querySelector('[data-preview="svg"]');
+  if (el) return el.outerHTML;
+  return null;
+}
+
 export default function QuoteModal({ isOpen, onClose, quote, productName, productType, config }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [markupPercent, setMarkupPercent] = useState("");
@@ -33,10 +47,20 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
   const errors = touched ? validation.errors : {};
   const canSubmit = validateForm({ name: form.name, email: form.email }).valid;
 
+  const buildQuotePayload = () => ({
+    productName,
+    quote: { ...quote, markupPercent: markupPct, markupValue, montaj: montajEur, finalTotal },
+    config,
+    clientInfo: form,
+    previewSvg: capturePreviewSvg(),
+  });
+
   const handleSend = async () => {
     setTouched(true);
     const check = validateForm({ name: form.name, email: form.email, phone: form.phone, message: form.message });
     if (!check.valid) return;
+
+    const payload = buildQuotePayload();
 
     saveQuote({
       client_name: form.name,
@@ -57,12 +81,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
     });
 
     if (sendMethod === "pdf") {
-      generateQuotePDF({
-        productName,
-        quote: { ...quote, markupPercent: markupPct, markupValue, montaj: montajEur, finalTotal },
-        config,
-        clientInfo: form,
-      });
+      generateQuotePDF(payload);
       setSent(true);
       return;
     }
@@ -70,12 +89,7 @@ export default function QuoteModal({ isOpen, onClose, quote, productName, produc
     if (sendMethod === "email") {
       setSending(true);
       try {
-        await sendQuoteEmail({
-          productName,
-          quote: { ...quote, markupPercent: markupPct, markupValue, montaj: montajEur, finalTotal },
-          config,
-          clientInfo: form,
-        });
+        await sendQuoteEmail(payload);
         setSent(true);
       } catch (err) {
         alert("Eroare la trimitere: " + err.message);
