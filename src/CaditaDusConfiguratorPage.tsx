@@ -213,7 +213,7 @@ export default function CaditaDusConfiguratorPage() {
             <img
               src={`/cadita-${colorKey}.jpg`}
               alt={`Cădiță duș ${p.colors[colorKey]?.name}`}
-              style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }}
+              style={{ width: "100%", borderRadius: 12 }}
             />
             {dims.width && dims.length && (
               <div style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.35)", marginTop: 8, textAlign: "center" }}>

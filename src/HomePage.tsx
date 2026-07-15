@@ -237,7 +237,7 @@ export default function HomePage() {
             <h2 className="serif" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 400 }}>Gama noastră completă</h2>
           </div>
 
-          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 380px))", gap: 20, justifyContent: "center" }}>
+          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             {PRODUCTS.map((p) => (
               p.active ? (
                 <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "block", position: "relative", zIndex: 2 }}>
