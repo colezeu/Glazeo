@@ -210,7 +210,16 @@ export default function CaditaDusConfiguratorPage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <PreviewBox title="Previzualizare">
-            <CaditaPreview dims={dims} colorKey={colorKey} colors={p.colors} />
+            <img
+              src={`/cadita-${colorKey}.jpg`}
+              alt={`Cădiță duș ${p.colors[colorKey]?.name}`}
+              style={{ width: "100%", borderRadius: 12, filter: "invert(0.92)" }}
+            />
+            {dims.width && dims.length && (
+              <div style={{ fontSize: "0.72rem", color: "rgba(240,237,232,0.35)", marginTop: 8, textAlign: "center" }}>
+                {parseFloat(dims.width).toFixed(1)}m × {parseFloat(dims.length).toFixed(1)}m · {p.colors[colorKey]?.name}
+              </div>
+            )}
           </PreviewBox>
           <QuoteSidebar quote={quote} isFormValid={isValid} calculating={calculating}
             onCalculate={calculate} onReset={() => setQuote(null)} onSolicita={() => setShowModal(true)}
