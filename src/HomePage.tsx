@@ -241,7 +241,7 @@ export default function HomePage() {
             {PRODUCTS.map((p) => (
               p.active ? (
                 <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "flex", height: "100%", position: "relative", zIndex: 2 }}>
-                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", width: "100%", display: "flex", flexDirection: "column", position: "relative", zIndex: 2, background: "rgba(15,17,23,0.55)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", width: "100%", display: "flex", flexDirection: "column", position: "relative", zIndex: 2, background: "rgba(15,17,23,0.55)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 14 }}>{p.tagline}</div>
                       <h3 style={{ fontSize: "1.35rem", fontWeight: 600, marginBottom: 10, fontFamily: "'DM Serif Display', serif" }}>{p.name}</h3>
