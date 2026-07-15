@@ -109,7 +109,7 @@ export default function VitroVibeConfiguratorPage() {
     <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #0f1117 0%, #15181f 100%)", color: "#f0ede8" }}>
       <ConfigHeader
         title="VitroVibe"
-        subtitle="Sticlă laminată cu textile reale"
+        subtitle="Materiale autentice integrate în sticlă arhitecturală"
         backTo="/home"
       />
 

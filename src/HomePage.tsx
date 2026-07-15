@@ -13,7 +13,7 @@ const PRODUCTS = [
   { id: "pergola",          name: "Pergole",                  tagline: "Bioclimatică · Sticlă · Sandwich",          price: "de la 420 €/m²", path: "/configurator/pergola-copertina", desc: "Pergole bioclimatice cu lamele orientabile, acoperiș din sticlă culisant sau panou sandwich.", active: true },
   { id: "copertina",        name: "Copertine",                tagline: "Tiranți · Consolă · Spider",                price: "de la 350 €/m²", path: "/configurator/copertina",        desc: "Copertine din sticlă cu tiranți din inox, în consolă fără suport vizibil sau pe prinderi spider.", active: true },
   { id: "oglinzi",          name: "Oglinzi",                  tagline: "Clară · Bronze · Gri · Antichizată",        price: "de la 80 €/m²",  path: "/configurator/oglinzi",         desc: "Oglinzi la comandă — clară, bronze, gri sau antichizată. Forme standard sau speciale, cu LED.", active: true },
-  { id: "vitrovibe",       name: "VitroVibe®",             tagline: "Sticlă laminată cu textile reale",           price: "de la 250 €/m²", path: "/configurator/vitrovibe",       desc: "Material compozit revoluționar. Textile, carbon, ardezie — reale, nu printate. Fiecare panou e unic.", active: true },
+  { id: "vitrovibe",       name: "VitroVibe®",             tagline: "Materiale autentice în sticlă arhitecturală", price: "de la 250 €/m²", path: "/configurator/vitrovibe",       desc: "Materiale autentice — textile, carbon, piatră — integrate direct în sticlă. Libertate creativă pentru arhitecți, designeri și dezvoltatori.", active: true },
 ];
 
 const STATS = [
