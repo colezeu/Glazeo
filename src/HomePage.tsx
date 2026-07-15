@@ -13,6 +13,7 @@ const PRODUCTS = [
   { id: "copertina",        name: "Copertine",                tagline: "Tiranți · Consolă · Spider",                price: "de la 350 €/m²", path: "/configurator/copertina",        desc: "Copertine din sticlă cu tiranți din inox, în consolă fără suport vizibil sau pe prinderi spider.", active: true },
   { id: "oglinzi",          name: "Oglinzi",                  tagline: "Clară · Bronze · Gri · Antichizată",        price: "de la 80 €/m²",  path: "/configurator/oglinzi",         desc: "Oglinzi la comandă — clară, bronze, gri sau antichizată. Forme standard sau speciale, cu LED.", active: true },
   { id: "vitrovibe",       name: "VitroVibe®",             tagline: "Sticlă laminată cu textile reale",           price: "de la 250 €/m²", path: "/configurator/vitrovibe",       desc: "Material compozit revoluționar. Textile, carbon, ardezie — reale, nu printate. Fiecare panou e unic.", active: true },
+  { id: "cadita-dus",      name: "Cădițe Duș Compozit",     tagline: "Pantă integrată · Sifon inclus · 4 culori",  price: "de la 210 €/m²", path: "/configurator/cadita-dus",      desc: "Cadă duș din compozit, h=3cm, pantă integrată către sifon. Alb, gri, negru, crem. Max 1.1×2.0m.", active: true },
 ];
 
 const STATS = [

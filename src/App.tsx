@@ -26,6 +26,7 @@ const PartitionConfiguratorPage = lazy(() => import("./PartitionConfiguratorPage
 const OglinziConfiguratorPage = lazy(() => import("./OglinziConfiguratorPage"));
 const CopertinaConfiguratorPage = lazy(() => import("./CopertinaConfiguratorPage"));
 const VitroVibeConfiguratorPage = lazy(() => import("./VitroVibeConfiguratorPage"));
+const CaditaDusConfiguratorPage = lazy(() => import("./CaditaDusConfiguratorPage"));
 const QuotesAdmin = lazy(() => import("./pages/QuotesAdmin"));
 const ServicesPage = lazy(() => import("./ServicesPage"));
 
@@ -166,6 +167,7 @@ function App() {
             <Route path="/configurator/oglinzi" element={<OglinziConfiguratorPage />} />
             <Route path="/configurator/copertina" element={<CopertinaConfiguratorPage />} />
             <Route path="/configurator/vitrovibe" element={<VitroVibeConfiguratorPage />} />
+            <Route path="/configurator/cadita-dus" element={<CaditaDusConfiguratorPage />} />
             <Route path="/services" element={<ServicesPage />} />
           </Routes>
         </Suspense>
