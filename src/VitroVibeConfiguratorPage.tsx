@@ -109,19 +109,19 @@ export default function VitroVibeConfiguratorPage() {
     <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #0f1117 0%, #15181f 100%)", color: "#f0ede8" }}>
       <ConfigHeader
         title="VitroVibe"
-        subtitle="Materiale autentice integrate în sticlă arhitecturală"
+        subtitle="Sticlă laminată cu textile reale"
         backTo="/home"
       />
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px 120px", display: "flex", gap: 32 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 120px", display: "flex", gap: 32 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
 
           {/* Intro */}
           <SectionCard title="Material compozit revoluționar" icon={<Sparkles size={18} />}>
             <p style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.88rem", lineHeight: 1.7, margin: 0 }}>
-              Încapsulăm textile și materiale reale direct între straturile de sticlă.
+              Încapsulăm <strong style={{ color: "#c8a96e" }}>textile și materiale reale</strong> direct între straturile de sticlă securizată.
               Nu folii printate, nu sablare — textură tridimensională autentică, dezvoltată în atelierul propriu din Arad.
-              Fiecare panou este unic și personalizabil.
+              Fiecare panou este <strong style={{ color: "#c8a96e" }}>unic și personalizabil</strong>.
             </p>
           </SectionCard>
 
