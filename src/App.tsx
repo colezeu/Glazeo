@@ -77,7 +77,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter basename="/ofertare">
+    <BrowserRouter>
       <AppErrorBoundary>
        <div className="fixed right-4 md:right-6 z-[100] flex items-center gap-2 md:gap-3" style={{ top: 72, background: "none", paddingRight: 4 }}>
   {user ? (
