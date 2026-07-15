@@ -119,9 +119,9 @@ export default function VitroVibeConfiguratorPage() {
           {/* Intro */}
           <SectionCard title="Material compozit revoluționar" icon={<Sparkles size={18} />}>
             <p style={{ color: "rgba(240,237,232,0.6)", fontSize: "0.88rem", lineHeight: 1.7, margin: 0 }}>
-              Încapsulăm <strong style={{ color: "#c8a96e" }}>textile și materiale reale</strong> direct între straturile de sticlă securizată.
+              Încapsulăm textile și materiale reale direct între straturile de sticlă securizată.
               Nu folii printate, nu sablare — textură tridimensională autentică, dezvoltată în atelierul propriu din Arad.
-              Fiecare panou este <strong style={{ color: "#c8a96e" }}>unic și personalizabil</strong>.
+              Fiecare panou este unic și personalizabil.
             </p>
           </SectionCard>
 
