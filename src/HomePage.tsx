@@ -3,17 +3,17 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, ChevronRight, ChevronDown, Clock, Menu, X } from "lucide-react";
 
 const PRODUCTS = [
-  { id: "balustrade",       name: "Balustrade",              tagline: "Scări, balcoane, terase",                   price: "de la 150 €/m²", path: "/configurator/balustrade",       desc: "Sticlă dreaptă sau pe rampă, cu butoni, profil U/V/L, mini-montanți sau canal în pardoseală.", active: true },
   { id: "inchidere-terasa", name: "Închidere Terase",         tagline: "Multitrack · Frameless · Ghilotină",          price: "de la 145 €/ml", path: "/configurator/inchidere-terasa", desc: "Multitrack cu șine și canate, frameless full-glass fără rame sau ghilotină verticală.", active: true },
   { id: "cabine-dus",       name: "Cabine Duș",              tagline: "Paravan fix, mobil, uși batante/culisante", price: "de la 120 €/m²", path: "/configurator/cabine-dus",       desc: "Paravan fix sau mobil (evantai), ușă batantă sau culisantă cu glisori la vedere sau în șină.", active: true },
   { id: "cadita-dus",      name: "Cădițe Duș Compozit",     tagline: "Alb · Gri · Negru · Crem",                  price: "de la 280 €/m²", path: "/configurator/cadita-dus",       desc: "Cădițe duș din compozit, pantă integrată + sifon inclus. Dimensiuni 0.7–1.8m, înălțime 3cm.", active: true },
-  { id: "partitionari",     name: "Partiționări",            tagline: "Profile perimetrale · Fonoizolante",        price: "de la 100 €/m²", path: "/configurator/partitionari",     desc: "Profile U+L, garnituri UP2, sticlă securizată 10mm. Panouri simetrice 700–980mm. Izolație fonică la cerere.", active: true },
+  { id: "balustrade",       name: "Balustrade",              tagline: "Scări, balcoane, terase",                   price: "de la 150 €/m²", path: "/configurator/balustrade",       desc: "Sticlă dreaptă sau pe rampă, cu butoni, profil U/V/L, mini-montanți sau canal în pardoseală.", active: true },
   { id: "usi-batante",      name: "Uși Batante",             tagline: "Full Glass · Toc Aluminiu · Fonoizolante", price: "de la 176 €",    path: "/configurator/usi-batante",      desc: "Full glass cu amortizor hidraulic, toc aluminiu în zidărie sau perete sticlă, izolație fonică.", active: true },
   { id: "usi-culisante",    name: "Uși Culisante",           tagline: "Canat cu/fără Ramă · Feronerie Invizibilă", price: "de la 289 €",    path: "/configurator/usi-culisante",    desc: "Canat cu sau fără ramă, cărucioare la vedere inox sau în șină aluminiu. Feronerie invizibilă 349€.", active: true },
+  { id: "partitionari",     name: "Partiționări",            tagline: "Profile perimetrale · Fonoizolante",        price: "de la 100 €/m²", path: "/configurator/partitionari",     desc: "Profile U+L, garnituri UP2, sticlă securizată 10mm. Panouri simetrice 700–980mm. Izolație fonică la cerere.", active: true },
   { id: "pergola",          name: "Pergole",                  tagline: "Bioclimatică · Sticlă · Sandwich",          price: "de la 420 €/m²", path: "/configurator/pergola-copertina", desc: "Pergole bioclimatice cu lamele orientabile, acoperiș din sticlă culisant sau panou sandwich.", active: true },
   { id: "copertina",        name: "Copertine",                tagline: "Tiranți · Consolă · Spider",                price: "de la 350 €/m²", path: "/configurator/copertina",        desc: "Copertine din sticlă cu tiranți din inox, în consolă fără suport vizibil sau pe prinderi spider.", active: true },
   { id: "oglinzi",          name: "Oglinzi",                  tagline: "Clară · Bronze · Gri · Antichizată",        price: "de la 80 €/m²",  path: "/configurator/oglinzi",         desc: "Oglinzi la comandă — clară, bronze, gri sau antichizată. Forme standard sau speciale, cu LED.", active: true },
-  { id: "vitrovibe",       name: "VitroVibe®",             tagline: "Materiale autentice în sticlă arhitecturală", price: "de la 250 €/m²", path: "/configurator/vitrovibe",       desc: "Materiale autentice — textile, carbon, piatră — integrate direct în sticlă. Libertate creativă pentru arhitecți, designeri și dezvoltatori.", active: true },
+  { id: "vitrovibe",       name: "VitroVibe®",             tagline: "Sticlă laminată cu textile reale",           price: "de la 250 €/m²", path: "/configurator/vitrovibe",       desc: "Material compozit revoluționar. Textile, carbon, ardezie — reale, nu printate. Fiecare panou e unic.", active: true },
 ];
 
 const STATS = [
@@ -237,11 +237,11 @@ export default function HomePage() {
             <h2 className="serif" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 400 }}>Gama noastră completă</h2>
           </div>
 
-          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
+          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             {PRODUCTS.map((p) => (
               p.active ? (
-                <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "block", position: "relative", zIndex: 2 }}>
-                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", height: "100%", display: "flex", flexDirection: "column", position: "relative", zIndex: 2, background: "rgba(15,17,23,0.55)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <Link key={p.id} to={p.path} style={{ textDecoration: "none", display: "flex", height: "100%", position: "relative", zIndex: 2 }}>
+                  <div className="glass-card glass-card-hover" style={{ borderRadius: 20, padding: "32px 28px", width: "100%", display: "flex", flexDirection: "column", position: "relative", zIndex: 2, background: "rgba(15,17,23,0.55)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#c8a96e", marginBottom: 14 }}>{p.tagline}</div>
                       <h3 style={{ fontSize: "1.35rem", fontWeight: 600, marginBottom: 10, fontFamily: "'DM Serif Display', serif" }}>{p.name}</h3>
@@ -256,7 +256,7 @@ export default function HomePage() {
                   </div>
                 </Link>
               ) : (
-                <div key={p.id} style={{ borderRadius: 20, padding: "32px 28px", height: "100%", display: "flex", flexDirection: "column", background: "rgba(15,17,23,0.35)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.06)", opacity: 0.6, cursor: "not-allowed" }}>
+                <div key={p.id} style={{ borderRadius: 20, padding: "32px 28px", width: "100%", display: "flex", flexDirection: "column", background: "rgba(15,17,23,0.35)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.06)", opacity: 0.6, cursor: "not-allowed" }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                       <div style={{ fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(200,169,110,0.5)" }}>{p.tagline}</div>
