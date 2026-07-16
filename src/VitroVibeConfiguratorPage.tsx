@@ -113,7 +113,7 @@ export default function VitroVibeConfiguratorPage() {
         backTo="/home"
       />
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 120px", display: "flex", gap: 32 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px 120px", display: "flex", gap: 32 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
 
           {/* Intro */}
