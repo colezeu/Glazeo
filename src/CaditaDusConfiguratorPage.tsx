@@ -9,8 +9,8 @@ const FALLBACK = {
   name: "Cădițe Duș Compozit",
   basePrice: 280,
   transport: 25,
-  maxWidth: 1.1,
-  maxLength: 2.0,
+  maxWidth: 1.8,
+  maxLength: 1.8,
   colors: {
     alb:   { name: "Alb",   color: "#f5f5f0" },
     gri:   { name: "Gri",   color: "#9e9e9e" },
@@ -124,7 +124,7 @@ export default function CaditaDusConfiguratorPage() {
   const w = parseFloat(dims.width) || 0;
   const l = parseFloat(dims.length) || 0;
   const isValid = dims.width && dims.length && w > 0 && l > 0
-    && w <= (p?.maxWidth || 1.1) && l <= (p?.maxLength || 2.0);
+    && w <= (p?.maxWidth || 1.8) && l <= (p?.maxLength || 1.8);
 
   const calculate = async () => {
     if (!p) return;
@@ -163,13 +163,13 @@ export default function CaditaDusConfiguratorPage() {
             <p style={{ fontSize: "0.8rem", color: "rgba(240,237,232,0.45)", marginBottom: 14 }}>
               Maxim: {p.maxWidth}m lățime × {p.maxLength}m lungime. Înălțime fixă 3cm, pantă integrată către sifon.
             </p>
-            <div className="config-dim-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <NumberInput label="Lățime (m) — max 1.1m" value={dims.width}
-                onChange={v => setDims(d => ({ ...d, width: v }))}
-                placeholder="Ex: 0.9" step="0.05" min="0.1" max={p.maxWidth} />
-              <NumberInput label="Lungime (m) — max 2.0m" value={dims.length}
-                onChange={v => setDims(d => ({ ...d, length: v }))}
-                placeholder="Ex: 1.2" step="0.05" min="0.1" max={p.maxLength} />
+            <div style={{ display: "flex", gap: 16 }}>
+              <NumberInput label="Lățime (m) — 0.7–1.8m" value={dims.width}
+                onChange={(v) => setDims({ ...dims, width: v })}
+                placeholder="Ex: 0.9" step="0.05" min={0.7} max={p.maxWidth} />
+              <NumberInput label="Lungime (m) — 0.7–1.8m" value={dims.length}
+                onChange={(v) => setDims({ ...dims, length: v })}
+                placeholder="Ex: 1.2" step="0.05" min={0.7} max={p.maxLength} />
             </div>
             <p style={{ fontSize: "0.75rem", color: "rgba(240,237,232,0.3)", marginTop: 10 }}>
               Suprafață: {(w * l).toFixed(2)} m²

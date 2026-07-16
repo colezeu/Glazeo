@@ -1999,8 +1999,8 @@
       "name": "Cădițe Duș Compozit",
       "basePrice": 280,
       "transport": 25,
-      "maxWidth": 1.1,
-      "maxLength": 2.0,
+      "maxWidth": 1.8,
+      "maxLength": 1.8,
       "colors": {
         "alb": {
           "name": "Alb",
