@@ -41,6 +41,8 @@ const PRODUCT_NAMES: Record<string, string> = {
   partitionari: 'Partiționări',
   oglinda: 'Oglinzi',
   copertina: 'Copertină',
+  vitrovibe: 'VitroVibe',
+  'cadita-dus': 'Cădiță Duș',
 };
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
@@ -95,6 +97,8 @@ export default function Dashboard() {
     partitionari: '/configurator/partitionari',
     oglinda: '/configurator/oglinzi',
     copertina: '/configurator/copertina',
+    vitrovibe: '/configurator/vitrovibe',
+    'cadita-dus': '/configurator/cadita-dus',
   };
 
   const route = routes[project.product_type] || '/';
@@ -121,6 +125,8 @@ export default function Dashboard() {
       partitionari: '/configurator/partitionari',
       oglinda: '/configurator/oglinzi',
       copertina: '/configurator/copertina',
+      vitrovibe: '/configurator/vitrovibe',
+      'cadita-dus': '/configurator/cadita-dus',
     };
 
     const route = routes[quote.product_type] || '/';
