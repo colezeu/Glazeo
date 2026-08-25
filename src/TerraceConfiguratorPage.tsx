@@ -5,6 +5,7 @@ import { ConfigHeader, SectionCard, OptionBtn, ToggleOption, NumberInput, Select
 import QuoteModal from "./QuoteModal.js";
 import { Plus, Trash2 } from "lucide-react";
 import { getUserMultiplier } from "./lib/user";
+import { MAX_SINA_CONTINUA, canUseContinuousRails } from "./lib/multitrack";
 
 interface Section {
   id: number;
@@ -98,6 +99,8 @@ export default function TerraceConfiguratorPage() {
 
   // Total width from all sections
   const totalW = sections.reduce((sum, s) => sum + (parseFloat(s.width) || 0), 0);
+  // Lățimea maximă a unei secțiuni — baza pentru validarea șinelor continue
+  const maxSectionW = sections.reduce((m, s) => Math.max(m, parseFloat(s.width) || 0), 0);
   const h = parseFloat(height) || 0;
 
   // Validation
@@ -141,8 +144,9 @@ export default function TerraceConfiguratorPage() {
     setSections(prev => prev.filter(s => s.id !== id));
   };
 
-const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
-  const effectiveSineNeintrerupte = sineNeintrerupte && w <= MAX_SINA_CONTINUA;
+  // Șinele continue se evaluează per secțiune (fiecare secțiune = deschidere separată)
+  const sineContinuaPermisa = canUseContinuousRails(sections);
+  const effectiveSineNeintrerupte = sineNeintrerupte && sineContinuaPermisa;
 
   const calculate = async () => {
     if (!p || !isValid) return;
@@ -273,10 +277,10 @@ const MAX_SINA_CONTINUA = 6.3; // m — lungimea brută a șinei
               Total sistem: {totalCanate} canate din {sections.length} secțiune{sections.length > 1 ? "i" : ""}
             </div>
             <ToggleOption checked={deschidereMijloc} onChange={setDeschidereMijloc} label="Deschidere la mijloc" desc="Canatele se întâlnesc la mijloc — fără șine suplimentare" />
-            <ToggleOption checked={effectiveSineNeintrerupte} onChange={w <= MAX_SINA_CONTINUA ? setSineNeintrerupte : () => {}}
-              label={w > MAX_SINA_CONTINUA ? "Șine neîntrerupte (indisponibil)" : "Șine neîntrerupte"}
-              desc={w > MAX_SINA_CONTINUA
-                ? `Lungimea totală ${w.toFixed(1)}m depășește șina brută de ${MAX_SINA_CONTINUA}m — șinele se îmbină`
+            <ToggleOption checked={effectiveSineNeintrerupte} onChange={sineContinuaPermisa ? setSineNeintrerupte : () => {}}
+              label={!sineContinuaPermisa ? "Șine neîntrerupte (indisponibil)" : "Șine neîntrerupte"}
+              desc={!sineContinuaPermisa
+                ? `O secțiune de ${maxSectionW.toFixed(1)}m depășește șina brută de ${MAX_SINA_CONTINUA}m — șinele se îmbină doar în acea secțiune`
                 : "Feronerie majorată cu 35% pentru șine continue"} />
           </SectionCard>
 
@@ -363,13 +367,16 @@ function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: num
   };
   const gc = glassColors[glass] || glassColors.clar;
 
-  // Build panel data from sections
+  // Build panel data from sections + segmente de șină per secțiune
+  // (fiecare secțiune e o deschidere independentă — șina ei nu continuă peste graniță)
   const panels: { w: number; x: number }[] = [];
+  const segments: { x: number; w: number }[] = [];
   let cx = x0;
   const totalSW = sections.reduce((sum, s) => sum + (parseFloat(s.width) || 0), 0) || realW;
   for (const s of sections) {
     const sw = (parseFloat(s.width) || 0) || (realW / sections.length);
     const sx = (sw / totalSW) * gW;
+    segments.push({ x: cx, w: sx });
     const pw = sx / (s.nrCanate || 1);
     for (let i = 0; i < (s.nrCanate || 1); i++) {
       panels.push({ w: pw, x: cx + i * pw });
@@ -381,10 +388,14 @@ function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: num
     <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: '#0f1117' }}>
       {/* Ground */}
       <line x1={x0 - 8} y1={y0 + gH + 6} x2={x0 + gW + 8} y2={y0 + gH + 6} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
-      {/* Bottom rail — profil gros în care stă sticla + căruciorul */}
-      <rect x={x0} y={y0 + gH - 2} width={gW} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
-      {/* Top rail */}
-      <line x1={x0} y1={y0 - 5} x2={x0 + gW} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
+      {/* Bottom rail per section — șina fiecărei secțiuni e independentă */}
+      {segments.map((seg, i) => (
+        <rect key={`rail-b-${i}`} x={seg.x} y={y0 + gH - 2} width={seg.w} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
+      ))}
+      {/* Top rail per section */}
+      {segments.map((seg, i) => (
+        <line key={`rail-t-${i}`} x1={seg.x} y1={y0 - 5} x2={seg.x + seg.w} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
+      ))}
       {panels.map((panel, i) => (
         <g key={i}>
           <rect x={panel.x + 1} y={y0} width={panel.w - 2} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1.2" />
