@@ -86,6 +86,20 @@ function SlidingDoorPreview({ dims, typology, carucioare }: { dims: { width: str
   );
 }
 
+interface SlidingQuote {
+  area: string;
+  kitP: number;
+  glP: number;
+  manP: number;
+  incP: number;
+  amortP: number;
+  sincP: number;
+  profilP: number;
+  subtotal: number;
+  vat: number;
+  total: number;
+}
+
 export default function SlidingDoorConfiguratorPage() {
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [vatRate, setVatRate] = useState(0.19);
@@ -105,7 +119,7 @@ export default function SlidingDoorConfiguratorPage() {
   const [inclProfilOrnamental, setInclProfilOrnamental] = useState(false);
 
   const [calculating, setCalculating] = useState(false);
-  const [quote, setQuote] = useState<Record<string, number | string> | null>(null);
+  const [quote, setQuote] = useState<SlidingQuote | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
@@ -340,7 +354,7 @@ export default function SlidingDoorConfiguratorPage() {
                 {nrCanate < 5 && <div style={{ color: "rgba(200,169,110,0.5)", fontSize: "0.75rem", marginTop: 6 }}>−{(5 - nrCanate) * 110}€ reducere</div>}
               </SectionCard>
               <div style={{ padding: 12, borderRadius: 12, background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", color: "rgba(200,169,110,0.7)", fontSize: "0.85rem", textAlign: "center" }}>
-                ⚠️ Feronerie {2000 - (5 - nrCanate) * 110}€ + TVA — max 3.9m lățime, max 5 canate
+                ⚠️ Feronerie {(Number(ty?.basePrice) || 2000) - (5 - nrCanate) * (Number(ty?.pricePerCanatMinus) || 110)}€ + TVA — max 3.9m lățime, max 5 canate
               </div>
             </>
           )}
@@ -412,7 +426,7 @@ export default function SlidingDoorConfiguratorPage() {
 
           {isInvizibila && (
             <div style={{ padding: 12, borderRadius: 12, background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)", color: "rgba(200,169,110,0.7)", fontSize: "0.85rem", textAlign: "center" }}>
-              Feronerie invizibilă — {ty.price || 349}€ (include kit complet)
+              Feronerie invizibilă — {Number(ty?.price) || 349}€ (include kit complet)
             </div>
           )}
         </div>

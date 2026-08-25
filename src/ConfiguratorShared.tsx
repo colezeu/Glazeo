@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
 import { ArrowLeft, Loader2, Check, RotateCcw } from "lucide-react";
 
 export function ConfigHeader({ title, quote }) {
@@ -36,7 +37,14 @@ export function SectionCard({ num, label, children }) {
   );
 }
 
-export function OptionBtn({ selected, onClick, label, desc, price, center }) {
+export function OptionBtn({ selected, onClick, label, desc, price, center }: {
+  selected: boolean;
+  onClick: () => void;
+  label: string;
+  desc?: string;
+  price?: string;
+  center?: boolean;
+}) {
   return (
     <button className={`option-btn ${selected ? "selected" : ""}`} onClick={onClick} style={center ? { textAlign:"center" } : {}}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -51,7 +59,13 @@ export function OptionBtn({ selected, onClick, label, desc, price, center }) {
   );
 }
 
-export function ToggleOption({ checked, onChange, label, desc, price }) {
+export function ToggleOption({ checked, onChange, label, desc, price }: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+  desc?: string;
+  price?: string;
+}) {
   return (
     <button className={`option-btn ${checked ? "selected" : ""}`} onClick={() => onChange(!checked)}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -70,7 +84,15 @@ export function ToggleOption({ checked, onChange, label, desc, price }) {
   );
 }
 
-export function NumberInput({ label, value, onChange, placeholder, step, min, max }) {
+export function NumberInput({ label, value, onChange, placeholder, step, min, max }: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  step?: string;
+  min?: number;
+  max?: number;
+}) {
   return (
     <div>
       <label style={{ fontSize:"0.78rem", color:"rgba(240,237,232,0.45)", display:"block", marginBottom:8 }}>{label}</label>
@@ -201,7 +223,7 @@ export function ErrorBanner({ message, onRetry, onBack }) {
   );
 }
 
-export function PreviewBox({ title, children }) {
+export function PreviewBox({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <div className="preview-svg-wrap glass-card" style={{ borderRadius:20, padding:"20px 16px" }}>
       <div style={{ fontSize:"0.72rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", color:"rgba(240,237,232,0.4)", marginBottom:14 }}>{title || "Previzualizare 2D"}</div>
