@@ -353,11 +353,10 @@ export default function TerraceConfiguratorPage() {
 }
 
 function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: number; nrCanate: number; glass: string; sections: Section[] }) {
-  const W = 300, H = 170, M = 16;
-  const realW = w || 4, realH = h || 2.4;
-  const sc = Math.min((W - M * 2) / realW, (H - M * 2) / realH);
-  const gW = realW * sc, gH = realH * sc;
-  const x0 = (W - gW) / 2, y0 = H - M - gH;
+  const realH = h || 2.4;
+  const CanvasW = 300, M = 16;
+  const cadruH = 128; // înălțimea alocată fiecărei secțiuni în canvas
+  const totalH = sections.length > 0 ? M + sections.length * (cadruH + 8) + 20 : 170;
 
   const glassColors: Record<string, { fill: string; stroke: string }> = {
     clar:   { fill: 'rgba(160,200,180,0.15)', stroke: 'rgba(160,200,180,0.4)' },
@@ -367,53 +366,61 @@ function TerracePreview({ w, h, nrCanate, glass, sections }: { w: number; h: num
   };
   const gc = glassColors[glass] || glassColors.clar;
 
-  // Build panel data from sections + segmente de șină per secțiune
-  // (fiecare secțiune e o deschidere independentă — șina ei nu continuă peste graniță)
-  const panels: { w: number; x: number }[] = [];
-  const segments: { x: number; w: number }[] = [];
-  let cx = x0;
-  const totalSW = sections.reduce((sum, s) => sum + (parseFloat(s.width) || 0), 0) || realW;
-  for (const s of sections) {
-    const sw = (parseFloat(s.width) || 0) || (realW / sections.length);
-    const sx = (sw / totalSW) * gW;
-    segments.push({ x: cx, w: sx });
-    const pw = sx / (s.nrCanate || 1);
-    for (let i = 0; i < (s.nrCanate || 1); i++) {
-      panels.push({ w: pw, x: cx + i * pw });
-    }
-    cx += sx;
-  }
-
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: '#0f1117' }}>
-      {/* Ground */}
-      <line x1={x0 - 8} y1={y0 + gH + 6} x2={x0 + gW + 8} y2={y0 + gH + 6} stroke="rgba(200,169,110,0.35)" strokeWidth="2" />
-      {/* Bottom rail per section — șina fiecărei secțiuni e independentă */}
-      {segments.map((seg, i) => (
-        <rect key={`rail-b-${i}`} x={seg.x} y={y0 + gH - 2} width={seg.w} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
-      ))}
-      {/* Top rail per section */}
-      {segments.map((seg, i) => (
-        <line key={`rail-t-${i}`} x1={seg.x} y1={y0 - 5} x2={seg.x + seg.w} y2={y0 - 5} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
-      ))}
-      {panels.map((panel, i) => (
-        <g key={i}>
-          <rect x={panel.x + 1} y={y0} width={panel.w - 2} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1.2" />
-        </g>
-      ))}
-      {/* Section dividers */}
-      {sections.length > 1 && (() => {
-        let dx = x0;
-        const result = [];
-        for (let i = 0; i < sections.length - 1; i++) {
-          const sw = (parseFloat(sections[i].width) || 0) || (realW / sections.length);
-          dx += (sw / totalSW) * gW;
-          result.push(<line key={`div-${i}`} x1={dx} y1={y0} x2={dx} y2={y0 + gH} stroke="rgba(200,169,110,0.2)" strokeWidth="1.5" strokeDasharray="3,3" />);
-        }
-        return result;
-      })()}
-      <text x={x0 + gW / 2} y={H - 4} textAnchor="middle" fill="rgba(200,169,110,0.5)" fontSize="7" fontFamily="DM Sans">
-        {realW.toFixed(1)}m × {realH.toFixed(1)}m · {nrCanate} canate{sections.length > 1 ? ` · ${sections.length} sec.` : ""}
+    <svg width="100%" viewBox={`0 0 ${CanvasW} ${totalH}`} style={{ background: '#0f1117', display: 'block' }}>
+      {sections.map((section, idx) => {
+        const sw = parseFloat(section.width) || 0;
+        if (sw <= 0) return null;
+        const sc = Math.min((CanvasW - M * 4) / sw, (cadruH - 36) / realH);
+        const gW = sw * sc;
+        const gH = realH * sc;
+        const x0 = M + 50; // spațiu pentru etichetă stânga
+        const y0 = M + idx * (cadruH + 8) + 8;
+
+        const pw = gW / (section.nrCanate || 1);
+
+        return (
+          <g key={`sec-${section.id}`}>
+            {/* Cadru secțiune */}
+            <rect x={M} y={y0} width={CanvasW - M * 2} height={cadruH - 8} rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            {/* Etichetă secțiune */}
+            <text x={M + 6} y={y0 + 14} fill="#c8a96e" fontSize="7" fontFamily="DM Sans" fontWeight="bold">
+              Secțiunea {idx + 1}
+            </text>
+            {/* Dimensiuni etichetă jos */}
+            <text x={M + 6} y={y0 + cadruH - 10} fill="rgba(240,237,232,0.35)" fontSize="6" fontFamily="DM Sans">
+              {sw.toFixed(1)}m × {realH.toFixed(1)}m · {section.nrCanate} canate
+            </text>
+            {/* Șină superioară */}
+            <line x1={x0} y1={y0 + 22} x2={x0 + gW} y2={y0 + 22} stroke="rgba(200,169,110,0.5)" strokeWidth="3" strokeLinecap="round" />
+            {/* Șină inferioară */}
+            <rect x={x0} y={y0 + 22 + gH - 2} width={gW} height={8} rx="2" fill="rgba(200,169,110,0.25)" stroke="rgba(200,169,110,0.5)" strokeWidth="1" />
+            {/* Linia solului */}
+            <line x1={x0 - 4} y1={y0 + 22 + gH + 8} x2={x0 + gW + 4} y2={y0 + 22 + gH + 8} stroke="rgba(200,169,110,0.15)" strokeWidth="1.5" />
+            {/* Canatele */}
+            {Array.from({ length: section.nrCanate || 1 }).map((_, pi) => (
+              <rect key={pi} x={x0 + pi * pw + 1} y={y0 + 22} width={Math.max(pw - 2, 1)} height={gH} fill={gc.fill} stroke={gc.stroke} strokeWidth="1" />
+            ))}
+            {/* Linie cotă lățime */}
+            <line x1={x0} y1={y0 + 22 + gH + 14} x2={x0 + gW} y2={y0 + 22 + gH + 14} stroke="#c8a96e" strokeWidth="0.8" />
+            <line x1={x0} y1={y0 + 22 + gH + 11} x2={x0} y2={y0 + 22 + gH + 17} stroke="#c8a96e" strokeWidth="0.8" />
+            <line x1={x0 + gW} y1={y0 + 22 + gH + 11} x2={x0 + gW} y2={y0 + 22 + gH + 17} stroke="#c8a96e" strokeWidth="0.8" />
+            <text x={x0 + gW / 2} y={y0 + 22 + gH + 21} textAnchor="middle" fill="#c8a96e" fontSize="6" fontFamily="DM Sans">
+              {sw.toFixed(1)}m
+            </text>
+            {/* Linie cotă înălțime */}
+            <line x1={x0 - 12} y1={y0 + 22} x2={x0 - 12} y2={y0 + 22 + gH} stroke="#c8a96e" strokeWidth="0.8" />
+            <line x1={x0 - 15} y1={y0 + 22} x2={x0 - 9} y2={y0 + 22} stroke="#c8a96e" strokeWidth="0.8" />
+            <line x1={x0 - 15} y1={y0 + 22 + gH} x2={x0 - 9} y2={y0 + 22 + gH} stroke="#c8a96e" strokeWidth="0.8" />
+            <text x={x0 - 16} y={y0 + 22 + gH / 2 + 2} textAnchor="end" fill="#c8a96e" fontSize="6" fontFamily="DM Sans">
+              {realH.toFixed(1)}m
+            </text>
+          </g>
+        );
+      })}
+      {/* Total textual în afara desenelor */}
+      <text x={CanvasW / 2} y={totalH - 4} textAnchor="middle" fill="rgba(240,237,232,0.4)" fontSize="7" fontFamily="DM Sans">
+        Total: {sections.length} secțiuni · {w.toFixed(1)}m lățime totală · {nrCanate} canate
       </text>
     </svg>
   );

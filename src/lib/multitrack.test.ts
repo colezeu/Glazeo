@@ -34,3 +34,24 @@ describe("canUseContinuousRails — independența secțiunilor", () => {
     expect(canUseContinuousRails([{ width: "" }])).toBe(false);
   });
 });
+
+describe("canUseContinuousRails — cazuri de validare Preview2D", () => {
+  it("permite șină continuă pentru o singură secțiune de 2.0m", () => {
+    expect(canUseContinuousRails([{ width: "2.0" }])).toBe(true);
+  });
+
+  it("permite șină continuă pentru două secțiuni 4.8 + 4.8 (total 9.6m)", () => {
+    expect(canUseContinuousRails([{ width: "4.8" }, { width: "4.8" }])).toBe(true);
+  });
+
+  it("respinge șină continuă dacă o secțiune din două depășește 6.3m (5.0 + 7.0)", () => {
+    expect(canUseContinuousRails([{ width: "5.0" }, { width: "7.0" }])).toBe(false);
+  });
+
+  it("permite secțiuni cu lățimi și număr de canate diferite (3.0/3 canate + 4.5/5 canate)", () => {
+    const sections = [{ width: "3.0", nrCanate: 3 }, { width: "4.5", nrCanate: 5 }];
+    expect(canUseContinuousRails(sections)).toBe(true);
+    expect(sections[0].nrCanate).toBeGreaterThan(0);
+    expect(sections[1].nrCanate).toBeGreaterThan(0);
+  });
+});
